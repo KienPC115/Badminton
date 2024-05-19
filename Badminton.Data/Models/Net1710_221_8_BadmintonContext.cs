@@ -8,6 +8,10 @@ namespace Badminton.Data.Models;
 
 public partial class Net1710_221_8_BadmintonContext : DbContext
 {
+    public Net1710_221_8_BadmintonContext()
+    {
+    }
+
     public Net1710_221_8_BadmintonContext(DbContextOptions<Net1710_221_8_BadmintonContext> options)
         : base(options)
     {

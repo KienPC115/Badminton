@@ -1,4 +1,6 @@
 ﻿using Badminton.Business.Interface;
+using Badminton.Common;
+using Badminton.Data.DAO;
 using Badminton.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
@@ -6,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,19 +24,25 @@ namespace Badminton.Business
     }
     public class CourtDetailBusiness : ICourtDetailBusiness
     {
-        private readonly Net1710_221_8_BadmintonContext _context;
+        /*private readonly Net1710_221_8_BadmintonContext _context;*/
+        private readonly CourtDetailDAO _dao;
+
+        public CourtDetailBusiness()
+        {
+            _dao = new CourtDetailDAO();
+        }
 
         public async Task<IBadmintonResult> AddCourtDetail(CourtDetail courtDetail)
         {
             try
             {
-                await _context.CourtDetails.AddAsync(courtDetail);
-                await _context.SaveChangesAsync();
-                return new BadmintonResult(1, "Court Detail added successfully");
+                var result = await _dao.CreateAsync(courtDetail);
+                return result < 1 ? new BadmintonResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG)
+                                  : new BadmintonResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG);
             }
             catch (Exception ex)
             {
-                return new BadmintonResult(-1, ex.Message);
+                return new BadmintonResult(Const.ERROR_EXCEPTION, ex.Message);
             }
         }
 
@@ -41,19 +50,21 @@ namespace Badminton.Business
         {
             try
             {
-                var courtDetail = await _context.CourtDetails.FindAsync(courtDetailId);
+                
+                /*var courtDetail = await _context.CourtDetails.FindAsync(courtDetailId);*/
+                var courtDetail = await _dao.GetByIdAsync(courtDetailId);
                 if (courtDetail == null)
                 {
                     return new BadmintonResult(0, $"Court Detail {courtDetailId} not found");
                 }
+                var result = await _dao.RemoveAsync(courtDetail);
 
-                _context.Remove(courtDetail);
-                await _context.SaveChangesAsync();
-                return new BadmintonResult(1, "Court Detail deleted successfully");
+                return result is true ? new BadmintonResult(Const.SUCCESS_DELETE_CODE, Const.SUCCESS_DELETE_MSG)
+                                      : new BadmintonResult(Const.FAIL_DELETE_CODE, Const.FAIL_DELETE_MSG);
             }
             catch (Exception ex)
             {
-                return new BadmintonResult(-1, ex.Message);
+                return new BadmintonResult(Const.ERROR_EXCEPTION, ex.Message);
             }
         }
 
@@ -61,13 +72,14 @@ namespace Badminton.Business
         {
             try
             {
-                var courtDetails = await _context.CourtDetails.ToListAsync();
-
-                return new BadmintonResult(1, "Get courts details successfully", courtDetails);
+                /*var courtDetails = await _context.CourtDetails.ToListAsync();*/
+                var courtDetails = await _dao.GetAllAsync();
+                return courtDetails.Count  > 0 ? new BadmintonResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, courtDetails)
+                                               : new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
             }
             catch (Exception ex)
             {
-                return new BadmintonResult(-1, ex.Message);
+                return new BadmintonResult(Const.ERROR_EXCEPTION, ex.Message);
             }
         }
 
@@ -75,16 +87,14 @@ namespace Badminton.Business
         {
             try
             {
-                var courtDetail = await _context.Courts.FindAsync(courtDetailId);
-                if (courtDetail == null)
-                {
-                    return new BadmintonResult(0, $"Court {courtDetailId} not found");
-                }
-                return new BadmintonResult(1, "Get court successfully", courtDetail);
+                /*var courtDetail = await _context.Courts.FindAsync(courtDetailId);*/
+                var courtDetail = await _dao.GetByIdAsync(courtDetailId);
+                return courtDetail != null ? new BadmintonResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, courtDetail)
+                                               : new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
             }
             catch (Exception ex)
             {
-                return new BadmintonResult(-1, ex.Message);
+                return new BadmintonResult(Const.ERROR_EXCEPTION, ex.Message);
             }
         }
 
@@ -92,25 +102,18 @@ namespace Badminton.Business
         {
             try
             {
-                var courtDetail = await _context.CourtDetails.FindAsync(courtDetailId);
+                /*var courtDetail = await _context.CourtDetails.FindAsync(courtDetailId);*/
+                var courtDetail = await _dao.GetByIdAsync(courtDetailId);
                 if (courtDetail == null)
                 {
-                    return new BadmintonResult(0, $"Court Detail {courtDetailId} not found");
+                    return new BadmintonResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
                 }
-
-                courtDetail.Price = updateCourtDetail.Price;
-                courtDetail.Status = updateCourtDetail.Status;
-                courtDetail.StartTime = updateCourtDetail.StartTime;
-                courtDetail.EndTime = updateCourtDetail.EndTime;
-                courtDetail.StaffId = updateCourtDetail.StaffId;
-                courtDetail.CourtId = updateCourtDetail.CourtId;
-
-                await _context.SaveChangesAsync();
-                return new BadmintonResult(1, "Court Detail updated successfully");
+                await _dao.UpdateAsync(updateCourtDetail);
+                return new BadmintonResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG);
             }
             catch (Exception ex)
             {
-                return new BadmintonResult(-1, ex.Message);
+                return new BadmintonResult(Const.ERROR_EXCEPTION, ex.Message);
             }
         }
     }

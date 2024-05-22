@@ -33,3 +33,4 @@ namespace Badminton.Business.Interface {
             Data = data;
         }
     }
+}

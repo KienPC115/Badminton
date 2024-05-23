@@ -17,8 +17,8 @@ namespace Badminton.Business
         public Task<IBadmintonResult> GetOrderDetailsByOrderId(int orderId);
         public Task<IBadmintonResult> GetOrderDetailsByCourtDetailId(int courtDetailId);
         public Task<IBadmintonResult> GetOrderDetailById(int orderDetailId);
-        public Task<IBadmintonResult> UpdateOrderDetail(IBadmintonResult result);
-        public Task<IBadmintonResult> AddOrderDetail(IBadmintonResult result);
+        public Task<IBadmintonResult> UpdateOrderDetail(OrderDetail result);
+        public Task<IBadmintonResult> AddOrderDetail(OrderDetail result);
         public Task<IBadmintonResult> DeleteOrderDetail(int orderDetailId);
         public Task<IBadmintonResult> DeleteOrderDetailsByOrderId(int orderId);
         public Task<IBadmintonResult> DeleteOrderDetailsByCourtDetailId(int courtDetailId);
@@ -31,22 +31,18 @@ namespace Badminton.Business
         {
             _DAO = new OrderDetailDAO();
         }
-        public async Task<IBadmintonResult> AddOrderDetail(IBadmintonResult result)
+        public async Task<IBadmintonResult> AddOrderDetail(OrderDetail result)
         {
             try
             {
-                if (result.Data is not OrderDetail orderDetail)
-                {
-                    return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
-                }
 
-                var od = await GetOrderDetailById(orderDetail.OrderId);
+                var od = await GetOrderDetailById(result.OrderId);
                 if (od.Data != null)
                 {
                     return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
                 }
 
-                var check = await _DAO.CreateAsync(orderDetail);
+                var check = await _DAO.CreateAsync(result);
                 if (check == 0)
                 {
                     return new BadmintonResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
@@ -201,15 +197,10 @@ namespace Badminton.Business
             }
         }
 
-        public async Task<IBadmintonResult> UpdateOrderDetail(IBadmintonResult result)
+        public async Task<IBadmintonResult> UpdateOrderDetail(OrderDetail orderDetail)
         {
             try
             {
-                if (result.Data == null)
-                {
-                    return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
-                }
-                var orderDetail = (OrderDetail)result.Data;
                 var od = await GetOrderDetailById(orderDetail.OrderDetailId);
                 if (od.Data == null)
                 {

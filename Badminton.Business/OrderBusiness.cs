@@ -17,8 +17,8 @@ namespace Badminton.Business
         public Task<IBadmintonResult> GetAllOrders();
         public Task<IBadmintonResult> GetAllOrdersByCustomerId(int id);
         public Task<IBadmintonResult> GetOrderById(int orderId);
-        public Task<IBadmintonResult> AddOrders(IBadmintonResult order);
-        public Task<IBadmintonResult> UpdateOrders(IBadmintonResult order);
+        public Task<IBadmintonResult> AddOrders(Order order);
+        public Task<IBadmintonResult> UpdateOrders(Order order);
         public Task<IBadmintonResult> DeleteOrders(int orderId);
         public Task<IBadmintonResult> DeleteOrdersByCustomerId(int orderId);
     }
@@ -30,7 +30,6 @@ namespace Badminton.Business
             _DAO = new OrderDAO();
         }
         private IOrderDetailBunsiness _orderDetailBusiness = new OrderDetailBusiness();
-        IOrderBusiness _orderBusiness = new OrderBusiness();
 
         public async Task<IBadmintonResult> GetAllOrders()
         {
@@ -97,12 +96,12 @@ namespace Badminton.Business
             }
         }
 
-        public async Task<IBadmintonResult> AddOrders(IBadmintonResult result)
+        public async Task<IBadmintonResult> AddOrders(Order result)
         {
             try
             {
 
-                var order = result.Data as Order;
+                var order = result;
 
                 if (order == null)
                 {
@@ -130,12 +129,12 @@ namespace Badminton.Business
             }
         }
 
-        public async Task<IBadmintonResult> UpdateOrders(IBadmintonResult result)
+        public async Task<IBadmintonResult> UpdateOrders(Order result)
         {
             try
             {
 
-                var order = result.Data as Order;
+                var order = result;
 
                 if (order == null)
                 {
@@ -149,7 +148,7 @@ namespace Badminton.Business
                     return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
                 }
 
-                var check = await _DAO.UpdateAsync(order);
+                var check = await _DAO.UpdateAsync(result);
 
                 if (check == 0)
                 {
@@ -197,7 +196,7 @@ namespace Badminton.Business
 
                 foreach (var order in orders)
                 {
-                    await _orderBusiness.DeleteOrders(order.OrderId);
+                    await DeleteOrders(order.OrderId);
                 }
 
                 return new BadmintonResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG);

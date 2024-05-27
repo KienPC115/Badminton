@@ -1,5 +1,6 @@
 ﻿using Badminton.Business.Interface;
 using Badminton.Common;
+using Badminton.Data;
 using Badminton.Data.DAO;
 using Badminton.Data.Models;
 using Microsoft.EntityFrameworkCore;
@@ -25,24 +26,22 @@ namespace Badminton.Business
     }
     public class OrderDetailBusiness : IOrderDetailBunsiness
     {
-        //private IOrderDetailBunsiness _orderDetailBusiness = new OrderDetailBusiness();
-        private readonly OrderDetailDAO _DAO;
+        private readonly UnitOfWork _unitOfWork;
         public OrderDetailBusiness()
         {
-            _DAO = new OrderDetailDAO();
+            _unitOfWork ??= new();
         }
         public async Task<IBadmintonResult> AddOrderDetail(OrderDetail result)
         {
             try
             {
-
                 var od = await GetOrderDetailById(result.OrderId);
                 if (od.Data != null)
                 {
                     return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
                 }
 
-                var check = await _DAO.CreateAsync(result);
+                var check = await _unitOfWork.OrderDetailRepository.CreateAsync(result);
                 if (check == 0)
                 {
                     return new BadmintonResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
@@ -84,7 +83,7 @@ namespace Badminton.Business
         {
             try
             {
-                var orderDetails = await _DAO.GetOrderDetailsByOrderId(orderId);
+                var orderDetails = await _unitOfWork.OrderDetailRepository.GetOrderDetailsByOrderId(orderId);
 
                 if (orderDetails == null)
                 {
@@ -115,7 +114,7 @@ namespace Badminton.Business
                 }
 
                 OrderDetail orderDetail = (OrderDetail)od.Data;
-                var check = await _DAO.RemoveAsync(orderDetail);
+                var check = await _unitOfWork.OrderDetailRepository.RemoveAsync(orderDetail);
                 if (!check)
                 {
                     return new BadmintonResult(Const.FAIL_DELETE_CODE, Const.FAIL_DELETE_MSG);
@@ -133,7 +132,7 @@ namespace Badminton.Business
         {
             try
             {
-                var orderDetails = await _DAO.GetAllAsync();
+                var orderDetails = await _unitOfWork.OrderDetailRepository.GetAllAsync();
                 if (orderDetails == null)
                 {
                     return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
@@ -150,7 +149,7 @@ namespace Badminton.Business
         {
             try
             {
-                var orderDetail = await _DAO.GetOrderDetailsByOrderId(orderId);
+                var orderDetail = await _unitOfWork.OrderDetailRepository.GetOrderDetailsByOrderId(orderId);
                 if (orderDetail == null)
                 {
                     return new BadmintonResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
@@ -167,7 +166,7 @@ namespace Badminton.Business
         {
             try
             {
-                var orderDetail = await _DAO.GetByIdAsync(orderDetailId);
+                var orderDetail = await _unitOfWork.OrderDetailRepository.GetByIdAsync(orderDetailId);
                 if (orderDetail == null)
                 {
                     return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
@@ -184,7 +183,7 @@ namespace Badminton.Business
         {
             try
             {
-                var orderDetail = await _DAO.GetOrderDetailsByCourtDetailId(courtDetailId);
+                var orderDetail = await _unitOfWork.OrderDetailRepository.GetOrderDetailsByCourtDetailId(courtDetailId);
                 if (orderDetail == null)
                 {
                     return new BadmintonResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
@@ -206,7 +205,7 @@ namespace Badminton.Business
                 {
                     return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
                 }
-                var check = await _DAO.UpdateAsync(orderDetail);
+                var check = await _unitOfWork.OrderDetailRepository.UpdateAsync(orderDetail);
                 if (check == 0)
                 {
                     return new BadmintonResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);

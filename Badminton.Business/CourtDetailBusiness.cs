@@ -38,8 +38,8 @@ namespace Badminton.Business
         {
             try
             {
-                _unitOfWork._courtDetailRepository.PrepareCreate(courtDetail);
-                var result = await _unitOfWork._courtDetailRepository.SaveAsync();
+                _unitOfWork.CourtDetailRepository.PrepareCreate(courtDetail);
+                var result = await _unitOfWork.CourtDetailRepository.SaveAsync();
 
                 return result < 1 ? new BadmintonResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG)
                                   : new BadmintonResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG);
@@ -56,12 +56,12 @@ namespace Badminton.Business
             {
                 
                 /*var courtDetail = await _context.CourtDetails.FindAsync(courtDetailId);*/
-                var courtDetail = await _unitOfWork._courtDetailRepository.GetByIdAsync(courtDetailId);
+                var courtDetail = await _unitOfWork.CourtDetailRepository.GetByIdAsync(courtDetailId);
                 if (courtDetail == null)
                 {
                     return new BadmintonResult(0, $"Court Detail {courtDetailId} not found");
                 }
-                var result = await _unitOfWork._courtDetailRepository.RemoveAsync(courtDetail);
+                var result = await _unitOfWork.CourtDetailRepository.RemoveAsync(courtDetail);
 
                 return result is true ? new BadmintonResult(Const.SUCCESS_DELETE_CODE, Const.SUCCESS_DELETE_MSG)
                                       : new BadmintonResult(Const.FAIL_DELETE_CODE, Const.FAIL_DELETE_MSG);
@@ -77,7 +77,7 @@ namespace Badminton.Business
             try
             {
                 /*var courtDetails = await _context.CourtDetails.ToListAsync();*/
-                var courtDetails = await _unitOfWork._courtDetailRepository.GetAllAsync();
+                var courtDetails = await _unitOfWork.CourtDetailRepository.GetAllAsync();
                 return courtDetails.Count  > 0 ? new BadmintonResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, courtDetails)
                                                : new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
             }
@@ -92,7 +92,7 @@ namespace Badminton.Business
             try
             {
                 /*var courtDetail = await _context.Courts.FindAsync(courtDetailId);*/
-                var courtDetail = await _unitOfWork._courtDetailRepository.GetByIdAsync(courtDetailId);
+                var courtDetail = await _unitOfWork.CourtDetailRepository.GetByIdAsync(courtDetailId);
                 return courtDetail != null ? new BadmintonResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, courtDetail)
                                                : new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
             }
@@ -107,12 +107,12 @@ namespace Badminton.Business
             try
             {
                 /*var courtDetail = await _context.CourtDetails.FindAsync(courtDetailId);*/
-                var courtDetail = await _unitOfWork._courtDetailRepository.GetByIdAsync(courtDetailId);
+                var courtDetail = await _unitOfWork.CourtDetailRepository.GetByIdAsync(courtDetailId);
                 if (courtDetail == null)
                 {
                     return new BadmintonResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
                 }
-                await _unitOfWork._courtDetailRepository.UpdateAsync(updateCourtDetail);
+                await _unitOfWork.CourtDetailRepository.UpdateAsync(updateCourtDetail);
                 return new BadmintonResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG);
             }
             catch (Exception ex)

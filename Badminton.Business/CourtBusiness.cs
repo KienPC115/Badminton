@@ -119,7 +119,6 @@ namespace Badminton.Business
                 return new BadmintonResult(Const.ERROR_EXCEPTION, ex.Message);
             }
         }
-
         public async Task<IBadmintonResult> DeleteCourt(int courtId)
         {
             try

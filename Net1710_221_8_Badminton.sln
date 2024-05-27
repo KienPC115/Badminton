@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34024.191
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Badminton.Data", "Badminton.Data\Badminton.Data.csproj", "{3F86C17C-7C9B-423F-ABFE-B443E0026EB9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Badminton.Data", "Badminton.Data\Badminton.Data.csproj", "{3F86C17C-7C9B-423F-ABFE-B443E0026EB9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Badminton.Business", "Badminton.Business\Badminton.Business.csproj", "{289FFF35-7274-40A7-ADE6-E1123FF6CE4C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Badminton.Business", "Badminton.Business\Badminton.Business.csproj", "{289FFF35-7274-40A7-ADE6-E1123FF6CE4C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Badminton.RazorWebApp", "Badminton.RazorWebApp\Badminton.RazorWebApp.csproj", "{F020DD9A-A8FF-49E8-AA63-83D716D5DB2D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Badminton.RazorWebApp", "Badminton.RazorWebApp\Badminton.RazorWebApp.csproj", "{F020DD9A-A8FF-49E8-AA63-83D716D5DB2D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Badminton.Common", "Badminton.Common\Badminton.Common.csproj", "{60B04992-F369-4E9D-84C7-51D42A8D381A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{F020DD9A-A8FF-49E8-AA63-83D716D5DB2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F020DD9A-A8FF-49E8-AA63-83D716D5DB2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F020DD9A-A8FF-49E8-AA63-83D716D5DB2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60B04992-F369-4E9D-84C7-51D42A8D381A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60B04992-F369-4E9D-84C7-51D42A8D381A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60B04992-F369-4E9D-84C7-51D42A8D381A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60B04992-F369-4E9D-84C7-51D42A8D381A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

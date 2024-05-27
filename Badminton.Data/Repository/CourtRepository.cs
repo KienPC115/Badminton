@@ -6,9 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Badminton.Data.DAO {
-    public class OrderDAO : BaseDAO<Order>{
-        public OrderDAO() {
+namespace Badminton.Data.Repository {
+    public class CourtRepository : GenericRepository<Court> {
+        public CourtRepository()
+        {
         }
     }
 }

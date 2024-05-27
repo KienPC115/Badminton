@@ -1,5 +1,6 @@
 ﻿using Badminton.Business.Interface;
 using Badminton.Common;
+using Badminton.Data;
 using Badminton.Data.DAO;
 using Badminton.Data.Models;
 using Microsoft.EntityFrameworkCore;
@@ -20,15 +21,18 @@ namespace Badminton.Business {
     }
 
     public class CourtBusiness : ICourtBusiness {
-        private readonly CourtDAO _DAO;
+        //private readonly CourtDAO _DAO;
+        private readonly UnitOfWork _unitOfWork;
 
         public CourtBusiness() {
-            _DAO = new CourtDAO();
+            //_DAO = new CourtDAO();
+            _unitOfWork ??= new UnitOfWork();
         }
 
         public async Task<IBadmintonResult> AddCourt(Court court) {
             try {
-                int result = await _DAO.CreateAsync(court);
+                _unitOfWork.CourtRepository.PrepareCreate(court);
+                int result = await _unitOfWork.CourtRepository.SaveAsync();
                 if (result < 1) {
                     return new BadmintonResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
                 }
@@ -41,7 +45,8 @@ namespace Badminton.Business {
 
         public async Task<IBadmintonResult> GetAllCourts() {
             try {
-                var courts = await _DAO.GetAllAsync();
+                //var courts = await _DAO.GetAllAsync();
+                var courts = await _unitOfWork.CourtRepository.GetAllAsync();
                 if (courts == null) {
                     return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
                 }
@@ -55,7 +60,8 @@ namespace Badminton.Business {
 
         public async Task<IBadmintonResult> GetCourtById(int courtId) {
             try {
-                var court = await _DAO.GetByIdAsync(courtId);
+                //var court = await _DAO.GetByIdAsync(courtId);\
+                var court = await _unitOfWork.CourtRepository.GetByIdAsync(courtId);
                 if (court == null) {
                     return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
                 }
@@ -68,7 +74,8 @@ namespace Badminton.Business {
 
         public async Task<IBadmintonResult> UpdateCourt(int courtId, Court updateCourt) {
             try {
-                var court = await _DAO.GetByIdAsync(courtId);
+                //var court = await _DAO.GetByIdAsync(courtId);
+                var court = await _unitOfWork.CourtRepository.GetByIdAsync(courtId);
                 if (court == null) {
                     return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
                 }
@@ -81,7 +88,7 @@ namespace Badminton.Business {
                 court.NightPrice = updateCourt.NightPrice;
                 court.WeekendNightPrice = updateCourt.WeekendNightPrice;
 
-                if (await _DAO.UpdateAsync(court) > 0) {
+                if (await _unitOfWork.CourtRepository.UpdateAsync(court) > 0) {
                     return new BadmintonResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG);
                 }
 
@@ -94,12 +101,12 @@ namespace Badminton.Business {
 
         public async Task<IBadmintonResult> DeleteCourt(int courtId) {
             try {
-                var court = await _DAO.GetByIdAsync(courtId);
+                var court = await _unitOfWork.CourtRepository.GetByIdAsync(courtId);
                 if (court == null) {
                     return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
                 }
 
-                if (await _DAO.RemoveAsync(court)) {
+                if (await _unitOfWork.CourtRepository.RemoveAsync(court)) {
                     return new BadmintonResult(Const.SUCCESS_DELETE_CODE, Const.SUCCESS_DELETE_MSG);
                 }
 

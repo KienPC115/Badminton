@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Badminton.Data.Repositories
+namespace Badminton.Data.Repository
 {
-        public class OrderDetailRepository : GenericRepository<OrderDetail>
+    public class OrderDetailRepository : GenericRepository<OrderDetail>
     {
         public async Task<List<OrderDetail>> GetOrderDetailsByCourtDetailId(int courtDetailId)
         {

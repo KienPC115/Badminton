@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Badminton.Business", "Badmi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Badminton.RazorWebApp", "Badminton.RazorWebApp\Badminton.RazorWebApp.csproj", "{F020DD9A-A8FF-49E8-AA63-83D716D5DB2D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Badminton.Common", "Badminton.Common\Badminton.Common.csproj", "{7750AED4-F08D-47E2-A5BC-4803BD7B1A64}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Badminton.Common", "Badminton.Common\Badminton.Common.csproj", "{7750AED4-F08D-47E2-A5BC-4803BD7B1A64}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

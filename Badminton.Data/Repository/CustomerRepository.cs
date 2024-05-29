@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Badminton.Data.Base;
 using Badminton.Data.Models;
 
-namespace Badminton.Data.Repositories {
+namespace Badminton.Data.Repository {
     public class CustomerRepository : GenericRepository<Customer> {
         public CustomerRepository() { }
 

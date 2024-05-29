@@ -1,8 +1,8 @@
 ﻿using Badminton.Data.Models;
-using Badminton.Data.Repositories;
 using Badminton.Data.Repository;
 
-namespace Badminton.Data {
+namespace Badminton.Data
+{
     public class UnitOfWork {
         private Net1710_221_8_BadmintonContext _unitOfWorkContext;
         private CourtRepository _court;

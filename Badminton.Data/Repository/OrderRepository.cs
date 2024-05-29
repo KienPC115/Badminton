@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Badminton.Data.Repositories
+namespace Badminton.Data.Repository
 {
     public class OrderRepository : GenericRepository<Order>
     {

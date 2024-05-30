@@ -19,7 +19,7 @@ namespace Badminton.Business {
         public Task<IBadmintonResult> DeleteCustomer(int CustomerId);
     }
 
-    internal class CustomerBusiness : ICustomerBusiness {
+    public class CustomerBusiness : ICustomerBusiness {
         //private readonly CustomerDAO _DAO;
         private readonly UnitOfWork _unitOfWork;
 

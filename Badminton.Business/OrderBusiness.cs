@@ -219,7 +219,7 @@ namespace Badminton.Business
                 List<OrderDetail> orderDetails = (List<OrderDetail>)result.Data; 
                 orderDetails.ForEach(o => sum += o.Amount);
                 var order = (await GetOrderById(orderId)).Data as Order;
-                order.TotalAmount = sum;
+                //order.TotalAmount = sum;
                 var check = await _unitOfWork.OrderRepository.UpdateOrder(new Order());
                 if (check == 0)
                 {

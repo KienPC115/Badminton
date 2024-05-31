@@ -23,6 +23,8 @@ namespace Badminton.Business
         public Task<IBadmintonResult> DeleteOrders(int orderId);
         public Task<IBadmintonResult> DeleteOrdersByCustomerId(int orderId);
         public Task<IBadmintonResult> UpdateAmount(int orderId);
+
+        public Task<IBadmintonResult> Save(Order order);
     }
     public class OrderBusiness : IOrderBusiness
     {
@@ -76,14 +78,14 @@ namespace Badminton.Business
             try
             {
 
-                var o = await GetOrderById(orderId);
+                var result = await GetOrderById(orderId);
 
-                if (o.Data == null)
+                if (result.Data == null)
                 {
-                    return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
+                    return result;
                 }
 
-                _unitOfWork.OrderRepository.PrepareUpdate((Order)o.Data);
+                _unitOfWork.OrderRepository.PrepareUpdate((Order)result.Data);
                 var check = await _unitOfWork.OrderRepository.SaveAsync();
                 await _orderDetailBusiness.DeleteOrderDetailsByOrderId(orderId);
 
@@ -100,23 +102,15 @@ namespace Badminton.Business
             }
         }
 
-        public async Task<IBadmintonResult> AddOrders(Order result)
+        public async Task<IBadmintonResult> AddOrders(Order order)
         {
             try
             {
-
-                var order = result;
-
-                if (order == null)
-                {
-                    return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
-                }
-
                 var o = await GetOrderById(order.OrderId);
 
                 if (o.Data != null)
                 {
-                    return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
+                    return o;
                 }
 
                 var check = await _unitOfWork.OrderRepository.CreateAsync(order);
@@ -137,18 +131,12 @@ namespace Badminton.Business
         {
             try
             {
-                //var order = result;
-
-                //if (order == null)
-                //{
-                //    return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
-                //}
 
                 //var o = await GetOrderById(order.OrderId);
 
                 //if (o.Data == null)
                 //{
-                //    return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
+                //    return o;
                 //}
 
                 var check = await _unitOfWork.OrderRepository.UpdateOrder(result);
@@ -215,7 +203,7 @@ namespace Badminton.Business
             try
             {
                 var result = await _orderDetailBusiness.GetOrderDetailsByOrderId(orderId);
-                double sum = 0;
+                int sum = 0;
                 List<OrderDetail> orderDetails = (List<OrderDetail>)result.Data; 
                 orderDetails.ForEach(o => sum += o.Amount);
                 var order = (await GetOrderById(orderId)).Data as Order;
@@ -232,6 +220,11 @@ namespace Badminton.Business
             {
                 return new BadmintonResult(Const.ERROR_EXCEPTION, ex.Message);
             }
+        }
+
+        public Task<IBadmintonResult> Save(Order order)
+        {
+            throw new NotImplementedException();
         }
     }
 }

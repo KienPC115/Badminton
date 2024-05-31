@@ -1,4 +1,5 @@
 ﻿using Badminton.Data.Models;
+using Badminton.Data.Repositories;
 using Badminton.Data.Repository;
 
 namespace Badminton.Data
@@ -39,6 +40,8 @@ namespace Badminton.Data
                 return _orderDetail ??= new OrderDetailRepository();
             }
         }
+        public OrderRepository OrderRepository { get { return _order ??= new OrderRepository(); } }
+        public OrderDetailRepository OrderDetailRepository { get { return _orderDetail ??= new OrderDetailRepository(); } }
 
         ////TO-DO CODE HERE/////////////////
 
@@ -71,29 +74,30 @@ namespace Badminton.Data
                     dbContextTransaction.Rollback();
                 }
             }
-
             return result;
         }
 
-        public async Task<int> SaveChangesWithTransactionAsync() {
+        public async Task<int> SaveChangesWithTransactionAsync()
+        {
             int result = -1;
 
             //System.Data.IsolationLevel.Snapshot
-            using (var dbContextTransaction = _unitOfWorkContext.Database.BeginTransaction()) {
-                try {
+            using (var dbContextTransaction = _unitOfWorkContext.Database.BeginTransaction())
+            {
+                try
+                {
                     result = await _unitOfWorkContext.SaveChangesAsync();
                     dbContextTransaction.Commit();
                 }
-                catch (Exception) {
+                catch (Exception)
+                {
                     //Log Exception Handling message                      
                     result = -1;
                     dbContextTransaction.Rollback();
                 }
             }
-
             return result;
         }
-
         #endregion
     }
 }

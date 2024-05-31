@@ -39,6 +39,7 @@ namespace Badminton.Business
             {
                 _unitOfWork.CourtRepository.PrepareCreate(court);
                 int result = await _unitOfWork.CourtRepository.SaveAsync();
+
                 if (result < 1)
                 {
                     return new BadmintonResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);

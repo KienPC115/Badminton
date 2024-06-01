@@ -1,12 +1,13 @@
 ﻿@page
-@model Badminton.RazorWebApp.Pages.OrderPages.IndexModel;
+@model Badminton.RazorWebApp.Pages.OrderModel
 @{
-    ViewData["Title"] = "Order page";
-    var Orders = Model.Order;
+    ViewData["Title"] = "Order";
+    var orders = Model.Orders;
+    var customers = Model.CustomersList;
 }
 
 <div class="text-center">
-    <h1 class="display-6">Order management</h1>
+    <h1 class="display-6">Orders management</h1>
 </div>
 
 <div class="row">
@@ -17,23 +18,26 @@
     </div>
 </div>
 
-@* <div class="row">
+<div class="row">
     <div class="col-md-12">
         <table class="table table-striped table-bordered table-hover">
             <thead>
                 <tr class="card-header">
-                    <th class="card-title text-center">CustomerId</th>
+                    <th class="card-title text-center">CodeId</th>
+                    <th class="card-title text-center">Name</th>
                     <th class="card-title text-center">Type</th>
                     <th class="card-title text-center">TotalAmount</th>
+                    <th class="card-title text-center"></th>
                 </tr>
             </thead>
-            <tbody class="tblOrderList">
-                @if (Orders.Count > 0)
+            <tbody class="tblcurrencyList">
+                @if (orders.Count > 0)
                 {
-                    foreach (var order in Orders)
+                    foreach (var order in orders)
                     {
                         <tr>
-                            <td>@order.CustomerId</td>
+                            <td>@order.OrderId</td>
+                            <td>@order.Customer.Name</td>
                             <td>@order.Type</td>
                             <td>@order.TotalAmount</td>
                         </tr>
@@ -42,45 +46,43 @@
             </tbody>
         </table>
     </div>
-</div> *@
+</div>
 
-<div class="modal fade" id="OrderModal" tabindex="-1" aria-labelledby="OrderModalLabel" aria-hidden="true">
+<div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="orderModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             @using (Html.BeginForm(null, null, FormMethod.Post, new { name = "frm", id = "frm" }))
             {
                 @Html.AntiForgeryToken()
                 <div class="modal-header">
-                    <h5 class="modal-title" id="OrderModalLabel">Order Transaction</h5>
+                    <h5 class="modal-title" id="orderModalLabel">New Order</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div id="OrderModalContent"></div>
+                    <div id="orderModalContent"></div>
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group row">
                                 <div class="col-md-6">
-                                    <label for="1">Code</label>
-                                    <input asp-for="Order.CustomerId" class="form-control" />
-                                </div>                                
-                                @* <div class="col-md-6">
-                                    <label for="1">Active</label>                                                                        
-                                    <input asp-for="Order.IsActive" type="checkbox" />
-                                    <input type="checkbox" id="Order_IsActive" name="Order.IsActive" class="form-check-input" />
-                                    <input type="hidden" id="Order_IsActive" value="@Model.Order?.IsActive" />
-                                </div> *@
+                                    <label for="2">Type</label>
+                                    <select asp-for="Order.Type" class="form-control">
+                                        <option value="UnPaid">Unpaid</option>
+                                        <option value="Paid">Paid</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-12">
-                            <div class="form-group row">                                
+                            <div class="form-group row">
                                 <div class="col-md-6">
-                                    <label for="1">Name</label>
-                                    <input asp-for="Order.Type" class="form-control" />
+                                    <label for="2">Customer</label>
+                                    <select asp-for="Order.CustomerId" class="form-control">
+                                        @foreach (var customer in customers)
+                                        {
+                                            <option value=@customer.CustomerId>@customer.Name</option>
+                                        }
+                                    </select>
                                 </div>
-                                <div class="col-md-6">
-                                    <label for="1">Nation</label>
-                                    <input asp-for="Order.TotalAmount" class="form-control" />
-                                </div>                                
                             </div>
                         </div>
                         <div class="col-md-12">
@@ -97,12 +99,12 @@
     </div>
 </div>
 
-@section scripts 
+@section scripts
 {
     <script type="text/javascript">
         function add() {
-            $('#OrderModal').modal('show');                       
+            $('#orderModal').modal('show');
         }
     </script>
-}    
-            
+}
+

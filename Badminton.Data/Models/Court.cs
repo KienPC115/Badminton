@@ -15,13 +15,7 @@ public partial class Court
 
     public string Description { get; set; }
 
-    public double NightPrice { get; set; }
-
-    public double DayPrice { get; set; }
-
-    public double WeekendDayPrice { get; set; }
-
-    public double WeekendNightPrice { get; set; }
+    public double Price { get; set; }
 
     public virtual ICollection<CourtDetail> CourtDetails { get; set; } = new List<CourtDetail>();
 }

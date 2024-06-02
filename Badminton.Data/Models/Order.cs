@@ -13,9 +13,7 @@ public partial class Order
 
     public string Type { get; set; }
 
-    public double TotalAmount { get; set; } = 0;
-
-    public virtual ICollection<CourtDetail> CourtDetails { get; set; } = new List<CourtDetail>();
+    public double TotalAmount { get; set; }
 
     public virtual Customer Customer { get; set; }
 

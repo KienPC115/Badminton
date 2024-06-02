@@ -11,6 +11,7 @@ namespace Badminton.RazorWebApp.Pages
 
         public string Message { get; set; } = default;
 
+        [BindProperty]
         public Court Court { get; set; } = default;
 
         public List<Court> Courts { get; set; } = new List<Court>();
@@ -24,8 +25,12 @@ namespace Badminton.RazorWebApp.Pages
             this.SaveCourt();
         }
 
-        public void OnDelete() {
-
+        public IActionResult OnGetDelete(int? id) {
+            if(id != null) {
+                var result = _courtBusiness.DeleteCourt(id.Value);
+                this.Message = result != null ? result.Result.Message : "Error System";
+            }
+            return RedirectToPage("Court");
         }
 
         private List<Court> GetCourts() {
@@ -36,19 +41,15 @@ namespace Badminton.RazorWebApp.Pages
                 return courts;
             }
 
-            return new List<Court> ();
+            return new List<Court>();
         }
 
         private void SaveCourt() {
             var result = _courtBusiness.AddCourt(this.Court);
 
-            if(result != null) {
-                this.Message = result.Result.Message;
-            }
-            else {
-                this.Message = "Error System";
-            }
+            this.Message = result != null ? result.Result.Message : "Error System";
 
+            Court = default;
         }
     }
 }

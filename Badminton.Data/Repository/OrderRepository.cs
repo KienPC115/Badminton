@@ -11,11 +11,20 @@ namespace Badminton.Data.Repository
 {
     public class OrderRepository : GenericRepository<Order>
     {
+        public OrderRepository()
+        {
+            
+        }
+
+        public OrderRepository(K17221goodmintonContext context)
+        {
+            _context = context;
+        }
         public async Task<List<Order>> GetAllOrdersByCustomerId(int customerId)
         {
             try
             {
-                return await (from o in _dbSet
+                return await (from o in _context.Orders
                               where o.CustomerId == customerId
                               select o).ToListAsync();
             }
@@ -29,7 +38,7 @@ namespace Badminton.Data.Repository
         {
             try
             {
-                _dbSet.Update(order);
+                _context.Update(order);
                 return await _context.SaveChangesAsync();
             }
             catch (Exception)

@@ -15,7 +15,7 @@ namespace Badminton.Data.Repository
         {
             try
             {
-                return await (from od in _dbSet
+                return await (from od in _context.OrderDetails
                               where od.CourtDetailId == courtDetailId
                               select od).ToListAsync();
             }
@@ -30,7 +30,7 @@ namespace Badminton.Data.Repository
         {
             try
             {
-                return await (from od in _dbSet
+                return await (from od in _context.OrderDetails
                               where od.OrderId == orderId
                               select od).ToListAsync();
             }
@@ -45,7 +45,7 @@ namespace Badminton.Data.Repository
         {
             try
             {
-                _dbSet.Update(OrderDetail);
+                _context.OrderDetails.Update(OrderDetail);
                 return await _context.SaveChangesAsync();
             }
             catch (Exception)

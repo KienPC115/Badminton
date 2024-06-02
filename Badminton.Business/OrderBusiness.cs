@@ -221,7 +221,7 @@ namespace Badminton.Business
             {
                 var result = await _orderDetailBusiness.GetOrderDetailsByOrderId(orderId);
                 double sum = 0;
-                List<OrderDetail> orderDetails = (List<OrderDetail>)result.Data; 
+                List<OrderDetail> orderDetails = (List<OrderDetail>)result.Data;
                 orderDetails.ForEach(o => sum += o.Amount);
                 var order = (await GetOrderById(orderId)).Data as Order;
                 //order.TotalAmount = sum;

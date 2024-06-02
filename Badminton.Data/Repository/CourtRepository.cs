@@ -11,5 +11,7 @@ namespace Badminton.Data.Repository {
         public CourtRepository()
         {
         }
+
+        public CourtRepository(Net1710_221_8_BadmintonContext context) => _context = context;
     }
 }

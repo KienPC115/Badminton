@@ -103,10 +103,7 @@ namespace Badminton.Business
                 court.Name = updateCourt.Name;
                 court.Status = updateCourt.Status;
                 court.Description = updateCourt.Description;
-                court.DayPrice = updateCourt.DayPrice;
-                court.WeekendDayPrice = updateCourt.WeekendDayPrice;
-                court.NightPrice = updateCourt.NightPrice;
-                court.WeekendNightPrice = updateCourt.WeekendNightPrice;
+                court.Price = updateCourt.Price;
 
                 if (await _unitOfWork.CourtRepository.UpdateAsync(court) > 0)
                 {

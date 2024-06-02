@@ -70,7 +70,7 @@ namespace Badminton.RazorWebApp.Pages
                 var court = (Court)_courtBusiness.GetCourtById(courtDetail.CourtId).Result.Data;
 
                 var order = (Order)_orderBusiness.GetOrderById(orderDetail.OrderId).Result.Data;
-
+                
                 courtDetail.Court = court;
                 orderDetail.CourtDetail = courtDetail;
                 orderDetail.Order = order;

@@ -38,7 +38,7 @@ namespace Badminton.Business
                 var od = await GetOrderDetailById(result.OrderId);
                 if (od.Data != null)
                 {
-                    return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
+                    return od;
                 }
 
                 var check = await _unitOfWork.OrderDetailRepository.CreateAsync(result);
@@ -62,7 +62,7 @@ namespace Badminton.Business
 
                 if (result.Data == null)
                 {
-                    return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
+                    return result;
                 }
 
                 List<OrderDetail> orderDetails = (List<OrderDetail>)result.Data;
@@ -110,7 +110,7 @@ namespace Badminton.Business
 
                 if (od.Data == null)
                 {
-                    return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
+                    return od;
                 }
 
                 OrderDetail orderDetail = (OrderDetail)od.Data;
@@ -203,7 +203,7 @@ namespace Badminton.Business
                 var od = await GetOrderDetailById(orderDetail.OrderDetailId);
                 if (od.Data == null)
                 {
-                    return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
+                    return od;
                 }
                 var check = await _unitOfWork.OrderDetailRepository.UpdateAsync(orderDetail);
                 if (check == 0)

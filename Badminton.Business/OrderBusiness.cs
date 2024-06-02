@@ -30,8 +30,10 @@ namespace Badminton.Business
     {
         private IOrderDetailBunsiness _orderDetailBusiness;
         private readonly UnitOfWork _unitOfWork;
+        private ICustomerBusiness _customerBusiness;
         public OrderBusiness()
         {
+            _customerBusiness ??= new CustomerBusiness();
             _orderDetailBusiness ??= new OrderDetailBusiness();
             _unitOfWork ??= new();
         }
@@ -43,7 +45,10 @@ namespace Badminton.Business
 
                 //var orders = await _DAO.GetAllAsync();
                 var orders = await _unitOfWork.OrderRepository.GetAllAsync();
-
+                foreach (var order in orders)
+                {
+                    order.Customer = await AssignCustomerToOrder(order);
+                }
                 if (orders == null)
                 {
                     return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
@@ -56,6 +61,13 @@ namespace Badminton.Business
             }
         }
 
+        private async Task<Customer> AssignCustomerToOrder(Order order)
+        {
+            var result = await _customerBusiness.GetCustomerById(order.CustomerId);
+            var customer = (Customer)result.Data;
+            return customer;
+        }
+
         public async Task<IBadmintonResult> GetOrderById(int id)
         {
             try
@@ -65,6 +77,7 @@ namespace Badminton.Business
                 {
                     return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
                 }
+                order.Customer = await AssignCustomerToOrder(order);
                 return new BadmintonResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, order);
             }
             catch (Exception ex)
@@ -106,12 +119,12 @@ namespace Badminton.Business
         {
             try
             {
-                var o = await GetOrderById(order.OrderId);
+                //var o = await GetOrderById(order.OrderId);
 
-                if (o.Data != null)
-                {
-                    return o;
-                }
+                //if (o.Data != null)
+                //{
+                //    return o;
+                //}
 
                 var check = await _unitOfWork.OrderRepository.CreateAsync(order);
                 if (check == 0)
@@ -132,12 +145,12 @@ namespace Badminton.Business
             try
             {
 
-                //var o = await GetOrderById(order.OrderId);
+                var o = await GetOrderById(result.OrderId);
 
-                //if (o.Data == null)
-                //{
-                //    return o;
-                //}
+                if (o.Data == null)
+                {
+                    return o;
+                }
 
                 var check = await _unitOfWork.OrderRepository.UpdateOrder(result);
 
@@ -164,6 +177,10 @@ namespace Badminton.Business
                 {
                     return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
                 }
+                foreach (var order in orders)
+                {
+                    order.Customer = await AssignCustomerToOrder(order);
+                }
                 return new BadmintonResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, orders);
             }
             catch (Exception ex)
@@ -180,7 +197,7 @@ namespace Badminton.Business
 
                 if (result.Data == null)
                 {
-                    return new BadmintonResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG);
+                    return result;
                 }
 
                 List<Order> orders = (List<Order>)result.Data;
@@ -203,8 +220,8 @@ namespace Badminton.Business
             try
             {
                 var result = await _orderDetailBusiness.GetOrderDetailsByOrderId(orderId);
-                int sum = 0;
-                List<OrderDetail> orderDetails = (List<OrderDetail>)result.Data; 
+                double sum = 0;
+                List<OrderDetail> orderDetails = (List<OrderDetail>)result.Data;
                 orderDetails.ForEach(o => sum += o.Amount);
                 var order = (await GetOrderById(orderId)).Data as Order;
                 //order.TotalAmount = sum;

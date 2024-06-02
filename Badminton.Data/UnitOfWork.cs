@@ -1,16 +1,20 @@
 ﻿using Badminton.Data.Models;
-using Badminton.Data.Repositories;
 using Badminton.Data.Repository;
 
 namespace Badminton.Data
 {
     public class UnitOfWork {
-        private Net1710_221_8_BadmintonContext _unitOfWorkContext;
+        private K17221goodmintonContext _unitOfWorkContext;
         private CourtRepository _court;
         private CourtDetailRepository _courtDetail;
         private CustomerRepository _customer;
         private OrderRepository _order;
         private OrderDetailRepository _orderDetail;
+
+        public UnitOfWork()
+        {
+            _unitOfWorkContext ??= new();
+        }
 
         public CourtRepository CourtRepository {
             get {
@@ -31,7 +35,7 @@ namespace Badminton.Data
 
         public OrderRepository OrderRepository {
             get {
-                return _order ??= new OrderRepository();
+                return _order ??= new OrderRepository(_unitOfWorkContext);
             }
         }
 
@@ -40,8 +44,6 @@ namespace Badminton.Data
                 return _orderDetail ??= new OrderDetailRepository();
             }
         }
-        public OrderRepository OrderRepository { get { return _order ??= new OrderRepository(); } }
-        public OrderDetailRepository OrderDetailRepository { get { return _orderDetail ??= new OrderDetailRepository(); } }
 
         ////TO-DO CODE HERE/////////////////
 

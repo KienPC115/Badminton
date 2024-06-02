@@ -11,8 +11,6 @@ public partial class CourtDetail
 
     public int StaffId { get; set; }
 
-    public int OrderId { get; set; }
-
     public int CourtId { get; set; }
 
     public DateTime StartTime { get; set; }
@@ -24,8 +22,6 @@ public partial class CourtDetail
     public string Status { get; set; }
 
     public virtual Court Court { get; set; }
-
-    public virtual Order Order { get; set; }
 
     public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 

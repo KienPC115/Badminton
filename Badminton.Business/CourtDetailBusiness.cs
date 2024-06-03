@@ -38,6 +38,7 @@ namespace Badminton.Business
         {
             try
             {
+                if (courtDetail.StartTime <= courtDetail.EndTime) return new BadmintonResult(Const.ERROR_EXCEPTION, "Start time can not before end time");
                 _unitOfWork.CourtDetailRepository.PrepareCreate(courtDetail);
                 var result = await _unitOfWork.CourtDetailRepository.SaveAsync();
 

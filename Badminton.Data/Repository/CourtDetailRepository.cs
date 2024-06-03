@@ -13,5 +13,8 @@ namespace Badminton.Data.Repository
         public CourtDetailRepository()
         {
         }
+
+        public CourtDetailRepository(Net1710_221_8_BadmintonContext context) => _context = context;
+       
     }
 }

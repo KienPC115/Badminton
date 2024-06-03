@@ -11,6 +11,11 @@ namespace Badminton.Data
         private OrderRepository _order;
         private OrderDetailRepository _orderDetail;
 
+        public UnitOfWork()
+        {
+            _unitOfWorkContext ??= new Net1710_221_8_BadmintonContext();
+        }
+
         public CourtRepository CourtRepository {
             get {
                 return _court ??= new CourtRepository();
@@ -18,7 +23,7 @@ namespace Badminton.Data
         }
         public CourtDetailRepository CourtDetailRepository {
             get {
-                return _courtDetail ??= new CourtDetailRepository();
+                return _courtDetail ??= new CourtDetailRepository(_unitOfWorkContext);
             }
         }
 

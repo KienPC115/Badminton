@@ -2,6 +2,7 @@ using Badminton.Business;
 using Badminton.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 
 namespace Badminton.RazorWebApp.Pages
 {
@@ -9,6 +10,8 @@ namespace Badminton.RazorWebApp.Pages
     {
         private readonly IOrderBusiness _orderBusiness = new OrderBusiness();
         private readonly ICustomerBusiness _customerBusiness = new CustomerBusiness();
+
+        [TempData]
         public string Message { get; set; } = default;
 
         [BindProperty]
@@ -47,10 +50,31 @@ namespace Badminton.RazorWebApp.Pages
         }
 
         public void OnPost() { this.SaveOrder(); }
+        public void OnPostPut(Order order) { this.UpdateOrder(order); }
+
+        private void UpdateOrder(Order order)
+        {
+            //var check = _orderBusiness.GetOrderById(order.OrderId);
+            //if (check == null)
+            //{
+            //    this.Message = check.Result.Message;
+            //    return;
+            //}
+            var result = _orderBusiness.UpdateOrder(order);
+            if (result != null)
+            {
+                this.Message = result.Result.Message;
+                OnGet();
+            }
+            else
+            {
+                this.Message = "Error System";
+            }
+        }
 
         private void SaveOrder()
         {
-
+            this.Order.OrderId = 0;
             var result = _orderBusiness.AddOrders(this.Order);
             if (result != null)
             {
@@ -61,6 +85,27 @@ namespace Badminton.RazorWebApp.Pages
             {
                 this.Message = "Error System";
             }
+        }
+
+        public async Task<IActionResult> OnPostDeleteAsync(int id)
+        {
+            var check = _orderBusiness.GetOrderById(id);
+            if (check == null)
+            {
+                this.Message = check.Result.Message;
+                return RedirectToPage("/Order");
+            }
+            var result = await _orderBusiness.DeleteOrders(id);
+            if (result != null)
+            {
+                this.Message = result.Message;
+                OnGet();
+            }
+            else
+            {
+                this.Message = "Error System";
+            }
+            return RedirectToPage("/Order");
         }
     }
 }

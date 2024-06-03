@@ -97,12 +97,14 @@ namespace Badminton.Business
                 {
                     return result;
                 }
+                var check1 = await _orderDetailBusiness.DeleteOrderDetailsByOrderId(orderId);
+                if (check1 == null)
+                {
+                    return check1;
+                }
+                var check = _unitOfWork.OrderRepository.Remove((Order)result.Data);
 
-                _unitOfWork.OrderRepository.PrepareUpdate((Order)result.Data);
-                var check = await _unitOfWork.OrderRepository.SaveAsync();
-                await _orderDetailBusiness.DeleteOrderDetailsByOrderId(orderId);
-
-                if (check == 0)
+                if (!check)
                 {
                     return new BadmintonResult(Const.FAIL_DELETE_CODE, Const.FAIL_DELETE_MSG);
                 }
@@ -131,7 +133,7 @@ namespace Badminton.Business
                 {
                     return new BadmintonResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
                 }
-                return new BadmintonResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, order);
+                return new BadmintonResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG, order);
 
             }
             catch (Exception ex)
@@ -144,15 +146,7 @@ namespace Badminton.Business
         {
             try
             {
-
-                var o = await GetOrderById(result.OrderId);
-
-                if (o.Data == null)
-                {
-                    return o;
-                }
-
-                var check = await _unitOfWork.OrderRepository.UpdateOrder(result);
+                var check = await _unitOfWork.OrderRepository.UpdateAsync(result);
 
                 if (check == 0)
                 {

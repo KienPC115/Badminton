@@ -4,6 +4,7 @@
     ViewData["Title"] = "Order";
     var orders = Model.Orders;
     var customers = Model.CustomersList;
+    var message = Model.Message;
 }
 
 <div class="text-center">
@@ -12,7 +13,7 @@
 
 <div class="row">
     <div class="col-md-12 text-end">
-        <button type="button" class="btn btn-primary" onclick="add();">
+        <button type="button" class="btn btn-primary" onclick="openModal();">
             Add
         </button>
     </div>
@@ -40,6 +41,13 @@
                             <td>@order.Customer.Name</td>
                             <td>@order.Type</td>
                             <td>@order.TotalAmount</td>
+                            <td>
+                                <button type="button" class="btn btn-primary" onclick="editOrder(@order.OrderId, '@order.Type', @order.CustomerId);">Edit</button>
+
+                                <form method="post" asp-page-handler="delete" asp-route-id="@order.OrderId" onsubmit="return confirm('Are you sure you want to delete this order?');">
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                            </td>
                         </tr>
                     }
                 }
@@ -60,12 +68,13 @@
                 </div>
                 <div class="modal-body">
                     <div id="orderModalContent"></div>
+                    <input type="hidden" asp-for="Order.OrderId" id="orderID" />
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group row">
                                 <div class="col-md-6">
-                                    <label for="2">Type</label>
-                                    <select asp-for="Order.Type" class="form-control">
+                                    <label for="type">Type</label>
+                                    <select asp-for="Order.Type" class="form-control" id="orderType">
                                         <option value="UnPaid">Unpaid</option>
                                         <option value="Paid">Paid</option>
                                     </select>
@@ -75,18 +84,15 @@
                         <div class="col-md-12">
                             <div class="form-group row">
                                 <div class="col-md-6">
-                                    <label for="2">Customer</label>
-                                    <select asp-for="Order.CustomerId" class="form-control">
+                                    <label for="customer">Customer</label>
+                                    <select asp-for="Order.CustomerId" class="form-control" id="customerID">
                                         @foreach (var customer in customers)
                                         {
-                                            <option value=@customer.CustomerId>@customer.Name</option>
+                                            <option value="@customer.CustomerId">@customer.Name</option>
                                         }
                                     </select>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-12">
-                            <label>@Model.Message</label>
                         </div>
                     </div>
                 </div>
@@ -102,8 +108,27 @@
 @section scripts
 {
     <script type="text/javascript">
-        function add() {
+        function openModal() {
+            document.getElementById('orderModalLabel').innerText = "New Order";
+            document.getElementById('frm').action = "/Order?handler=Post"; // Use OnPost handler for creating a new order
+            document.getElementById('frm').reset();
             $('#orderModal').modal('show');
         }
+
+        function editOrder(orderId, type, customerId) {
+            document.getElementById('orderModalLabel').innerText = "Edit Order";
+            document.getElementById('frm').action = "/Order?handler=Put"; // Use OnPostPut handler for updating an existing order
+            document.getElementById('orderID').value = orderId;
+            document.getElementById('orderType').value = type;
+            document.getElementById('customerID').value = customerId;
+            $('#orderModal').modal('show');
+        }
+
+        $(document).ready(function () {
+            var message = '@message';
+            if (message) {
+                alert(message);
+            }
+        });
     </script>
 }

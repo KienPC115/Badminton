@@ -12,6 +12,7 @@ namespace Badminton.RazorWebApp.Pages
         private readonly IOrderDetailBunsiness _orderDetailBunsiness = new OrderDetailBusiness();
         private readonly ICourtBusiness _courtBusiness = new CourtBusiness();
 
+        [BindProperty]
         public string Message { get; set; }
 
         [BindProperty]

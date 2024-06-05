@@ -1,9 +1,5 @@
 ﻿using Badminton.WpfApp.UI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -25,6 +21,13 @@ namespace Badminton.WpfApp {
 
         private async void Open_wCourt_Click(object sender, RoutedEventArgs e) {
             var p = new wCourt();
+            p.Owner = this;
+            p.Show();
+        }
+
+        private void Open_wOrder_Click(object sender, RoutedEventArgs e)
+        {
+            var p = new wOrder();
             p.Owner = this;
             p.Show();
         }

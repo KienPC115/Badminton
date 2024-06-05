@@ -20,7 +20,7 @@ namespace Badminton.Business
         public Task<IBadmintonResult> GetOrderById(int orderId);
         public Task<IBadmintonResult> AddOrders(Order order);
         public Task<IBadmintonResult> UpdateOrder(Order order);
-        public Task<IBadmintonResult> DeleteOrders(int orderId);
+        public Task<IBadmintonResult> DeleteOrder(int orderId);
         public Task<IBadmintonResult> DeleteOrdersByCustomerId(int orderId);
         public Task<IBadmintonResult> UpdateAmount(int orderId);
 
@@ -86,7 +86,7 @@ namespace Badminton.Business
             }
         }
 
-        public async Task<IBadmintonResult> DeleteOrders(int orderId)
+        public async Task<IBadmintonResult> DeleteOrder(int orderId)
         {
             try
             {
@@ -198,7 +198,7 @@ namespace Badminton.Business
 
                 foreach (var order in orders)
                 {
-                    await DeleteOrders(order.OrderId);
+                    await DeleteOrder(order.OrderId);
                 }
 
                 return new BadmintonResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG);

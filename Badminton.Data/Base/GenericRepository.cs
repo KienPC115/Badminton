@@ -12,6 +12,7 @@ namespace Badminton.Data.Base
     {
         protected Net1710_221_8_BadmintonContext _context;
 
+
         public GenericRepository()
         {
             _context ??= new Net1710_221_8_BadmintonContext();
@@ -107,5 +108,6 @@ namespace Badminton.Data.Base
         public async Task<T> GetByIdAsync(Guid code) {
             return await _context.Set<T>().FindAsync(code);
         }
+
     }
 }

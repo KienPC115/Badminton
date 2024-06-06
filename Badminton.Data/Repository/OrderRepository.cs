@@ -16,7 +16,7 @@ namespace Badminton.Data.Repository
             
         }
 
-        public OrderRepository(K17221goodmintonContext context)
+        public OrderRepository(Net1710_221_8_BadmintonContext context)
         {
             _context = context;
         }

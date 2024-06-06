@@ -24,7 +24,12 @@ namespace Badminton.WpfApp {
             p.Owner = this;
             p.Show();
         }
-
+        private async void Open_wCourtDetail_Click(object sender, RoutedEventArgs e)
+        {
+            var p = new wCourtDetail();
+            p.Owner = this;
+            p.Show();
+        }
         private void Open_wOrder_Click(object sender, RoutedEventArgs e)
         {
             var p = new wOrder();

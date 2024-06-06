@@ -35,6 +35,7 @@
 
                     <Label Grid.Column="0" Grid.Row="2" Content="TotalAmount" HorizontalAlignment="Left" VerticalContentAlignment="Center" />
                     <TextBox Grid.Column="1" Grid.Row="2" x:Name="txtTotalAmount" Height="25" Text="0" IsReadOnly="True" Margin="5" Width="180" HorizontalAlignment="Left"/>
+
                 </Grid>
             </GroupBox>
             <StackPanel Height="40" Orientation="Horizontal" HorizontalAlignment="Right">

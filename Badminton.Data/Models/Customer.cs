@@ -1,23 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Badminton.Data.Models;
-
-public partial class Customer
+namespace Badminton.Data.Models
 {
-    public int CustomerId { get; set; }
+    public partial class Customer
+    {
+        public Customer()
+        {
+            Orders = new HashSet<Order>();
+        }
 
-    public string Phone { get; set; } = null!;
+        public int CustomerId { get; set; }
+        public string Phone { get; set; }
+        public string Name { get; set; }
+        public string Address { get; set; }
+        public string Email { get; set; }
+        public DateTime DateOfBirth { get; set; }
 
-    public string Name { get; set; } = null!;
-
-    public string Address { get; set; } = null!;
-
-    public string Email { get; set; } = null!;
-
-    public DateTime DateOfBirth { get; set; }
-
-    public virtual ICollection<CourtDetail> CourtDetails { get; set; } = new List<CourtDetail>();
-
-    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
+        public virtual ICollection<Order> Orders { get; set; }
+    }
 }

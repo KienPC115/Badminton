@@ -75,15 +75,16 @@ namespace Badminton.WpfApp.UI
                     Order order = GetOrder();
                     var result = await _orderBusiness.AddOrders(order);
                     MessageBox.Show(result.Message);
+                    LoadGrdOrders();
                 }
                 else
                 {
                     Order order = GetOrder();
                     var result = await _orderBusiness.UpdateOrder(order);
                     MessageBox.Show(result.Message);
+                    LoadGrdOrders();
+
                 }
-                RefreshAllText();
-                LoadGrdOrders();
             }
             catch (Exception ex)
             {

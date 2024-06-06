@@ -4,7 +4,7 @@ using Badminton.Data.Repository;
 namespace Badminton.Data
 {
     public class UnitOfWork {
-        private K17221goodmintonContext _unitOfWorkContext;
+        private Net1710_221_8_BadmintonContext _unitOfWorkContext;
         private CourtRepository _court;
         private CourtDetailRepository _courtDetail;
         private CustomerRepository _customer;
@@ -23,7 +23,7 @@ namespace Badminton.Data
         }
         public CourtDetailRepository CourtDetailRepository {
             get {
-                return _courtDetail ??= new CourtDetailRepository();
+                return _courtDetail ??= new CourtDetailRepository(_unitOfWorkContext);
             }
         }
 

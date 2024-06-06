@@ -3,27 +3,22 @@
 using System;
 using System.Collections.Generic;
 
-namespace Badminton.Data.Models;
-
-public partial class CourtDetail
+namespace Badminton.Data.Models
 {
-    public int CourtDetailId { get; set; }
+    public partial class CourtDetail
+    {
+        public CourtDetail()
+        {
+            OrderDetails = new HashSet<OrderDetail>();
+        }
 
-    public int StaffId { get; set; }
+        public int CourtDetailId { get; set; }
+        public int CourtId { get; set; }
+        public string Slot { get; set; }
+        public double Price { get; set; }
+        public string Status { get; set; }
 
-    public int CourtId { get; set; }
-
-    public DateTime StartTime { get; set; }
-
-    public DateTime EndTime { get; set; }
-
-    public double Price { get; set; }
-
-    public string Status { get; set; }
-
-    public virtual Court Court { get; set; }
-
-    public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
-
-    public virtual Customer Staff { get; set; }
+        public virtual Court Court { get; set; }
+        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
+    }
 }

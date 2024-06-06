@@ -18,6 +18,8 @@ namespace Badminton.Business
     public interface ICourtDetailBusiness
     {
         public Task<IBadmintonResult> GetAllCourtDetails();
+        public Task<IBadmintonResult> GetAllCourtDetailsIncludeCourt();
+
         public Task<IBadmintonResult> GetCourtDetail(int courtDetailId);
         public Task<IBadmintonResult> AddCourtDetail(CourtDetail courtDetail);
         public Task<IBadmintonResult> UpdateCourtDetail(int courtDetailId, CourtDetail courtDetail);
@@ -38,6 +40,7 @@ namespace Badminton.Business
         {
             try
             {
+
                 _unitOfWork.CourtDetailRepository.PrepareCreate(courtDetail);
                 var result = await _unitOfWork.CourtDetailRepository.SaveAsync();
 
@@ -86,7 +89,19 @@ namespace Badminton.Business
                 return new BadmintonResult(Const.ERROR_EXCEPTION, ex.Message);
             }
         }
-
+        public async Task<IBadmintonResult> GetAllCourtDetailsIncludeCourt()
+        {
+            try
+            {
+                var courtDetails = await _unitOfWork.CourtDetailRepository.GetAllCourtDetailsIncludeCourtAsync();
+                return courtDetails.Count > 0 ? new BadmintonResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, courtDetails)
+                                               : new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
+            }
+            catch (Exception ex)
+            {
+                return new BadmintonResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
         public async Task<IBadmintonResult> GetCourtDetail(int courtDetailId)
         {
             try

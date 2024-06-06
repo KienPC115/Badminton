@@ -28,8 +28,7 @@
                     <th class="card-title text-center">CodeId</th>
                     <th class="card-title text-center">OrderId</th>
                     <th class="card-title text-center">Court</th>
-                    <th class="card-title text-center">Start Time</th>
-                    <th class="card-title text-center">End Time</th>
+                    <th class="card-title text-center">Slot</th>
                     <th class="card-title text-center">Amount</th>
                     <th class="card-title text-center"></th>
                 </tr>
@@ -43,8 +42,7 @@
                             <td>@orderDetail.OrderDetailId</td>
                             <td>@orderDetail.OrderId</td>
                             <td>@orderDetail.CourtDetail.Court.Name</td>
-                            <td>@orderDetail.CourtDetail.StartTime</td>
-                            <td>@orderDetail.CourtDetail.EndTime</td>
+                            <td>@orderDetail.CourtDetail.Slot</td>
                             <td>@orderDetail.Amount</td>
                         </tr>
                     }

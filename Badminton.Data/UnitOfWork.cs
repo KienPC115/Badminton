@@ -23,7 +23,7 @@ namespace Badminton.Data
         }
         public CourtDetailRepository CourtDetailRepository {
             get {
-                return _courtDetail ??= new CourtDetailRepository();
+                return _courtDetail ??= new CourtDetailRepository(_unitOfWorkContext);
             }
         }
 

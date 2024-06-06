@@ -76,6 +76,7 @@ namespace Badminton.WpfApp.UI
                     var result = await _orderBusiness.AddOrders(order);
                     MessageBox.Show(result.Message);
                     LoadGrdOrders();
+                    RefreshAllText();
                 }
                 else
                 {
@@ -83,7 +84,7 @@ namespace Badminton.WpfApp.UI
                     var result = await _orderBusiness.UpdateOrder(order);
                     MessageBox.Show(result.Message);
                     LoadGrdOrders();
-
+                    RefreshAllText();
                 }
             }
             catch (Exception ex)

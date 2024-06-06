@@ -65,6 +65,13 @@ namespace Badminton.WpfApp.UI
                 MessageBox.Show(ex.Message, "Error");
             }
         }
+        private void RefreshAllText()
+        {
+            txtOrderDetailId.Text = "0";
+            txtOrderId.Text = "0";
+            txtAmount.Text = "0";
+            txtCourtDetailId.Text = string.Empty;
+        }
 
         private async void ButtonSave_Click(object sender, RoutedEventArgs e)
         {
@@ -77,13 +84,14 @@ namespace Badminton.WpfApp.UI
                     var result = await _orderDetailBunsiness.AddOrderDetail(orderDetail);
                     if (result.Status < 0) { MessageBox.Show(result.Message); return; }
                     result = await _orderBusiness.UpdateAmount(orderDetail.OrderId); MessageBox.Show(result.Message);
+                    RefreshAllText();
                 }
                 else
                 {
                     OrderDetail orderDetail = GetOrderDetail();
                     var result = await _orderDetailBunsiness.UpdateOrderDetail(orderDetail);
                     MessageBox.Show(result.Message);
-
+                    RefreshAllText();
                 }
                 LoadGrdOrderDetails();
             }
@@ -210,7 +218,7 @@ namespace Badminton.WpfApp.UI
                     return;
                 }
                 courtDetail.Court = result.Data as Court;
-                lbCourtInfo.Content = $"Court name: {courtDetail.Court.Name} - Start time: {courtDetail.StartTime} - End time: {courtDetail.EndTime}";
+                lbCourtInfo.Content = $"Court name: {courtDetail.Court.Name} - Slot: {courtDetail.Slot} - Price: {courtDetail.Price}";
             }
             catch (Exception ex)
             {
@@ -221,6 +229,11 @@ namespace Badminton.WpfApp.UI
         private void txtAmount_TextChanged(object sender, TextChangedEventArgs e)
         {
 
+        }
+
+        private void ButtonRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            RefreshAllText();
         }
     }
 }

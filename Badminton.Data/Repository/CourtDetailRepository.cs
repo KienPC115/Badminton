@@ -21,5 +21,6 @@ namespace Badminton.Data.Repository
             var result =await _context.CourtDetails.Include(cd => cd.Court).ToListAsync();
             return result;
         }
+
     }
 }

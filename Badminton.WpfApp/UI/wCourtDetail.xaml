@@ -7,24 +7,25 @@
         mc:Ignorable="d"
         Title="wCourtDetail" Height="450" Width="863">
     <Grid>
-        <StackPanel Orientation="Vertical">
-            <GroupBox Header="Court Detail Form" Margin="10">
+        <Grid>
+            <StackPanel Orientation="Vertical">
+                <GroupBox Header="Court Detail Form" Margin="10">
                 <Grid Height="80">
-                    <Grid.RowDefinitions>
+                        <Grid.RowDefinitions>
                         <RowDefinition Height="1*"/>
                         <RowDefinition Height="1*"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="200"/>
                         <ColumnDefinition Width="80"/>
                         <ColumnDefinition Width="200"/>
                         <ColumnDefinition Width="80"/>
                         <ColumnDefinition Width="200"/>
-                        <ColumnDefinition Width="80"/>
-                        <ColumnDefinition Width="200"/>
-                        <ColumnDefinition Width="80"/>
-                        <ColumnDefinition Width="200"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
                     <Label Grid.Column="0" Grid.Row="0" Content="ID" HorizontalAlignment="Left" VerticalContentAlignment="Center" />
                     <TextBox Grid.Column="1" Grid.Row="0" x:Name="txtCourtDetailId" Height="25" Text="{Binding Path=CourtDetail.CourtDetailId, Mode=TwoWay}" IsEnabled="False" Margin="5"  Width="180" HorizontalAlignment="Left"/>
 
@@ -65,32 +66,34 @@
                     <Label Grid.Column="0" Grid.Row="1" Content="Price" HorizontalAlignment="Left" VerticalContentAlignment="Center" />
                     <TextBox Grid.Column="1" Grid.Row="1" x:Name="txtCourtPrice" Height="25" Text="{Binding Path=CourtDetail.Price, Mode=TwoWay}" Margin="5" Width="180" HorizontalAlignment="Left"/>
 
-                </Grid>
+                    </Grid>
                 
                 
-            </GroupBox>
-            <StackPanel Height="40" Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button x:Name="ButtonSave" Content="Save" Height="30" Width="80" Click="ButtonSave_Click"/>
-                <Button x:Name="ButtonCancel" Content="Cancel" Height="30" Width="80" Click="ButtonCancel_Click"/>
-            </StackPanel>
-            <StackPanel Height="210">
+                </GroupBox>
+                <StackPanel Height="40" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button x:Name="ButtonSave" Content="Save" Height="30" Width="80" Click="ButtonSave_Click"/>
+                    <Button x:Name="ButtonCancel" Content="Cancel" Height="30" Width="80" Click="ButtonCancel_Click"/>
+                </StackPanel>
+                <StackPanel Height="210">
                 <DataGrid x:Name="grdCourtDetail" AutoGenerateColumns="False" ItemsSource="{Binding CourtDetails}" CanUserAddRows="False" Height="200" Margin="10" MouseDoubleClick="grdCourtDetail_MouseDouble_Click" SelectionMode="Single" SelectionUnit="FullRow">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Id" Binding="{Binding Path=CourtDetailId}" Visibility="Visible"/>
+                        <DataGrid.Columns>
+                            <!--<DataGridTextColumn Header="Code" Binding="{Binding Path=Id}" Visibility="Hidden"/>-->
+                            <DataGridTextColumn Header="Id" Binding="{Binding Path=CourtDetailId}" Visibility="Visible"/>
                         <DataGridTextColumn Header="Court Name" Binding="{Binding Path=Court.Name}"  Visibility="Visible" IsReadOnly="True"/>
                         <DataGridTextColumn Header="Slot" Binding="{Binding Path=Slot}" Width="100" IsReadOnly="True"/>
                         <DataGridTextColumn Header="Price" Binding="{Binding Path=Price}" Width="100" IsReadOnly="True"/>
                         <DataGridTextColumn Header="Status" Binding="{Binding Path=Status}" Width="100" IsReadOnly="True"/>
-                        <DataGridTemplateColumn Width="50">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
+                            <DataGridTemplateColumn Width="50">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
                                     <Button Content="X" x:Name="ButtonDelete" CommandParameter="{Binding Path=CourtDetailId}" Click="grdCourt_ButtonDelete_Click"/>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                    </DataGrid.Columns>
-                </DataGrid>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </StackPanel>
             </StackPanel>
-        </StackPanel>
+        </Grid>
     </Grid>
 </Window>

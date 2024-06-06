@@ -59,19 +59,19 @@ namespace Badminton.WpfApp.UI
             }
         }
         private async void ButtonSave_Click(object sender, RoutedEventArgs e)
-        { 
+        {
             var court = ComboBoxCourtName.SelectedItem as Court;
             if (string.IsNullOrEmpty(court.Name) || string.IsNullOrEmpty(ComboBoxSlot.SelectedItem.ToString()) || string.IsNullOrEmpty(ComboBoxStatus.SelectedItem.ToString()) || string.IsNullOrEmpty(txtCourtPrice.Text))
             {
                 MessageBox.Show("You need to fill required fields!");
                 return;
-            }
+        }
             string slot = ComboBoxSlot.SelectedItem.ToString();
             string status = ComboBoxStatus.SelectedItem.ToString();
             var Ok = Double.TryParse(txtCourtPrice.Text, out var price);
             if (Ok == false || price < 0) MessageBox.Show("The price is invalid please enter again");
             if (string.IsNullOrEmpty(txtCourtDetailId.Text))
-            {
+        {
                 var courtDetail = new CourtDetail();
                 courtDetail.CourtId = court.CourtId;
                 courtDetail.Status = status;
@@ -81,16 +81,16 @@ namespace Badminton.WpfApp.UI
                 if (result.Status > 0)
                 {
                     this.LoadData();
-                }
+        }
                 MessageBox.Show(result.Message);
             }
             else
-            {
+        {
                 var courtDetailId = int.Parse(txtCourtDetailId.Text);
                 var result =await _courtDetailBusiness.GetCourtDetail(courtDetailId);
                 if(result.Status < 0 && result == null) {
                     MessageBox.Show(result.Message);
-                }
+        }
                 var courtDetail = result as CourtDetail;
                 courtDetail.CourtId = court.CourtId;
                 courtDetail.Status = status;
@@ -98,7 +98,7 @@ namespace Badminton.WpfApp.UI
                 courtDetail.Price = price;
                 var resultUpdate = await _courtDetailBusiness.UpdateCourtDetail(courtDetailId,courtDetail);
                 if(resultUpdate.Status < 0)
-                {
+        {
                     MessageBox.Show(resultUpdate.Message);
                 }
 
@@ -113,9 +113,9 @@ namespace Badminton.WpfApp.UI
             txtCourtPrice.Clear();
         }
         private async void ButtonCancel_Click(object sender, RoutedEventArgs e)
-        {
+            {
             this.ClearData();
-        }
+            }
 
         private async void grdCourt_ButtonDelete_Click(object sender, RoutedEventArgs e)
         {
@@ -125,11 +125,11 @@ namespace Badminton.WpfApp.UI
 
 
                 if (MessageBox.Show("Do you want to delete this item?", "Delete", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                {
+            {
                     var result = await _courtDetailBusiness.DeleteCourtDetail(courtDetailId);
                     MessageBox.Show($"{result.Message}", "Delete");
                     this.LoadData();
-                }
+            }
         }
 
         private async void grdCourtDetail_MouseDouble_Click(object sender, MouseButtonEventArgs e)

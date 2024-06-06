@@ -95,7 +95,7 @@ namespace Badminton.RazorWebApp.Pages
                 this.Message = check.Result.Message;
                 return RedirectToPage("/Order");
             }
-            var result = await _orderBusiness.DeleteOrders(id);
+            var result = await _orderBusiness.DeleteOrder(id);
             if (result != null)
             {
                 this.Message = result.Message;

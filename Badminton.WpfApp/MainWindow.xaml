@@ -12,6 +12,7 @@
                 <MenuItem Header="Court" IsCheckable="False" FontSize="12" Click="Open_wCourt_Click"/>
                 <MenuItem Header="Order" IsCheckable="False" FontSize="12" Click="Open_wOrder_Click"/>
                 <MenuItem Header="Court Detail" IsCheckable="False" FontSize="12" Click="Open_wCourtDetail_Click"/> 
+                <MenuItem Header="OrderDetail" IsCheckable="False" FontSize="12" Click="Open_wOrderDetail_Click"/>
             </MenuItem>
         </Menu>
         

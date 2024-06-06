@@ -42,8 +42,6 @@ namespace Badminton.Business
         {
             try
             {
-
-                //var orders = await _DAO.GetAllAsync();
                 var orders = await _unitOfWork.OrderRepository.GetAllAsync();
                 foreach (var order in orders)
                 {
@@ -75,7 +73,7 @@ namespace Badminton.Business
                 var order = await _unitOfWork.OrderRepository.GetByIdAsync(id);
                 if (order == null)
                 {
-                    return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
+                    return new BadmintonResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
                 order.Customer = await AssignCustomerToOrder(order);
                 return new BadmintonResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, order);
@@ -121,12 +119,12 @@ namespace Badminton.Business
         {
             try
             {
-                //var o = await GetOrderById(order.OrderId);
+                var o = await GetOrderById(order.OrderId);
 
-                //if (o.Data != null)
-                //{
-                //    return o;
-                //}
+                if (o.Status > 0)
+                {
+                    return o;
+                }
 
                 var check = await _unitOfWork.OrderRepository.CreateAsync(order);
                 if (check == 0)
@@ -142,11 +140,17 @@ namespace Badminton.Business
             }
         }
 
-        public async Task<IBadmintonResult> UpdateOrder(Order result)
+        public async Task<IBadmintonResult> UpdateOrder(Order order)
         {
             try
             {
-                var check = await _unitOfWork.OrderRepository.UpdateAsync(result);
+                var result = await GetOrderById(order.OrderId);
+                if (result.Status <= 0) return result;
+                var existingOrder = result.Data as Order;
+                existingOrder.OrderDetails = order.OrderDetails;
+                existingOrder.CustomerId = order.CustomerId;
+                existingOrder.Type = order.Type;
+                var check = await _unitOfWork.OrderRepository.UpdateAsync(existingOrder);
 
                 if (check == 0)
                 {
@@ -215,16 +219,20 @@ namespace Badminton.Business
             {
                 var result = await _orderDetailBusiness.GetOrderDetailsByOrderId(orderId);
                 double sum = 0;
+
                 List<OrderDetail> orderDetails = (List<OrderDetail>)result.Data;
                 orderDetails.ForEach(o => sum += o.Amount);
+
                 var order = (await GetOrderById(orderId)).Data as Order;
-                //order.TotalAmount = sum;
-                var check = await _unitOfWork.OrderRepository.UpdateOrder(new Order());
+                order.TotalAmount = sum;
+                _unitOfWork.OrderRepository.PrepareUpdate(order);
+                
+                var check = await _unitOfWork.OrderRepository.SaveAsync();
                 if (check == 0)
                 {
                     return new BadmintonResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
                 }
-
+                result = await _orderDetailBusiness.GetOrderDetailsByOrderId(orderId);
                 return new BadmintonResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG);
             }
             catch (Exception ex)

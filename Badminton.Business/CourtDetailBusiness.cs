@@ -25,7 +25,7 @@ namespace Badminton.Business
     }
     public class CourtDetailBusiness : ICourtDetailBusiness
     {
-        /*private readonly Net1710_221_8_BadmintonContext _context;*/
+        /*private readonly K17221goodmintonContext _context;*/
         /*private readonly CourtDetailDAO _dao;*/
         private readonly UnitOfWork _unitOfWork;
         public CourtDetailBusiness()

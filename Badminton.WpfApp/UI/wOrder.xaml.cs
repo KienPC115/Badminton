@@ -14,6 +14,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Badminton.WpfApp.UI
 {
@@ -34,15 +35,22 @@ namespace Badminton.WpfApp.UI
 
         private async void LoadGrdOrders()
         {
-            var result = await _orderBusiness.GetAllOrders();
+            try
+            {
+                var result = await _orderBusiness.GetAllOrders();
 
-            if (result.Status > 0 && result.Data != null)
-            {
-                grdOrder.ItemsSource = result.Data as List<Order>;
+                if (result.Status > 0 && result.Data != null)
+                {
+                    grdOrder.ItemsSource = result.Data as List<Order>;
+                }
+                else
+                {
+                    grdOrder.ItemsSource = new List<Order>();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                grdOrder.ItemsSource = new List<Order>();
+                MessageBox.Show(ex.Message, "Error");
             }
         }
 
@@ -67,16 +75,15 @@ namespace Badminton.WpfApp.UI
                     Order order = GetOrder();
                     var result = await _orderBusiness.AddOrders(order);
                     MessageBox.Show(result.Message);
-                    LoadGrdOrders();
                 }
                 else
                 {
                     Order order = GetOrder();
                     var result = await _orderBusiness.UpdateOrder(order);
                     MessageBox.Show(result.Message);
-                    LoadGrdOrders();
-
                 }
+                RefreshAllText();
+                LoadGrdOrders();
             }
             catch (Exception ex)
             {
@@ -91,46 +98,61 @@ namespace Badminton.WpfApp.UI
 
         private async void ButtonDelete_Click(object sender, RoutedEventArgs e)
         {
-            Button btn = (Button)sender;
-
-            string orderCode = btn.CommandParameter.ToString();
-
-            //MessageBox.Show(orderCode);
-
-            if (!string.IsNullOrEmpty(orderCode))
+            try
             {
-                if (MessageBox.Show("Do you want to delete this item?", "Delete", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                Button btn = (Button)sender;
+
+                string orderCode = btn.CommandParameter.ToString();
+
+                //MessageBox.Show(orderCode);
+
+                if (!string.IsNullOrEmpty(orderCode))
                 {
-                    var result = await _orderBusiness.DeleteOrder(int.Parse(orderCode));
-                    MessageBox.Show($"{result.Message}", "Delete");
-                    this.LoadGrdOrders();
+                    if (MessageBox.Show("Do you want to delete this item?", "Delete", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                    {
+                        var result = await _orderBusiness.DeleteOrder(int.Parse(orderCode));
+                        MessageBox.Show($"{result.Message}", "Delete");
+                        this.LoadGrdOrders();
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error");
             }
         }
 
         private async void grdOrder_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            //MessageBox.Show("Double Click on Grid");
-            DataGrid grd = sender as DataGrid;
-            if (grd != null && grd.SelectedItems != null && grd.SelectedItems.Count == 1)
+            try
             {
-                var row = grd.ItemContainerGenerator.ContainerFromItem(grd.SelectedItem) as DataGridRow;
-                if (row != null)
+                //MessageBox.Show("Double Click on Grid");
+                DataGrid grd = sender as DataGrid;
+                if (grd != null && grd.SelectedItems != null && grd.SelectedItems.Count == 1)
                 {
-                    var item = row.Item as Order;
-                    if (item != null)
+                    var row = grd.ItemContainerGenerator.ContainerFromItem(grd.SelectedItem) as DataGridRow;
+                    if (row != null)
                     {
-                        var result = await _orderBusiness.GetOrderById(item.OrderId);
-
-                        if (result.Status > 0 && result.Data != null)
+                        var item = row.Item as Order;
+                        if (item != null)
                         {
-                            item = result.Data as Order;
-                            txtCustomerId.Text = item.CustomerId.ToString();
-                            txtTotalAmount.Text = item.TotalAmount.ToString();
-                            txtType.Text = item.Type.ToString();
+                            var result = await _orderBusiness.GetOrderById(item.OrderId);
+
+                            if (result.Status > 0 && result.Data != null)
+                            {
+                                item = result.Data as Order;
+                                txtOrderId.Text = item.OrderId.ToString();
+                                txtCustomerId.Text = item.CustomerId.ToString();
+                                txtTotalAmount.Text = item.TotalAmount.ToString();
+                                txtType.Text = item.Type.ToString();
+                            }
                         }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error");
             }
         }
 
@@ -141,32 +163,33 @@ namespace Badminton.WpfApp.UI
                 string temp = txtCustomerId.Text;
                 if (temp.IsNullOrEmpty())
                 {
-                    lbName.Content = "Not Found";
-                    lbPhone.Content = "";
-                    lbEmail.Content = "";
+                    lbCustomerInfo.Content = string.Empty;
                     return;
                 }
                 var result = await _customerBusiness.GetCustomerById(int.Parse(temp));
                 if (result.Status <= 0)
                 {
-                    lbName.Content = "Not Found";
-                    lbPhone.Content = "";
-                    lbEmail.Content = "";
+                    lbCustomerInfo.Content = "Not Found";
                     return;
                 }
-                if (result.Data != null)
-                {
-                    Customer customer = result.Data as Customer;
-                    lbEmail.Content = customer.Email;
-                    lbName.Content = customer.Name;
-                    lbPhone.Content = customer.Phone;
-                }
+                Customer customer = result.Data as Customer;
+                lbCustomerInfo.Content = $"{customer.Name} - {customer.Email} - {customer.Address} - {customer.DateOfBirth}";
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                MessageBox.Show(ex.Message, "Error");
             }
+        }
+        private void RefreshAllText()
+        {
+            txtCustomerId.Text = string.Empty;
+            txtOrderId.Text = "0";
+            txtTotalAmount.Text = "0";
+            txtType.Text = string.Empty;
+        }
+        private void ButtonRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            RefreshAllText();
         }
     }
 }

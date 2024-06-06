@@ -4,6 +4,7 @@ using Badminton.Data;
 using Badminton.Data.DAO;
 using Badminton.Data.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,12 +36,11 @@ namespace Badminton.Business
         {
             try
             {
-                var od = await GetOrderDetailById(result.OrderId);
-                if (od.Data != null)
+                var od = await GetOrderDetailById(result.OrderDetailId);
+                if (od.Status > 0)
                 {
-                    return od;
+                    return new BadmintonResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
                 }
-
                 var check = await _unitOfWork.OrderDetailRepository.CreateAsync(result);
                 if (check == 0)
                 {
@@ -60,17 +60,14 @@ namespace Badminton.Business
             {
                 var result = await GetOrderDetailsByCourtDetailId(courtDetailId);
 
-                if (result.Data == null)
-                {
-                    return result;
-                }
+                if (result.Status <= 0) return result;
 
-                List<OrderDetail> orderDetails = (List<OrderDetail>)result.Data;
+                var orderDetails = result.Data as List<OrderDetail>;
 
-                foreach (var orderDetail in orderDetails)
-                {
-                    await DeleteOrderDetail(orderDetail.OrderDetailId);
-                }
+                orderDetails.ForEach(od => _unitOfWork.OrderDetailRepository.PrepareUpdate(od));
+                var check = _unitOfWork.OrderDetailRepository.Save();
+
+                if (check < orderDetails.Count) return new BadmintonResult(Const.FAIL_DELETE_CODE, Const.FAIL_DELETE_MSG);
                 return new BadmintonResult(Const.SUCCESS_DELETE_CODE, Const.SUCCESS_DELETE_MSG);
             }
             catch (Exception ex)
@@ -83,17 +80,15 @@ namespace Badminton.Business
         {
             try
             {
-                var orderDetails = await _unitOfWork.OrderDetailRepository.GetOrderDetailsByOrderId(orderId);
+                var result = await GetOrderDetailsByOrderId(orderId);
+                if (result.Status <= 0) return result;
 
-                if (orderDetails == null)
-                {
-                    return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
-                }
+                var orderDetails = result.Data as List<OrderDetail>;
 
-                foreach (var orderDetail in orderDetails)
-                {
-                    await DeleteOrderDetail(orderDetail.OrderDetailId);
-                }
+                orderDetails.ForEach(od => _unitOfWork.OrderDetailRepository.PrepareRemove(od));
+                var check = _unitOfWork.OrderDetailRepository.Save();
+
+                if (check < orderDetails.Count) return new BadmintonResult(Const.FAIL_DELETE_CODE, Const.FAIL_DELETE_MSG);
                 return new BadmintonResult(Const.SUCCESS_DELETE_CODE, Const.SUCCESS_DELETE_MSG);
             }
             catch (Exception ex)
@@ -137,6 +132,13 @@ namespace Badminton.Business
                 {
                     return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
                 }
+                orderDetails.ForEach(od =>
+                {
+                    od.Order = _unitOfWork.OrderRepository.GetById(od.OrderId);
+                    od.CourtDetail = _unitOfWork.CourtDetailRepository.GetById(od.CourtDetailId);
+                    od.CourtDetail.Court = _unitOfWork.CourtRepository.GetById(od.CourtDetailId);
+                });
+
                 return new BadmintonResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, orderDetails);
             }
             catch (Exception ex)
@@ -149,12 +151,13 @@ namespace Badminton.Business
         {
             try
             {
-                var orderDetail = await _unitOfWork.OrderDetailRepository.GetOrderDetailsByOrderId(orderId);
-                if (orderDetail == null)
+                var result = await GetAllOrderDetails();
+                if (result.Status <= 0)
                 {
                     return new BadmintonResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
-                return new BadmintonResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, orderDetail);
+                List<OrderDetail> orderDetails = (result.Data as List<OrderDetail>).Where(od => od.OrderId == orderId).ToList();
+                return new BadmintonResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, orderDetails);
             }
             catch (Exception ex)
             {
@@ -166,10 +169,15 @@ namespace Badminton.Business
         {
             try
             {
-                var orderDetail = await _unitOfWork.OrderDetailRepository.GetByIdAsync(orderDetailId);
+                var result = await GetAllOrderDetails();
+                if (result.Status <= 0)
+                {
+                    return new BadmintonResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
+                }
+                var orderDetail = (result.Data as List<OrderDetail>).FirstOrDefault(od => od.OrderDetailId == orderDetailId);
                 if (orderDetail == null)
                 {
-                    return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
+                    return new BadmintonResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
                 return new BadmintonResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, orderDetail);
             }
@@ -183,11 +191,12 @@ namespace Badminton.Business
         {
             try
             {
-                var orderDetail = await _unitOfWork.OrderDetailRepository.GetOrderDetailsByCourtDetailId(courtDetailId);
-                if (orderDetail == null)
+                var result = await GetAllOrderDetails();
+                if (result.Status <= 0)
                 {
                     return new BadmintonResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
+                var orderDetail = (result.Data as List<OrderDetail>).FirstOrDefault(od => od.CourtDetailId == courtDetailId);
                 return new BadmintonResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, orderDetail);
             }
             catch (Exception ex)
@@ -200,12 +209,16 @@ namespace Badminton.Business
         {
             try
             {
-                var od = await GetOrderDetailById(orderDetail.OrderDetailId);
-                if (od.Data == null)
+                var result = await GetOrderDetailById(orderDetail.OrderDetailId);
+                if (result.Status <= 0)
                 {
-                    return od;
+                    return result;
                 }
-                var check = await _unitOfWork.OrderDetailRepository.UpdateAsync(orderDetail);
+                var od = result.Data as OrderDetail;
+                od.CourtDetailId = orderDetail.CourtDetailId;
+                od.OrderDetailId = orderDetail.OrderDetailId;
+                od.Amount = orderDetail.Amount;
+                var check = await _unitOfWork.OrderDetailRepository.UpdateAsync(od);
                 if (check == 0)
                 {
                     return new BadmintonResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);

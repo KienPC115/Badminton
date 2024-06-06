@@ -104,7 +104,7 @@ namespace Badminton.Business
                 court.Status = updateCourt.Status;
                 court.Description = updateCourt.Description;
                 court.Price = updateCourt.Price;
-
+                
                 if (await _unitOfWork.CourtRepository.UpdateAsync(court) > 0)
                 {
                     return new BadmintonResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG);

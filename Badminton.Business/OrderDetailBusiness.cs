@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Badminton.Business
 {
-    public interface IOrderDetailBunsiness
+    public interface IOrderDetailBusiness
     {
         public Task<IBadmintonResult> GetAllOrderDetails();
         public Task<IBadmintonResult> GetOrderDetailsByOrderId(int orderId);
@@ -25,7 +25,7 @@ namespace Badminton.Business
         public Task<IBadmintonResult> DeleteOrderDetailsByOrderId(int orderId);
         public Task<IBadmintonResult> DeleteOrderDetailsByCourtDetailId(int courtDetailId);
     }
-    public class OrderDetailBusiness : IOrderDetailBunsiness
+    public class OrderDetailBusiness : IOrderDetailBusiness
     {
         private readonly UnitOfWork _unitOfWork;
         public OrderDetailBusiness()
@@ -216,8 +216,10 @@ namespace Badminton.Business
                 }
                 var od = result.Data as OrderDetail;
                 od.CourtDetailId = orderDetail.CourtDetailId;
-                od.OrderDetailId = orderDetail.OrderDetailId;
+                od.OrderId = orderDetail.OrderId;
                 od.Amount = orderDetail.Amount;
+                od.Order = null;
+                od.CourtDetail = null;
                 var check = await _unitOfWork.OrderDetailRepository.UpdateAsync(od);
                 if (check == 0)
                 {

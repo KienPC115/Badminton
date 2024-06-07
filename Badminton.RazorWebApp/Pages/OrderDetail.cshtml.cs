@@ -1,18 +1,17 @@
 using Badminton.Business;
 using Badminton.Data.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-
+using Microsoft.AspNetCore.Mvc;
 namespace Badminton.RazorWebApp.Pages
 {
     public class OrderDetailModel : PageModel
     {
         private readonly IOrderBusiness _orderBusiness = new OrderBusiness();
         private readonly ICourtDetailBusiness _courtDetailBusiness = new CourtDetailBusiness();
-        private readonly IOrderDetailBunsiness _orderDetailBunsiness = new OrderDetailBusiness();
+        private readonly IOrderDetailBusiness _orderDetailBusiness = new OrderDetailBusiness();
         private readonly ICourtBusiness _courtBusiness = new CourtBusiness();
 
-        [BindProperty]
+        [TempData]
         public string Message { get; set; }
 
         [BindProperty]
@@ -26,52 +25,63 @@ namespace Badminton.RazorWebApp.Pages
 
         public List<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 
-        public void OnGet()
+        public async Task OnGetAsync()
         {
-            CourtDetails = this.GetCourtDetails();
-            OrderDetails = this.GetOrderDetails();
-            Orders = this.GetOrders();
-            Courts = this.GetCourts();
+            CourtDetails = await GetCourtDetailsAsync();
+            OrderDetails = await GetOrderDetailsAsync();
+            Orders = await GetOrdersAsync();
+            Courts = await GetCourtsAsync();
         }
 
-        private List<Court> GetCourts()
+        private async Task<List<Court>> GetCourtsAsync()
         {
-            var result = _courtBusiness.GetAllCourts();
-            if (result.Result.Data == null)
+            var result = await _courtBusiness.GetAllCourts();
+            if (result.Data == null)
             {
-                return new();
+                return new List<Court>();
             }
-            var courts = (List<Court>)result.Result.Data;
+            var courts = (List<Court>)result.Data;
+            foreach (var court in courts)
+            {
+                var temp = (await GetCourtDetailsAsync()).Where(cd => cd.CourtId == court.CourtId);
+                court.CourtDetails = temp.ToList();
+            }
             return courts;
         }
 
-        private List<Order> GetOrders()
+        private async Task<List<Order>> GetOrdersAsync()
         {
-            var result = _orderBusiness.GetAllOrders();
-            if (result.Result.Data == null)
+            var result = await _orderBusiness.GetAllOrders();
+            if (result.Data == null)
             {
-                return new();
+                return new List<Order>();
             }
-            var orders = (List<Order>)result.Result.Data;
+            var orders = (List<Order>)result.Data;
             return orders;
         }
 
-        private List<OrderDetail> GetOrderDetails()
+        private async Task<List<OrderDetail>> GetOrderDetailsAsync()
         {
-            var result = _orderDetailBunsiness.GetAllOrderDetails();
-            if (result.Result.Data == null)
+            var result = await _orderDetailBusiness.GetAllOrderDetails();
+            if (result.Data == null)
             {
-                return new();
+                return new List<OrderDetail>();
             }
-            var orderDetails = (List<OrderDetail>)result.Result.Data;
+            var orderDetails = (List<OrderDetail>)result.Data;
             foreach (var orderDetail in orderDetails)
             {
-                var courtDetail = (CourtDetail)_courtDetailBusiness.GetCourtDetail(orderDetail.OrderDetailId).Result.Data;
+                var courtDetailResult = await _courtDetailBusiness.GetCourtDetail(orderDetail.CourtDetailId);
+                if (courtDetailResult.Data == null) continue;
+                var courtDetail = (CourtDetail)courtDetailResult.Data;
 
-                var court = (Court)_courtBusiness.GetCourtById(courtDetail.CourtId).Result.Data;
+                var courtResult = await _courtBusiness.GetCourtById(courtDetail.CourtId);
+                if (courtResult.Data == null) continue;
+                var court = (Court)courtResult.Data;
 
-                var order = (Order)_orderBusiness.GetOrderById(orderDetail.OrderId).Result.Data;
-                
+                var orderResult = await _orderBusiness.GetOrderById(orderDetail.OrderId);
+                if (orderResult.Data == null) continue;
+                var order = (Order)orderResult.Data;
+
                 courtDetail.Court = court;
                 orderDetail.CourtDetail = courtDetail;
                 orderDetail.Order = order;
@@ -79,31 +89,86 @@ namespace Badminton.RazorWebApp.Pages
             return orderDetails;
         }
 
-        private List<CourtDetail> GetCourtDetails()
+        private async Task<List<CourtDetail>> GetCourtDetailsAsync()
         {
-            var result = _courtDetailBusiness.GetAllCourtDetails();
-            if (result.Result.Data == null)
+            var result = await _courtDetailBusiness.GetAllCourtDetails();
+            if (result.Data == null)
             {
-                return new();
+                return new List<CourtDetail>();
             }
-            var courtDetails = (List<CourtDetail>)result.Result.Data;
+            var courtDetails = (List<CourtDetail>)result.Data;
             return courtDetails;
         }
 
-        public void OnPost() { this.SaveOrderDetail(); }
-
-        private void SaveOrderDetail()
+        public async Task<IActionResult> OnPostAsync()
         {
-            var result = _orderDetailBunsiness.AddOrderDetail(this.OrderDetail);
+            await SaveOrderDetailAsync();
+            return RedirectToPage("/OrderDetail");
+        }
+
+        private async Task SaveOrderDetailAsync()
+        {
+            var courtDetailResult = await _courtDetailBusiness.GetCourtDetail(OrderDetail.CourtDetailId);
+            if (courtDetailResult.Data == null)
+            {
+                Message = "Court detail not found";
+                return;
+            }
+            var courtDetail = courtDetailResult.Data as CourtDetail;
+            OrderDetail.Amount = courtDetail.Price;
+
+            var result = await _orderDetailBusiness.AddOrderDetail(OrderDetail);
+
             if (result != null)
             {
-                this.Message = result.Result.Message;
-                OnGet();
+                Message = result.Message;
             }
             else
             {
-                this.Message = "Error System";
+                Message = "Error System";
             }
+        }
+
+        public async Task<IActionResult> OnPostDeleteAsync(int id)
+        {
+            var check = await _orderDetailBusiness.GetOrderDetailById(id);
+            if (check.Status <= 0)
+            {
+                Message = check.Message;
+                return RedirectToPage("/OrderDetail");
+            }
+            var result = await _orderDetailBusiness.DeleteOrderDetail(id);
+            if (result != null)
+            {
+                Message = result.Message;
+            }
+            else
+            {
+                Message = "Error System";
+            }
+            return RedirectToPage("/OrderDetail");
+        }
+
+        public async Task<IActionResult> OnPostPutAsync(OrderDetail orderDetail)
+        {
+            var courtDetailResult = await _courtDetailBusiness.GetCourtDetail(orderDetail.CourtDetailId);
+            if (courtDetailResult.Data == null)
+            {
+                Message = "Court detail not found";
+                return RedirectToPage("/OrderDetail");
+            }
+            var courtDetail = courtDetailResult.Data as CourtDetail;
+            orderDetail.Amount = courtDetail.Price;
+            var result = await _orderDetailBusiness.UpdateOrderDetail(orderDetail);
+            if (result != null)
+            {
+                Message = result.Message;
+            }
+            else
+            {
+                Message = "Error System";
+            }
+            return RedirectToPage("/OrderDetail");
         }
     }
 }

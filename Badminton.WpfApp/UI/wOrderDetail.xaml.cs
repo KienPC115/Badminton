@@ -23,7 +23,7 @@ namespace Badminton.WpfApp.UI
     public partial class wOrderDetail : Window
     {
         IOrderBusiness _orderBusiness;
-        IOrderDetailBunsiness _orderDetailBunsiness;
+        IOrderDetailBusiness _orderDetailBunsiness;
         ICourtDetailBusiness _courtDetailBusiness;
         ICourtBusiness _courtBusiness;
         public wOrderDetail()

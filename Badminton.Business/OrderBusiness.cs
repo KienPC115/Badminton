@@ -28,7 +28,7 @@ namespace Badminton.Business
     }
     public class OrderBusiness : IOrderBusiness
     {
-        private IOrderDetailBunsiness _orderDetailBusiness;
+        private IOrderDetailBusiness _orderDetailBusiness;
         private readonly UnitOfWork _unitOfWork;
         private ICustomerBusiness _customerBusiness;
         public OrderBusiness()
@@ -46,6 +46,7 @@ namespace Badminton.Business
                 foreach (var order in orders)
                 {
                     order.Customer = await AssignCustomerToOrder(order);
+                    await UpdateAmount(order.OrderId);
                 }
                 if (orders == null)
                 {

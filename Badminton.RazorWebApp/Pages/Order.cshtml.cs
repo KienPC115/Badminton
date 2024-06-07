@@ -54,12 +54,6 @@ namespace Badminton.RazorWebApp.Pages
 
         private void UpdateOrder(Order order)
         {
-            //var check = _orderBusiness.GetOrderById(order.OrderId);
-            //if (check == null)
-            //{
-            //    this.Message = check.Result.Message;
-            //    return;
-            //}
             var result = _orderBusiness.UpdateOrder(order);
             if (result != null)
             {

@@ -14,7 +14,7 @@ namespace Badminton.Business.Shared
             return new List<string>(Slot);
         }
         public static List<string> Status() {
-            string[] Status = { "Available", "Booked", "Maintenance" };
+            string[] Status = { "Available", "Booked"};
             return new List<string>(Status);
         }
     }

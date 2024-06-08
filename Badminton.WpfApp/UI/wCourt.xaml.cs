@@ -1,4 +1,5 @@
 ﻿using Badminton.Business;
+using Badminton.Business.Shared;
 using Badminton.Data.Models;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,7 @@ namespace Badminton.WpfApp.UI
     public partial class wCourt : Window
     {
         private readonly ICourtBusiness _courtBusiness;
+        List<string> courtStatus;
         public wCourt()
         {
             InitializeComponent();
@@ -38,15 +40,15 @@ namespace Badminton.WpfApp.UI
                 var item = await _courtBusiness.GetCourtById(idTmp);
 
                 if (item.Data == null) {
-
-                    if (string.IsNullOrEmpty(txtCourtName.Text) || string.IsNullOrEmpty(txtCourtStatus.Text) || string.IsNullOrEmpty(txtCourtPrice.Text)) {
+                    /*|| string.IsNullOrEmpty(txtCourtStatus.Text)*/
+                    if (string.IsNullOrEmpty(txtCourtName.Text) || string.IsNullOrEmpty(txtCourtPrice.Text)) {
                         MessageBox.Show("You need to fill required fields!");
                         return;
                     }
                     Court court = new Court() {
                         Name = txtCourtName.Text,
                         Description = txtCourtDescription.Text,
-                        Status = txtCourtStatus.Text,
+                        Status = comboBoxStatus.SelectedItem.ToString(),
                         Price = double.Parse(txtCourtPrice.Text)
                     };
                     var result = await _courtBusiness.AddCourt(court);
@@ -60,13 +62,15 @@ namespace Badminton.WpfApp.UI
                         MessageBox.Show(item.Message);
                     }
                     var court = item.Data as Court;
-                    if (string.IsNullOrEmpty(txtCourtName.Text) || string.IsNullOrEmpty(txtCourtStatus.Text) || string.IsNullOrEmpty(txtCourtPrice.Text)) {
+                    /*string.IsNullOrEmpty(txtCourtStatus.Text)*/
+                    if (string.IsNullOrEmpty(txtCourtName.Text) || string.IsNullOrEmpty(txtCourtPrice.Text)) {
                         MessageBox.Show("You need to fill required fields!");
                         return;
                     }
                     court.Name = txtCourtName.Text.Trim();
                     court.Description = txtCourtDescription.Text.Trim();
-                    court.Status = txtCourtStatus.Text.Trim();
+                    court.Status = comboBoxStatus.SelectedItem.ToString();
+                    /*court.Status = txtCourtStatus.Text.Trim();*/
                     court.Price = double.Parse(txtCourtPrice.Text.Trim());
 
                     var resultUpdate = await _courtBusiness.UpdateCourt(court.CourtId, court);
@@ -132,7 +136,8 @@ namespace Badminton.WpfApp.UI
                             txtCourtId.Text = item.CourtId.ToString();
                             txtCourtName.Text = item.Name.ToString();
                             txtCourtDescription.Text = item.Description.ToString();
-                            txtCourtStatus.Text = item.Status.ToString();
+                            comboBoxStatus.SelectedValue = item.Status;
+                            /*txtCourtStatus.Text = item.Status.ToString();*/
                             txtCourtPrice.Text = item.Price.ToString();
                         }
                     }
@@ -152,13 +157,15 @@ namespace Badminton.WpfApp.UI
             txtCourtId.Clear();
             txtCourtName.Clear();
             txtCourtDescription.Clear();
-            txtCourtStatus.Clear();
+            comboBoxStatus.SelectedItem = courtStatus[0];
             txtCourtPrice.Clear();
         }
 
         private async void LoadGrdCourts() {
             var result = await _courtBusiness.GetAllCourts();
-
+            courtStatus = CourtShared.Status();
+            comboBoxStatus.ItemsSource = courtStatus;
+            comboBoxStatus.SelectedItem = courtStatus[0];
             if (result.Status > 0 && result.Data != null) {
                 grdCourt.ItemsSource = result.Data as List<Court>;
             }

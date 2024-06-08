@@ -41,13 +41,17 @@
                             <td>@court.Description</td>
                             <td>@court.Price</td>
                             <td>
-                                    
-                                <button type="button" class="btn btn-success" onclick="edit();">
+                                <button type="button" class="btn btn-success">
                                     Edit
                                 </button>
-                                <button type="button" class="btn btn-danger" asp-page="./Court"
+                                @* <button type="button" class="btn btn-danger" asp-page="Court"
                                    onclick="return confirm('Are you sure you want to delete this item?');"
-                                   asp-page-handler="Delete" asp-route-id="@court.CourtId">Delete</button>
+                                   asp-page-handler="Delete" asp-route-id="@court.CourtId">Delete</button> *@
+                                <a type="button" class="btn btn-danger" 
+                                        onclick="return confirm('Are you sure you want to delete this item?');"
+                                        href="/Court?handler=Delete&id=@court.CourtId">
+                                    Delete
+                                </a>
                             </td>
                         </tr>
                     }
@@ -71,16 +75,19 @@
                 </div>
                 <div class="modal-body">
                     <div id="courtModalContent"></div>
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group row">
                                 <div class="col-md-6">
                                     <label for="1">Name</label>
                                     <input asp-for="Court.Name" class="form-control" />
+                                    <span asp-validation-for="Court.Name" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="1">Description</label>
                                     <input asp-for="Court.Description" class="form-control" />
+                                    <span asp-validation-for="Court.Description" class="text-danger"></span>
                                 </div>
                             </div>
                         </div>
@@ -89,10 +96,12 @@
                                 <div class="col-md-6">
                                     <label for="1">Status</label>
                                     <input asp-for="Court.Status" class="form-control" />
+                                    <span asp-validation-for="Court.Status" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="1">Price</label>
                                     <input asp-for="Court.Price" class="form-control" />
+                                    <span asp-validation-for="Court.Price" class="text-danger"></span>
                                 </div>
                             </div>
                         </div>
@@ -117,5 +126,7 @@
             $('#courtModal').modal('show');
         }
     </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
-

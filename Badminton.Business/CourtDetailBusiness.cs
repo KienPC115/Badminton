@@ -12,6 +12,7 @@ using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
+using Badminton.Business.Shared;
 
 namespace Badminton.Business
 {
@@ -22,7 +23,7 @@ namespace Badminton.Business
 
         public Task<IBadmintonResult> GetCourtDetail(int courtDetailId);
         public Task<IBadmintonResult> AddCourtDetail(CourtDetail courtDetail);
-        public Task<IBadmintonResult> UpdateCourtDetail(int courtDetailId, CourtDetail courtDetail);
+        public Task<IBadmintonResult> UpdateCourtDetail(int courtDetailId, CourtDetail courtDetail,string msg);
         public Task<IBadmintonResult> DeleteCourtDetail(int courtDetailId);
     }
     public class CourtDetailBusiness : ICourtDetailBusiness
@@ -117,7 +118,7 @@ namespace Badminton.Business
             }
         }
 
-        public async Task<IBadmintonResult> UpdateCourtDetail(int courtDetailId, CourtDetail updateCourtDetail)
+        public async Task<IBadmintonResult> UpdateCourtDetail(int courtDetailId, CourtDetail updateCourtDetail, string msg)
         {
             try
             {
@@ -127,8 +128,21 @@ namespace Badminton.Business
                 {
                     return new BadmintonResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
                 }
-                await _unitOfWork.CourtDetailRepository.UpdateAsync(updateCourtDetail);
-                return new BadmintonResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG);
+
+                courtDetail.CourtId = updateCourtDetail.CourtId;
+                courtDetail.Slot = updateCourtDetail.Slot;
+                courtDetail.Price = updateCourtDetail.Price;
+                courtDetail.Status = updateCourtDetail.Status;
+                var result = await _unitOfWork.CourtDetailRepository.UpdateAsync(courtDetail);
+                if (msg.ToLower().Contains(CourtDetailShared.DELETE))
+                {
+                    return result > 0
+                        ? new BadmintonResult(Const.SUCCESS_DELETE_CODE, Const.SUCCESS_DELETE_MSG)
+                        : new BadmintonResult(Const.FAIL_DELETE_CODE, Const.FAIL_DELETE_MSG);
+                }
+                return  result > 0
+                    ? new BadmintonResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG)
+                    : new BadmintonResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
             }
             catch (Exception ex)
             {

@@ -1,0 +1,54 @@
+﻿@page
+@model Badminton.RazorWebApp.Pages.CourtDetailPage.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CourtDetail[0].Slot)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CourtDetail[0].Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CourtDetail[0].Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CourtDetail[0].Court.Name)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.CourtDetail) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Slot)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Court.Name)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.CourtDetailId">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.CourtDetailId">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.CourtDetailId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

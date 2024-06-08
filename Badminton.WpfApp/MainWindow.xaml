@@ -10,7 +10,7 @@
         <Menu Height="30" Name="menu1" Margin="0,0,0,0" VerticalAlignment="Top" BorderThickness="2" FontSize="16" FontWeight="Bold">
             <MenuItem Header="Menu" IsCheckable="False" FontSize="16">
                 <MenuItem Header="Court" IsCheckable="False" FontSize="12" Click="Open_wCourt_Click"/>
-                <MenuItem Header="Customer" IsCheckable="False" FontSize="12" Click="Open_wCustomer_Click">
+                <MenuItem Header="Customer" IsCheckable="False" FontSize="12" Click="Open_wCustomer_Click"/>
                 <MenuItem Header="Order" IsCheckable="False" FontSize="12" Click="Open_wOrder_Click"/>
                 <MenuItem Header="Court Detail" IsCheckable="False" FontSize="12" Click="Open_wCourtDetail_Click"/> 
                 <MenuItem Header="OrderDetail" IsCheckable="False" FontSize="12" Click="Open_wOrderDetail_Click"/>

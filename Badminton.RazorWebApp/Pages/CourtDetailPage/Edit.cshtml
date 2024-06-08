@@ -1,0 +1,62 @@
+﻿@page
+@model Badminton.RazorWebApp.Pages.CourtDetailPage.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>CourtDetail</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="CourtDetail.CourtDetailId" />
+            <div class="form-group">
+                <label asp-for="CourtDetail.CourtId" class="control-label"> Court Name</label>
+                <select asp-for="CourtDetail.CourtId" class="form-control" asp-items="ViewBag.CourtId">
+                    @foreach (var item in Model.Courts)
+                    {
+                        <option value="@item.CourtId">@item.Name</option>
+                    }
+                </select>
+                <span asp-validation-for="CourtDetail.CourtId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CourtDetail.Slot" class="control-label"></label>
+                <select asp-for="CourtDetail.Slot" class="form-control">
+                    @foreach (var item in Model.Slot)
+                    {
+                    <option value="@item">@item</option>
+                    }
+                </select>
+                <span asp-validation-for="CourtDetail.Slot" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CourtDetail.Price" class="control-label"></label>
+                <input asp-for="CourtDetail.Price" class="form-control" />
+                <span asp-validation-for="CourtDetail.Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CourtDetail.Status" class="control-label"></label>
+                <select asp-for="CourtDetail.Status" class="form-control">
+                    @foreach (var item in Model.Status)
+                    {
+                    <option value="@item">@item</option>
+                    }
+                </select>
+                <span asp-validation-for="CourtDetail.Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+

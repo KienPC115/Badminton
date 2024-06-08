@@ -50,7 +50,7 @@ namespace Badminton.WpfApp.UI {
                 Email = txtCustomerEmail.Text,
             };
         }
-
+        
         private async void ButtonSave_Click(object sender, RoutedEventArgs e) {
             try {
                 var item = await _business.GetCustomerById(int.Parse(txtCustomerCode.Text));
@@ -76,7 +76,7 @@ namespace Badminton.WpfApp.UI {
             Close();
         }
 
-        private async void ButtonDelete_Click(object sender, RoutedEventArgs e) {
+        private async void grdCustomer_ButtonDelete_Click(object sender, RoutedEventArgs e) {
             try {
                 Button btn = (Button)sender;
 
@@ -96,7 +96,7 @@ namespace Badminton.WpfApp.UI {
             }
         }
 
-        private async void grdCustomer_MouseDoubleClick(object sender, MouseButtonEventArgs e) {
+        private async void grdCustomer_MouseDouble_Click(object sender, MouseButtonEventArgs e) {
             try {
                 //MessageBox.Show("Double Click on Grid");
                 DataGrid grd = sender as DataGrid;

@@ -16,21 +16,19 @@ namespace Badminton.RazorWebApp.Pages
 
         public List<Court> Courts { get; set; } = new List<Court>();
 
-        public IActionResult OnGet()
+        public void OnGet()
         {
             Courts = this.GetCourts();
-            return Page();
         }
 
         public IActionResult OnPost() {
             this.SaveCourt();
-            Court = default;
-            return Page();
+            return RedirectToPage("Court");
         }
 
-        public IActionResult OnGetDelete(int? id) {
+        public IActionResult OnGetDelete(int id) {
             if(id != null) {
-                var result = _courtBusiness.DeleteCourt(id.Value);
+                var result = _courtBusiness.DeleteCourt(id);
                 this.Message = result != null ? result.Result.Message : "Error System";
             }
             return RedirectToPage("Court");

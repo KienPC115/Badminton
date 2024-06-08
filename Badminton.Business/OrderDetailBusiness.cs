@@ -41,6 +41,7 @@ namespace Badminton.Business
                 {
                     return new BadmintonResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
                 }
+                result.Amount = _unitOfWork.CourtDetailRepository.GetById(result.CourtDetailId).Price;
                 var check = await _unitOfWork.OrderDetailRepository.CreateAsync(result);
                 if (check == 0)
                 {
@@ -85,10 +86,9 @@ namespace Badminton.Business
 
                 var orderDetails = result.Data as List<OrderDetail>;
 
-                orderDetails.ForEach(od => _unitOfWork.OrderDetailRepository.PrepareRemove(od));
-                var check = _unitOfWork.OrderDetailRepository.Save();
+                orderDetails.ForEach(od => _unitOfWork.OrderDetailRepository.Remove(od));
+                result = await GetOrderDetailsByOrderId(orderId);
 
-                if (check < orderDetails.Count) return new BadmintonResult(Const.FAIL_DELETE_CODE, Const.FAIL_DELETE_MSG);
                 return new BadmintonResult(Const.SUCCESS_DELETE_CODE, Const.SUCCESS_DELETE_MSG);
             }
             catch (Exception ex)
@@ -135,6 +135,7 @@ namespace Badminton.Business
                 orderDetails.ForEach(od =>
                 {
                     od.Order = _unitOfWork.OrderRepository.GetById(od.OrderId);
+                    od.Order.Customer = _unitOfWork.CustomerRepository.GetById(od.Order.CustomerId);
                     od.CourtDetail = _unitOfWork.CourtDetailRepository.GetById(od.CourtDetailId);
                     od.CourtDetail.Court = _unitOfWork.CourtRepository.GetById(od.CourtDetailId);
                 });
@@ -217,7 +218,7 @@ namespace Badminton.Business
                 var od = result.Data as OrderDetail;
                 od.CourtDetailId = orderDetail.CourtDetailId;
                 od.OrderId = orderDetail.OrderId;
-                od.Amount = orderDetail.Amount;
+                od.Amount = _unitOfWork.CourtDetailRepository.GetById(od.CourtDetailId).Price;
                 od.Order = null;
                 od.CourtDetail = null;
                 var check = await _unitOfWork.OrderDetailRepository.UpdateAsync(od);

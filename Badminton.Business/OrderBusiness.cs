@@ -97,7 +97,7 @@ namespace Badminton.Business
                     return result;
                 }
                 var check1 = await _orderDetailBusiness.DeleteOrderDetailsByOrderId(orderId);
-                if (check1 == null)
+                if (check1.Status <= 0)
                 {
                     return check1;
                 }

@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Badminton.RazorWebApp", "Ba
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Badminton.Common", "Badminton.Common\Badminton.Common.csproj", "{7750AED4-F08D-47E2-A5BC-4803BD7B1A64}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Badminton.WpfApp", "Badminton.WpfApp\Badminton.WpfApp.csproj", "{861D90EE-E426-4513-8DD8-3BB743E6172C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Badminton.WpfApp", "Badminton.WpfApp\Badminton.WpfApp.csproj", "{861D90EE-E426-4513-8DD8-3BB743E6172C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -93,19 +93,24 @@ namespace Badminton.WpfApp.UI
 
         private async void grdCourt_ButtonDelete_Click(object sender, RoutedEventArgs e) {
 
-            Button btn = (Button)sender;
+            try {
+                Button btn = (Button)sender;
 
-            string courtId = btn.CommandParameter.ToString();
+                string courtId = btn.CommandParameter.ToString();
 
-            //MessageBox.Show(currencyCode);
+                //MessageBox.Show(currencyCode);
 
-            if (!string.IsNullOrEmpty(courtId)) {
-                if (MessageBox.Show("Do you want to delete this item?", "Delete", MessageBoxButton.YesNo) == MessageBoxResult.Yes) {
-                    int id = int.Parse(courtId);
-                    var result = await _courtBusiness.DeleteCourt(id);
-                    MessageBox.Show($"{result.Message}", "Delete");
-                    this.LoadGrdCourts();
+                if (!string.IsNullOrEmpty(courtId)) {
+                    if (MessageBox.Show("Do you want to delete this item?", "Delete", MessageBoxButton.YesNo) == MessageBoxResult.Yes) {
+                        int id = int.Parse(courtId);
+                        var result = await _courtBusiness.DeleteCourt(id);
+                        MessageBox.Show($"{result.Message}", "Delete");
+                        this.LoadGrdCourts();
+                    }
                 }
+            }
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message, "Error");
             }
             /*var parameter = (sender as ButtonBase).CommandParameter;
             int courtId = int.Parse(parameter.ToString());
@@ -136,7 +141,7 @@ namespace Badminton.WpfApp.UI
                             txtCourtId.Text = item.CourtId.ToString();
                             txtCourtName.Text = item.Name.ToString();
                             txtCourtDescription.Text = item.Description.ToString();
-                            comboBoxStatus.SelectedValue = item.Status;
+                            comboBoxStatus.SelectedItem = item.Status;
                             /*txtCourtStatus.Text = item.Status.ToString();*/
                             txtCourtPrice.Text = item.Price.ToString();
                         }

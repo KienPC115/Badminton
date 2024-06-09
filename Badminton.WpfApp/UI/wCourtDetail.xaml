@@ -38,8 +38,15 @@
                               Margin="5,5,0,5"
                               HorizontalAlignment="Left" 
                               VerticalContentAlignment="Center"
-                              DisplayMemberPath="Name"
-                              ></ComboBox>
+                              >
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Name}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
 
                     <Label Grid.Column="4" Grid.Row="0" Content="Slot" HorizontalAlignment="Left" VerticalContentAlignment="Center" />
                     <ComboBox 

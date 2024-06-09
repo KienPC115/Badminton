@@ -100,7 +100,7 @@ namespace Badminton.WpfApp.UI
                     MessageBox.Show(result.Message);
                 }
 
-                var courtDetail = result as CourtDetail;
+                var courtDetail = result.Data as CourtDetail;
                 courtDetail.CourtId = court.CourtId;
                 courtDetail.Status = status;
                 courtDetail.Slot = slot;
@@ -111,6 +111,7 @@ namespace Badminton.WpfApp.UI
                 {
                     MessageBox.Show(resultUpdate.Message);
                 }
+                this.LoadData();
             }
         }
 
@@ -160,7 +161,7 @@ namespace Badminton.WpfApp.UI
             if (courtDetail != null)
             {
                 txtCourtDetailId.Text = courtDetail.CourtDetailId.ToString();
-                ComboBoxCourtName.SelectedItem = courtDetail.Court;
+                ComboBoxCourtName.SelectedIndex = courtDetail.Court.CourtId - 1;
                 ComboBoxSlot.SelectedItem = courtDetail.Slot;
                 ComboBoxStatus.SelectedItem = courtDetail.Status;
                 txtCourtPrice.Text = courtDetail.Price.ToString();

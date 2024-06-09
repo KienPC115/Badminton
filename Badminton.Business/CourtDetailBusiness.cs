@@ -134,7 +134,7 @@ namespace Badminton.Business
                 courtDetail.Price = updateCourtDetail.Price;
                 courtDetail.Status = updateCourtDetail.Status;
                 var result = await _unitOfWork.CourtDetailRepository.UpdateAsync(courtDetail);
-                if (msg.ToLower().Contains(CourtDetailShared.DELETE))
+                if (msg.Contains(CourtDetailShared.DELETE))
                 {
                     return result > 0
                         ? new BadmintonResult(Const.SUCCESS_DELETE_CODE, Const.SUCCESS_DELETE_MSG)

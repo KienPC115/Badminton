@@ -50,7 +50,7 @@ namespace Badminton.RazorWebApp.Pages
 
         private List<CourtDetail> GetCourtDetails()
         {
-            var courtDetailsResult = _courtDetailBusiness.GetAllCourtDetailsIncludeCourt();
+            var courtDetailsResult = _courtDetailBusiness.GetAllCourtDetailsIncludeCourt("");
 
             if (courtDetailsResult.Status > 0 && courtDetailsResult.Result.Data != null)
             {

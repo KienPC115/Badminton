@@ -1,5 +1,6 @@
 ﻿using Badminton.Data.Base;
 using Badminton.Data.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,5 +14,11 @@ namespace Badminton.Data.Repository {
         }
 
         public CourtRepository(Net1710_221_8_BadmintonContext context) => _context = context;
+
+        public async Task<List<Court>> GetCourtsByStatusAsync(string status) {
+            return await _context.Courts
+                .Where(x => x.Status.ToLower() == status.ToLower())
+                .ToListAsync();
+        }
     }
 }

@@ -37,7 +37,7 @@ namespace Badminton.WpfApp.UI
 
         public async void LoadData()
         {
-            var result = await _courtDetailBusiness.GetAllCourtDetailsIncludeCourt();
+            var result = await _courtDetailBusiness.GetAllCourtDetailsIncludeCourt("");
             var resultCourts = await _courtBusiness.GetCourtsByStatus(CourtShared.Status()[0]); // get court with available status
             var SlotList = CourtDetailShared.Slot();
             var StatusList = CourtDetailShared.Status();

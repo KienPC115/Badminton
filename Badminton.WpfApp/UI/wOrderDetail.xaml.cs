@@ -1,4 +1,5 @@
 ﻿using Badminton.Business;
+using Badminton.Business.Shared;
 using Badminton.Data.Models;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -50,7 +51,7 @@ namespace Badminton.WpfApp.UI
             try
             {
                 var result = await _orderDetailBunsiness.GetAllOrderDetails();
-
+                txtAmount.Text = 0 + "";
                 if (result.Status > 0 && result.Data != null)
                 {
                     grdOrderDetail.ItemsSource = result.Data as List<OrderDetail>;
@@ -68,7 +69,7 @@ namespace Badminton.WpfApp.UI
         private void RefreshAllText()
         {
             txtOrderDetailId.Text = "0";
-            txtOrderId.Text = "0";
+            txtOrderId.Text = string.Empty;
             txtAmount.Text = "0";
             txtCourtDetailId.Text = string.Empty;
         }
@@ -77,11 +78,26 @@ namespace Badminton.WpfApp.UI
         {
             try
             {
+                var result = await _courtDetailBusiness.GetCourtDetail(int.Parse(txtCourtDetailId.Text));
+                if (result.Status <= 0)
+                {
+                    MessageBox.Show(result.Message);
+                    return;
+                }
+                var courtDetail = result.Data as CourtDetail;
+                if (courtDetail.Status != "Available")
+                {
+                    MessageBox.Show("This slot is not available");
+                    return;
+                }
                 var item = await _orderDetailBunsiness.GetOrderDetailById(int.Parse(txtOrderDetailId.Text));
                 if (item.Data == null)
                 {
                     OrderDetail orderDetail = GetOrderDetail();
-                    var result = await _orderDetailBunsiness.AddOrderDetail(orderDetail);
+                    orderDetail.OrderDetailId = 0;
+                    courtDetail.Status = "Booked";
+                    result = await _orderDetailBunsiness.AddOrderDetail(orderDetail);
+                    result = await _courtDetailBusiness.UpdateCourtDetail(courtDetail.CourtDetailId, courtDetail, CourtDetailShared.UPDATE);
                     if (result.Status < 0) { MessageBox.Show(result.Message); return; }
                     result = await _orderBusiness.UpdateAmount(orderDetail.OrderId); MessageBox.Show(result.Message);
                     RefreshAllText();
@@ -89,7 +105,11 @@ namespace Badminton.WpfApp.UI
                 else
                 {
                     OrderDetail orderDetail = GetOrderDetail();
-                    var result = await _orderDetailBunsiness.UpdateOrderDetail(orderDetail);
+                    result = await _courtDetailBusiness.GetCourtDetail(orderDetail.CourtDetailId);
+                    courtDetail = result.Data as CourtDetail;
+                    courtDetail.Status = "Booked";
+                    result = await _courtDetailBusiness.UpdateCourtDetail(courtDetail.CourtDetailId, courtDetail, CourtDetailShared.UPDATE);
+                    result = await _orderDetailBunsiness.UpdateOrderDetail(orderDetail);
                     MessageBox.Show(result.Message);
                     RefreshAllText();
                 }
@@ -218,7 +238,7 @@ namespace Badminton.WpfApp.UI
                     return;
                 }
                 courtDetail.Court = result.Data as Court;
-                lbCourtInfo.Content = $"Court name: {courtDetail.Court.Name} - Slot: {courtDetail.Slot} - Price: {courtDetail.Price}";
+                lbCourtInfo.Content = $"Court name: {courtDetail.Court.Name} - Slot: {courtDetail.Slot} - Price: {courtDetail.Price} - Status:{courtDetail.Status}";
             }
             catch (Exception ex)
             {

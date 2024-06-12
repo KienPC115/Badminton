@@ -29,8 +29,8 @@
 
                     <Label Grid.Column="0" Grid.Row="1" Content="Type" HorizontalAlignment="Left" VerticalContentAlignment="Center" />
                     <ComboBox Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" x:Name="txtType" VerticalAlignment="Top" Width="180" Height="24" Grid.RowSpan="2" Margin="5,2,0,0">
-                        <ComboBoxItem Content="Paid"/>
-                        <ComboBoxItem Content="UnPaid"/>
+                        <ComboBoxItem Content="Direct Payment"/>
+                        <ComboBoxItem Content="Online Payment"/>
                     </ComboBox>
 
                     <Label Grid.Column="0" Grid.Row="2" Content="TotalAmount" HorizontalAlignment="Left" VerticalContentAlignment="Center" />

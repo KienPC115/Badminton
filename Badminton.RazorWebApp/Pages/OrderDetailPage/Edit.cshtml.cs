@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Badminton.Data.Models;
 using Badminton.Business;
+using Badminton.Business.Shared;
 
 namespace Badminton.RazorWebApp.Pages.OrderDetailPage
 {
@@ -35,6 +36,7 @@ namespace Badminton.RazorWebApp.Pages.OrderDetailPage
         {
             Orders = _orderBusiness.GetAllOrders().Result.Data as List<Order>;
             CourtDetails = _courtDetailBusiness.GetAllCourtDetails().Result.Data as List<CourtDetail>;
+            CourtDetails = CourtDetails.Where(cd => cd.Status == "Available").ToList();
             CourtDetails.ForEach(cd => cd.Court = _courtBusiness.GetCourtById(cd.CourtId).Result.Data as Court);
             var result = await _orderDetailBusiness.GetOrderDetailById(id.Value);
             if (result.Status < 0)
@@ -58,7 +60,12 @@ namespace Badminton.RazorWebApp.Pages.OrderDetailPage
             {
                 return Page();
             }
-            var result = await _orderDetailBusiness.UpdateOrderDetail(OrderDetail);
+
+            var result = await _courtDetailBusiness.GetCourtDetail(OrderDetail.CourtDetailId);
+            var courtDetail = result.Data as CourtDetail;
+            courtDetail.Status = "Booked";
+            result = await _courtDetailBusiness.UpdateCourtDetail(courtDetail.CourtDetailId, courtDetail, CourtDetailShared.UPDATE);
+            result = await _orderDetailBusiness.UpdateOrderDetail(OrderDetail);
             if (result.Status <= 0)
             {
                 return Page();

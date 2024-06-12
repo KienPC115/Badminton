@@ -26,7 +26,7 @@ namespace Badminton.RazorWebApp.Pages.CourtDetailPage
         {
             Slot = CourtDetailShared.Slot();
             Status = CourtDetailShared.Status();
-            var result = await _courtBusiness.GetAllCourts();
+            var result = await _courtBusiness.GetCourtsByStatus(CourtShared.Status()[0]);
             Courts = result.Data as List<Court>;
             return Page();
         }

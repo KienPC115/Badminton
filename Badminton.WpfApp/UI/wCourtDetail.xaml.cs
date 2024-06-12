@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -157,15 +158,18 @@ namespace Badminton.WpfApp.UI
         private async void grdCourtDetail_MouseDouble_Click(object sender, MouseButtonEventArgs e)
         {
             var courtDetail = (sender as DataGrid).SelectedItem as CourtDetail;
-
+           
             if (courtDetail != null)
             {
+                var result = await _courtBusiness.GetCourtIdByName(courtDetail.Court.Name);
+                var court = result.Data as Court;
                 txtCourtDetailId.Text = courtDetail.CourtDetailId.ToString();
-                ComboBoxCourtName.SelectedIndex = courtDetail.Court.CourtId - 1;
+                ComboBoxCourtName.SelectedItem = court;   
                 ComboBoxSlot.SelectedItem = courtDetail.Slot;
                 ComboBoxStatus.SelectedItem = courtDetail.Status;
                 txtCourtPrice.Text = courtDetail.Price.ToString();
             }
+            this.ClearData();
         }
     }
 }

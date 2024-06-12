@@ -14,17 +14,23 @@ namespace Badminton.Data.Repository
         public CourtDetailRepository()
         {
         }
+
         public CourtDetailRepository(Net1710_221_8_BadmintonContext context) => _context = context;
 
-        public async Task<List<CourtDetail>> GetAllCourtDetailsIncludeCourtAsync()
+        public async Task<List<CourtDetail>> GetAllCourtDetailsIncludeCourtAsync(string? Search)
         {
-            var result =await _context.CourtDetails
-                .Where(cd => cd.Status.ToLower() != "delete")
+            IQueryable<CourtDetail> query = _context.CourtDetails;
+            query = query.Where(cd => cd.Status.ToLower() != "delete")
                 .Include(cd => cd.Court)
-                .OrderBy(cd => cd.Court.Name)
-                .ToListAsync();
-            return result;
-        }
+                .OrderBy(cd => cd.Court.Name);
+            if (!string.IsNullOrEmpty(Search))
+            {
+                query = query.Where(x => x.Price.ToString().Contains(Search.ToLower())
+                                         || x.Status.Contains(Search.ToLower())
+                                         || x.Court.Name.ToLower().Contains(Search.ToLower()));
+            }
 
+            return await query.ToListAsync();
+        }
     }
 }

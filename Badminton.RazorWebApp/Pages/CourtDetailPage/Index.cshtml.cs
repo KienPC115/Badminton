@@ -18,14 +18,15 @@ namespace Badminton.RazorWebApp.Pages.CourtDetailPage
         {
             _courtDetailBusiness ??= new CourtDetailBusiness();
         }
-
+        [BindProperty(SupportsGet = true)]    
+        public string? Search { get; set; }
         public IList<CourtDetail> CourtDetail { get;set; } = default!;
 
         public async Task OnGetAsync()
         {
             if (_courtDetailBusiness != null)
             {
-                var result = await _courtDetailBusiness.GetAllCourtDetailsIncludeCourt();
+                var result = await _courtDetailBusiness.GetAllCourtDetailsIncludeCourt(Search);
                 if (result != null && result.Status > 0 && result.Data != null)
                 {
                     CourtDetail = result.Data as List<CourtDetail>;

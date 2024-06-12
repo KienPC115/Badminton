@@ -17,5 +17,9 @@ namespace Badminton.Business.Shared
             string[] Status = { "Available", "Booked"};
             return new List<string>(Status);
         }
+
+        public static string DELETE = "Delete";
+        public static string UPDATE = "Update";
+
     }
 }

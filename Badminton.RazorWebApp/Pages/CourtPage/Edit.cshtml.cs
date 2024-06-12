@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Badminton.Data.Models;
 using Badminton.Business;
+using Badminton.Business.Shared;
 
 namespace Badminton.RazorWebApp.Pages.CourtPage
 {
@@ -23,6 +24,8 @@ namespace Badminton.RazorWebApp.Pages.CourtPage
         [BindProperty]
         public Court Court { get; set; } = default!;
 
+        public List<string> Status { get; set; } = default!;
+
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null) {
@@ -34,6 +37,7 @@ namespace Badminton.RazorWebApp.Pages.CourtPage
                 return NotFound();
             }
 
+            Status = CourtShared.Status();
             // Load dropdown
             // ViewData["CustomerId"] = new SelectList(_context.Customers,"CustomerId", "Address","selectedValue")
             Court = court.Data as Court;

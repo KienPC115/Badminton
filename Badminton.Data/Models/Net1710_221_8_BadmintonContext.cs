@@ -8,8 +8,7 @@ namespace Badminton.Data.Models;
 
 public partial class Net1710_221_8_BadmintonContext : DbContext
 {
-    public Net1710_221_8_BadmintonContext()
-    {
+    public Net1710_221_8_BadmintonContext() {
     }
 
     public Net1710_221_8_BadmintonContext(DbContextOptions<Net1710_221_8_BadmintonContext> options)
@@ -28,7 +27,7 @@ public partial class Net1710_221_8_BadmintonContext : DbContext
     public virtual DbSet<OrderDetail> OrderDetails { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-        optionsBuilder.UseSqlServer("data source=server;initial catalog=;user id=sa;password=12345;Integrated Security=True;TrustServerCertificate=True");
+        optionsBuilder.UseSqlServer("data source=localhost;initial catalog=Net1710_221_8_Badminton;user id=sa;password=12345;Integrated Security=True;TrustServerCertificate=True");
         base.OnConfiguring(optionsBuilder);
     }
 
@@ -36,7 +35,7 @@ public partial class Net1710_221_8_BadmintonContext : DbContext
     {
         modelBuilder.Entity<Court>(entity =>
         {
-            entity.HasKey(e => e.CourtId).HasName("PK__Court__C3A67C9A1483B5C1");
+            entity.HasKey(e => e.CourtId).HasName("PK__Court__C3A67C9A0954DD17");
 
             entity.ToTable("Court");
 
@@ -55,12 +54,14 @@ public partial class Net1710_221_8_BadmintonContext : DbContext
 
         modelBuilder.Entity<CourtDetail>(entity =>
         {
-            entity.HasKey(e => e.CourtDetailId).HasName("PK__CourtDet__91278BAA26348000");
+            entity.HasKey(e => e.CourtDetailId).HasName("PK__CourtDet__91278BAAB3642086");
 
             entity.ToTable("CourtDetail");
 
-            entity.Property(e => e.EndTime).HasColumnType("datetime");
-            entity.Property(e => e.StartTime).HasColumnType("datetime");
+            entity.Property(e => e.Slot)
+                .IsRequired()
+                .HasMaxLength(50)
+                .IsUnicode(false);
             entity.Property(e => e.Status)
                 .HasMaxLength(50)
                 .IsUnicode(false);
@@ -68,22 +69,12 @@ public partial class Net1710_221_8_BadmintonContext : DbContext
             entity.HasOne(d => d.Court).WithMany(p => p.CourtDetails)
                 .HasForeignKey(d => d.CourtId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__CourtDeta__Court__403A8C7D");
-
-            entity.HasOne(d => d.Order).WithMany(p => p.CourtDetails)
-                .HasForeignKey(d => d.OrderId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__CourtDeta__Order__3F466844");
-
-            entity.HasOne(d => d.Staff).WithMany(p => p.CourtDetails)
-                .HasForeignKey(d => d.StaffId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__CourtDeta__Staff__3E52440B");
+                .HasConstraintName("FK__CourtDeta__Court__3E52440B");
         });
 
         modelBuilder.Entity<Customer>(entity =>
         {
-            entity.HasKey(e => e.CustomerId).HasName("PK__Customer__A4AE64D81395D17F");
+            entity.HasKey(e => e.CustomerId).HasName("PK__Customer__A4AE64D8AD342FF6");
 
             entity.ToTable("Customer");
 
@@ -106,7 +97,7 @@ public partial class Net1710_221_8_BadmintonContext : DbContext
 
         modelBuilder.Entity<Order>(entity =>
         {
-            entity.HasKey(e => e.OrderId).HasName("PK__Order__C3905BCF35767FD4");
+            entity.HasKey(e => e.OrderId).HasName("PK__Order__C3905BCF69E71BEF");
 
             entity.ToTable("Order");
 
@@ -123,19 +114,19 @@ public partial class Net1710_221_8_BadmintonContext : DbContext
 
         modelBuilder.Entity<OrderDetail>(entity =>
         {
-            entity.HasKey(e => e.OrderDetailId).HasName("PK__OrderDet__D3B9D36C9424FDD4");
+            entity.HasKey(e => e.OrderDetailId).HasName("PK__OrderDet__D3B9D36C9FC8B7AB");
 
             entity.ToTable("OrderDetail");
 
             entity.HasOne(d => d.CourtDetail).WithMany(p => p.OrderDetails)
                 .HasForeignKey(d => d.CourtDetailId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__OrderDeta__Court__440B1D61");
+                .HasConstraintName("FK__OrderDeta__Court__4222D4EF");
 
             entity.HasOne(d => d.Order).WithMany(p => p.OrderDetails)
                 .HasForeignKey(d => d.OrderId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__OrderDeta__Order__4316F928");
+                .HasConstraintName("FK__OrderDeta__Order__412EB0B6");
         });
 
         OnModelCreatingPartial(modelBuilder);

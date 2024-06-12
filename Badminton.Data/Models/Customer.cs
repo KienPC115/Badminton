@@ -19,7 +19,5 @@ public partial class Customer
 
     public DateTime DateOfBirth { get; set; }
 
-    public virtual ICollection<CourtDetail> CourtDetails { get; set; } = new List<CourtDetail>();
-
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 }

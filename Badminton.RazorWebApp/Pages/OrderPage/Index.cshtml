@@ -1,0 +1,66 @@
+﻿@page
+@model Badminton.RazorWebApp.Pages.OrderPage.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Order[0].Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Order[0].TotalAmount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Order[0].Customer.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Order[0].Customer.Address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Order[0].Customer.DateOfBirth)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Order[0].Customer.Email)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Order) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalAmount)
+            </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Customer.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Customer.Address)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Customer.DateOfBirth)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Customer.Email)
+                </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.OrderId">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.OrderId">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.OrderId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

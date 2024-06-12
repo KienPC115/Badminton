@@ -9,15 +9,9 @@ public partial class CourtDetail
 {
     public int CourtDetailId { get; set; }
 
-    public int StaffId { get; set; }
-
-    public int OrderId { get; set; }
-
     public int CourtId { get; set; }
 
-    public DateTime StartTime { get; set; }
-
-    public DateTime EndTime { get; set; }
+    public string Slot { get; set; }
 
     public double Price { get; set; }
 
@@ -25,9 +19,5 @@ public partial class CourtDetail
 
     public virtual Court Court { get; set; }
 
-    public virtual Order Order { get; set; }
-
     public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
-
-    public virtual Customer Staff { get; set; }
 }

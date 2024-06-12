@@ -1,0 +1,126 @@
+﻿@page
+@model Badminton.RazorWebApp.Pages.CourtDetailModel
+@{
+    ViewData["Title"] = "CourtDetail";
+    var courtDetails = Model.CourtDetails;
+    var courtDetail = Model.CourtDetail;
+    int i = 0;
+}
+
+<div class="text-center">
+    <h1 class="display-6">Court Details management</h1>
+</div>
+
+<div class="row">
+    <div class="col-md-12 text-end">
+        <button type="button" class="btn btn-primary" onclick="add();">
+            Add
+        </button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+                <tr class="card-header">
+                    <th class="card-title text-center">No</th>
+                    <th class="card-title text-center">Court Name</th>
+                    <th class="card-title text-center">Slot</th>
+                    <th class="card-title text-center">Price</th>
+                    <th class="card-title text-center">Status</th>
+                </tr>
+            </thead>
+            <tbody class="tblcurrencyList">
+                @if (courtDetails.Count > 0)
+                {
+                    foreach (var item in courtDetails)
+                    {
+                        <tr>
+                            <td>@(++i)</td>
+                            <td>@item.Court.Name</td>
+                            <td>@item.Slot</td>
+                            <td>@item.Price</td>
+                            <td>@item.Status</td>
+                            <td>
+                                <form asp-page-handler="GetCourtDetail" asp-route-id="@item.CourtDetailId" method="get">
+                                    <button class="btn btn-primary">Edit</button>
+                                </form>
+                                <button type="button" class="btn btn-danger" asp-page="./CourtDetail"
+                                        onclick="return confirm('Are you sure you want to delete this item?');"
+                                        asp-page-handler="Delete" asp-route-id="@item.CourtDetailId">
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <p>No Court Details Available.</p>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal fade" id="courtDetailModal" tabindex="-1" aria-labelledby="courtDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { name = "frm", id = "frm" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <h5 class="modal-title" id="courtDetailModalLabel">New Court Detail</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="courtDetailModalContent"></div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <div class="col-md-6">
+                                    <label for="1">Court Name</label>
+                                    <input asp-for="CourtDetail.Court.Name" class="form-control" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="1">Price</label>
+                                    <input asp-for="CourtDetail.Court.Price" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <div class="col-md-6">
+                                    <label for="1">Slot</label>
+                                    <input asp-for="CourtDetail.Slot" class="form-control" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="1">Status</label>
+                                    <input asp-for="CourtDetail.Status" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label>@Model.Message</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="btSave" type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        function add() {
+            $('#courtDetailModal').modal('show');
+        }
+    </script>
+}
+

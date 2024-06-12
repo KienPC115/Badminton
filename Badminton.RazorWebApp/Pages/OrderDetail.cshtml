@@ -1,0 +1,152 @@
+﻿@page
+@model Badminton.RazorWebApp.Pages.OrderDetailModel
+@{
+    ViewData["Title"] = "OrderDetail";
+    var orderDetails = Model.OrderDetails;
+    var orders = Model.Orders;
+    var courtDetails = Model.CourtDetails;
+    var courts = Model.Courts;
+    var message = Model.Message;
+}
+
+<div class="text-center">
+    <h1 class="display-6">Order Details management</h1>
+</div>
+
+<div class="row">
+    <div class="col-md-12 text-end">
+        <button type="button" class="btn btn-primary" onclick="openModal();">
+            Add
+        </button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+                <tr class="card-header">
+                    <th class="card-title text-center">CodeId</th>
+                    <th class="card-title text-center">OrderId</th>
+                    <th class="card-title text-center">Court</th>
+                    <th class="card-title text-center">Slot</th>
+                    <th class="card-title text-center">Amount</th>
+                    <th class="card-title text-center"></th>
+                </tr>
+            </thead>
+            <tbody class="tblcurrencyList">
+                @if (orderDetails.Count > 0)
+                {
+                    foreach (var orderDetail in orderDetails)
+                    {
+                        <tr>
+                            <td>@orderDetail.OrderDetailId</td>
+                            <td>@orderDetail.OrderId</td>
+                            <td>@orderDetail.CourtDetail.Court.Name</td>
+                            <td>@orderDetail.CourtDetail.Slot</td>
+                            <td>@orderDetail.Amount</td>
+                            <td>
+                                <button type="button" class="btn btn-primary" onclick="editOrderDetail(@orderDetail.OrderDetailId, @orderDetail.OrderId, @orderDetail.CourtDetailId, @orderDetail.CourtDetail.Price);">Edit</button>
+                                <form method="post" asp-page-handler="delete" asp-route-id="@orderDetail.OrderDetailId" onsubmit="return confirm('Are you sure you want to delete this order detail?');">
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                    </form>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5">No details found</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal fade" id="orderDetailModal" tabindex="-1" aria-labelledby="orderDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { name = "frm", id = "frm" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <h5 class="modal-title" id="orderDetailModalLabel">New OrderDetail</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="orderDetailModalContent"></div>
+                    <input type="hidden" asp-for="OrderDetail.OrderDetailId" id="orderDetailID" />
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <div class="col-md-6">
+                                    <label for="orderId">Order</label>
+                                    <select asp-for="OrderDetail.OrderId" class="form-control" id="orderId">
+                                        @foreach (var order in orders)
+                                        {
+                                            <option value=@order.OrderId>@order.OrderId - @order.Customer.Name</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <div class="col-md-6">
+                                    <label for="courtDetailId">Court</label>
+                                    <select asp-for="OrderDetail.CourtDetailId" class="form-control" id="courtDetailId">
+                                        @foreach (var court in courts)
+                                        {
+                                            @foreach (var courtDetail in court.CourtDetails)
+                                            {
+                                                <option value=@courtDetail.CourtDetailId>@court.Name - @courtDetail.Slot - @courtDetail.Price</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label>@Model.Message</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="btSave" type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        function openModal() {
+            document.getElementById('orderDetailModalLabel').innerText = "New Order Detail";
+            document.getElementById('frm').action = "/OrderDetail?handler=Post"; // Use OnPost handler for creating a new order
+            document.getElementById('frm').reset();
+            $('#orderDetailModal').modal('show');
+        }
+
+        function editOrderDetail(orderDetailId, orderId, courtDetailId, amount) {
+            document.getElementById('orderDetailModalLabel').innerText = "Edit Order Detail";
+            document.getElementById('frm').action = "/OrderDetail?handler=Put"; // Use OnPostPut handler for updating an existing order
+            document.getElementById('orderDetailID').value = orderDetailId;
+            document.getElementById('orderId').value = orderId;
+            document.getElementById('courtDetailId').value = courtDetailId;
+            $('#orderDetailModal').modal('show');
+        }
+
+        $(document).ready(function () {
+            var message = '@message';
+            if (message) {
+                alert(message);
+            }
+        });
+    </script>
+}
+

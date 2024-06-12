@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -100,7 +101,7 @@ namespace Badminton.WpfApp.UI
                     MessageBox.Show(result.Message);
                 }
 
-                var courtDetail = result as CourtDetail;
+                var courtDetail = result.Data as CourtDetail;
                 courtDetail.CourtId = court.CourtId;
                 courtDetail.Status = status;
                 courtDetail.Slot = slot;
@@ -111,6 +112,7 @@ namespace Badminton.WpfApp.UI
                 {
                     MessageBox.Show(resultUpdate.Message);
                 }
+                this.LoadData();
             }
         }
 
@@ -156,15 +158,18 @@ namespace Badminton.WpfApp.UI
         private async void grdCourtDetail_MouseDouble_Click(object sender, MouseButtonEventArgs e)
         {
             var courtDetail = (sender as DataGrid).SelectedItem as CourtDetail;
-
+           
             if (courtDetail != null)
             {
+                var result = await _courtBusiness.GetCourtIdByName(courtDetail.Court.Name);
+                var court = result.Data as Court;
                 txtCourtDetailId.Text = courtDetail.CourtDetailId.ToString();
-                ComboBoxCourtName.SelectedItem = courtDetail.Court;
+                ComboBoxCourtName.SelectedItem = court;   
                 ComboBoxSlot.SelectedItem = courtDetail.Slot;
                 ComboBoxStatus.SelectedItem = courtDetail.Status;
                 txtCourtPrice.Text = courtDetail.Price.ToString();
             }
+            this.ClearData();
         }
     }
 }

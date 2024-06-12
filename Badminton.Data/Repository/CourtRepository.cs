@@ -20,5 +20,10 @@ namespace Badminton.Data.Repository {
                 .Where(x => x.Status.ToLower() == status.ToLower())
                 .ToListAsync();
         }
+
+        public async Task<Court> GetCourtIdByName(string name)
+        {
+            return await _context.Courts.FirstOrDefaultAsync(x => x.Name.ToLower() == name.ToLower());
+        }
     }
 }

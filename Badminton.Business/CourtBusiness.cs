@@ -21,6 +21,7 @@ namespace Badminton.Business
         public Task<IBadmintonResult> AddCourt(Court court);
         public Task<IBadmintonResult> UpdateCourt(int courtId, Court court);
         public Task<IBadmintonResult> DeleteCourt(int courtId);
+        public Task<IBadmintonResult> GetCourtIdByName(string name);
     }
 
     public class CourtBusiness : ICourtBusiness
@@ -134,6 +135,26 @@ namespace Badminton.Business
                 }
 
                 return new BadmintonResult(Const.FAIL_DELETE_CODE, Const.FAIL_DELETE_MSG);
+            }
+            catch (Exception ex)
+            {
+                return new BadmintonResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
+
+        public async Task<IBadmintonResult> GetCourtIdByName(string name)
+        {
+            try
+            {
+                var court = await _unitOfWork.CourtRepository.GetCourtIdByName(name);
+                if (court == null)
+                {
+                    return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
+                }
+                else
+                {
+                    return new BadmintonResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG,court!);
+                }
             }
             catch (Exception ex)
             {

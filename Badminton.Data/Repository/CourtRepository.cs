@@ -21,6 +21,19 @@ namespace Badminton.Data.Repository {
                 .ToListAsync();
         }
 
+        public async Task<List<Court>> GetCourtsByKeyword(string key) {
+            if(string.IsNullOrEmpty(key))
+                return await _context.Courts.ToListAsync();
+
+            key = key.Trim();
+            return await _context.Courts
+                .Where(x => x.Name.ToLower().Contains(key.ToLower())
+                || x.Description.ToLower().Contains(key.ToLower())
+                || x.Price.ToString().ToLower().Contains(key.ToLower())
+                || x.Status.ToLower().Contains(key.ToLower()))
+                .ToListAsync();
+        }
+
         public async Task<Court> GetCourtIdByName(string name)
         {
             return await _context.Courts.FirstOrDefaultAsync(x => x.Name.ToLower() == name.ToLower());

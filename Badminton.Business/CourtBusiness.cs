@@ -17,6 +17,7 @@ namespace Badminton.Business
     {
         public Task<IBadmintonResult> GetAllCourts();
         public Task<IBadmintonResult> GetCourtsByStatus(string status);
+        public Task<IBadmintonResult> GetCourtsByKeyword(string key);
         public Task<IBadmintonResult> GetCourtById(int courtId);
         public Task<IBadmintonResult> AddCourt(Court court);
         public Task<IBadmintonResult> UpdateCourt(int courtId, Court court);
@@ -166,6 +167,21 @@ namespace Badminton.Business
             try {
                 //var courts = await _DAO.GetAllAsync();
                 var courts = await _unitOfWork.CourtRepository.GetCourtsByStatusAsync(status);
+                if (courts == null) {
+                    return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
+                }
+
+                return new BadmintonResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, courts!);
+            }
+            catch (Exception ex) {
+                return new BadmintonResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
+
+        public async Task<IBadmintonResult> GetCourtsByKeyword(string? key) {
+            try {
+                //var courts = await _DAO.GetAllAsync();
+                var courts = await _unitOfWork.CourtRepository.GetCourtsByKeyword(key);
                 if (courts == null) {
                     return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
                 }

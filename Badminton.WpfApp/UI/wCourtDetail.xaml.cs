@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -36,7 +37,7 @@ namespace Badminton.WpfApp.UI
 
         public async void LoadData()
         {
-            var result = await _courtDetailBusiness.GetAllCourtDetailsIncludeCourt();
+            var result = await _courtDetailBusiness.GetAllCourtDetailsIncludeCourt("");
             var resultCourts = await _courtBusiness.GetCourtsByStatus(CourtShared.Status()[0]); // get court with available status
             var SlotList = CourtDetailShared.Slot();
             var StatusList = CourtDetailShared.Status();
@@ -101,6 +102,8 @@ namespace Badminton.WpfApp.UI
                 }
 
                 var courtDetail = result.Data as CourtDetail;
+
+                courtDetail.CourtId = court.CourtId;
                 courtDetail.Status = status;
                 courtDetail.Slot = slot;
                 courtDetail.Price = price;
@@ -111,6 +114,7 @@ namespace Badminton.WpfApp.UI
                 {
                     MessageBox.Show(resultUpdate.Message);
                 }
+                this.LoadData();
             }
         }
 
@@ -156,15 +160,18 @@ namespace Badminton.WpfApp.UI
         private async void grdCourtDetail_MouseDouble_Click(object sender, MouseButtonEventArgs e)
         {
             var courtDetail = (sender as DataGrid).SelectedItem as CourtDetail;
-
+           
             if (courtDetail != null)
             {
+                var result = await _courtBusiness.GetCourtIdByName(courtDetail.Court.Name);
+                var court = result.Data as Court;
                 txtCourtDetailId.Text = courtDetail.CourtDetailId.ToString();
-                ComboBoxCourtName.SelectedItem = courtDetail.Court;
+                ComboBoxCourtName.SelectedItem = court;   
                 ComboBoxSlot.SelectedItem = courtDetail.Slot;
                 ComboBoxStatus.SelectedItem = courtDetail.Status;
                 txtCourtPrice.Text = courtDetail.Price.ToString();
             }
+            this.ClearData();
         }
     }
 }

@@ -19,7 +19,7 @@ namespace Badminton.Business
     public interface ICourtDetailBusiness
     {
         public Task<IBadmintonResult> GetAllCourtDetails();
-        public Task<IBadmintonResult> GetAllCourtDetailsIncludeCourt();
+        public Task<IBadmintonResult> GetAllCourtDetailsIncludeCourt(string? Search);
 
         public Task<IBadmintonResult> GetCourtDetail(int courtDetailId);
         public Task<IBadmintonResult> AddCourtDetail(CourtDetail courtDetail);
@@ -90,11 +90,11 @@ namespace Badminton.Business
                 return new BadmintonResult(Const.ERROR_EXCEPTION, ex.Message);
             }
         }
-        public async Task<IBadmintonResult> GetAllCourtDetailsIncludeCourt()
+        public async Task<IBadmintonResult> GetAllCourtDetailsIncludeCourt(string? Search)
         {
             try
             {
-                var courtDetails = await _unitOfWork.CourtDetailRepository.GetAllCourtDetailsIncludeCourtAsync();
+                var courtDetails = await _unitOfWork.CourtDetailRepository.GetAllCourtDetailsIncludeCourtAsync(Search);
                 return courtDetails.Count > 0 ? new BadmintonResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, courtDetails)
                                                : new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
             }
@@ -134,7 +134,7 @@ namespace Badminton.Business
                 courtDetail.Price = updateCourtDetail.Price;
                 courtDetail.Status = updateCourtDetail.Status;
                 var result = await _unitOfWork.CourtDetailRepository.UpdateAsync(courtDetail);
-                if (msg.ToLower().Contains(CourtDetailShared.DELETE))
+                if (msg.Contains(CourtDetailShared.DELETE))
                 {
                     return result > 0
                         ? new BadmintonResult(Const.SUCCESS_DELETE_CODE, Const.SUCCESS_DELETE_MSG)

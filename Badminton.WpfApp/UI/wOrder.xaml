@@ -14,6 +14,8 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="80"/>
@@ -33,12 +35,20 @@
                         <ComboBoxItem Content="Online Payment"/>
                     </ComboBox>
 
-                    <Label Grid.Column="0" Grid.Row="2" Content="TotalAmount" HorizontalAlignment="Left" VerticalContentAlignment="Center" />
-                    <TextBox Grid.Column="1" Grid.Row="2" x:Name="txtTotalAmount" Height="25" Text="0" IsReadOnly="True" Margin="5" Width="180" HorizontalAlignment="Left"/>
+                    <Label Grid.Column="0" Grid.Row="2" Content="Note" HorizontalAlignment="Left" VerticalContentAlignment="Center" />
+                    <TextBox Grid.Column="1" Grid.Row="2" x:Name="txtNote" Height="25" Text="" Margin="5" Width="180" HorizontalAlignment="Left"/>
+
+                    <Label Grid.Column="0" Grid.Row="3" Content="Order Date" HorizontalAlignment="Left" VerticalContentAlignment="Center" />
+                    <DatePicker Grid.Column="1" Grid.Row="3" x:Name="txtDate" Height="25" Margin="5"  Width="180" HorizontalAlignment="Left"/>
+
+                    <Label Grid.Column="0" Grid.Row="4" Content="TotalAmount" HorizontalAlignment="Left" VerticalContentAlignment="Center" />
+                    <TextBox Grid.Column="1" Grid.Row="4" x:Name="txtTotalAmount" Height="25" Text="0" IsReadOnly="True" Margin="5" Width="180" HorizontalAlignment="Left"/>
 
                 </Grid>
             </GroupBox>
             <StackPanel Height="40" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Label Content="Search Note" Margin="5, 5, 10, 5"/>
+                <TextBox TextWrapping="Wrap" x:Name="txtKey" Width="400" Margin="0, 5, 40, 5" TextChanged="TextBox_TextChanged"/>
                 <Button x:Name="ButtonRefresh" Content="Refresh" Height="30" Width="80" Click="ButtonRefresh_Click"/>
                 <Button x:Name="ButtonSave" Content="Save" Height="30" Width="80" Click="ButtonSave_Click"/>
                 <Button x:Name="ButtonCancel" Content="Cancel" Height="30" Width="80" Click="ButtonCancel_Click"/>
@@ -50,7 +60,9 @@
                         <DataGridTextColumn Header="Code" Binding="{Binding Path=OrderId}" Visibility="Visible" IsReadOnly="True"/>
                         <DataGridTextColumn Header="CustomerId" Binding="{Binding Path=CustomerId}" Width="180"  IsReadOnly="True"/>
                         <DataGridTextColumn Header="Type" Binding="{Binding Path=Type}" Width="180"  IsReadOnly="True"/>
-                        <DataGridTextColumn Header="TotalAmount" Binding="{Binding Path=TotalAmount}" Width="180"  IsReadOnly="True"/>
+                        <DataGridTextColumn Header="Note" Binding="{Binding Path=OrderNotes}" Width="180"  IsReadOnly="True"/>
+                        <DataGridTextColumn Header="Order Date" Binding="{Binding Path=OrderDate}" Width="180" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="Total Amount" Binding="{Binding Path=TotalAmount}" Width="180"  IsReadOnly="True"/>
                         <DataGridTemplateColumn Width="50">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>

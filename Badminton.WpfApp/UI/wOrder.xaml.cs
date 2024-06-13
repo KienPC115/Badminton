@@ -38,10 +38,17 @@ namespace Badminton.WpfApp.UI
             try
             {
                 var result = await _orderBusiness.GetAllOrders();
-
                 if (result.Status > 0 && result.Data != null)
                 {
                     grdOrder.ItemsSource = result.Data as List<Order>;
+                    (result.Data as List<Order>).ForEach(o =>
+                    {
+                        if (o.OrderNotes == null)
+                        {
+                            o.OrderNotes = string.Empty;
+                            _orderBusiness.UpdateOrder(o);
+                        }
+                    });
                 }
                 else
                 {
@@ -56,12 +63,24 @@ namespace Badminton.WpfApp.UI
 
         private Order GetOrder()
         {
+            DateTime orderDate = txtDate.DisplayDate;
+            if (orderDate.ToString().IsNullOrEmpty())
+            {
+                orderDate = DateTime.Now;
+            }
+            string note = txtNote.Text;
+            if (note.IsNullOrEmpty())
+            {
+                note = string.Empty;
+            }
             return new Order
             {
                 OrderId = int.Parse(txtOrderId.Text),
                 CustomerId = int.Parse(txtCustomerId.Text),
                 TotalAmount = int.Parse(txtTotalAmount.Text),
                 Type = txtType.Text,
+                OrderNotes = note,
+                OrderDate = orderDate,
             };
         }
 
@@ -146,7 +165,18 @@ namespace Badminton.WpfApp.UI
                                 txtOrderId.Text = item.OrderId.ToString();
                                 txtCustomerId.Text = item.CustomerId.ToString();
                                 txtTotalAmount.Text = item.TotalAmount.ToString();
-                                txtType.Text = item.Type.ToString();
+                                txtNote.Text = item.OrderNotes;
+                                txtDate.SelectedDate = item.OrderDate;
+
+                                // Select the appropriate item in the ComboBox
+                                foreach (ComboBoxItem comboBoxItem in txtType.Items)
+                                {
+                                    if (comboBoxItem.Content.ToString() == item.Type)
+                                    {
+                                        txtType.SelectedItem = comboBoxItem;
+                                        break;
+                                    }
+                                }
                             }
                         }
                     }
@@ -188,10 +218,33 @@ namespace Badminton.WpfApp.UI
             txtOrderId.Text = "0";
             txtTotalAmount.Text = "0";
             txtType.Text = string.Empty;
+            txtDate.Text = DateTime.Now.ToString();
+            txtNote.Text = string.Empty;
         }
         private void ButtonRefresh_Click(object sender, RoutedEventArgs e)
         {
             RefreshAllText();
+        }
+
+        private async void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                var result = await _orderBusiness.GetBySearchingNote(txtKey.Text);
+
+                if (result.Status > 0 && result.Data != null)
+                {
+                    grdOrder.ItemsSource = result.Data as List<Order>;
+                }
+                else
+                {
+                    grdOrder.ItemsSource = new List<Order>();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error");
+            }
         }
     }
 }

@@ -43,20 +43,7 @@ namespace Badminton.RazorWebApp.Pages.OrderDetailPage
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-            var result = await _courtDetailBusiness.GetCourtDetail(OrderDetail.CourtDetailId);
-            if (result.Status <= 0)
-            {
-                return Page();
-            }
-            var courtDetail = result.Data as CourtDetail;
-            courtDetail.Status = "Booked";
-            result = await _courtDetailBusiness.UpdateCourtDetail(courtDetail.CourtDetailId, courtDetail, CourtDetailShared.UPDATE);
-            if (result.Status <= 0)
-            {
-                return Page();
-            }
-            result = await _orderDetailBusiness.AddOrderDetail(OrderDetail);
-            await _orderBusiness.UpdateAmount(OrderDetail.OrderId);
+            var result = await _orderDetailBusiness.AddOrderDetail(OrderDetail);
             if (result.Status <= 0)
             {
                 return Page();

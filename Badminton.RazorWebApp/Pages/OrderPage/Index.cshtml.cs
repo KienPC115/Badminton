@@ -17,7 +17,8 @@ namespace Badminton.RazorWebApp.Pages.OrderPage
         {
             _orderBusiness ??= new OrderBusiness();
         }
-
+        [BindProperty]
+        public string Key { get; set; }
         public IList<Order> Order { get;set; } = default!;
 
         public async Task OnGetAsync()
@@ -25,7 +26,15 @@ namespace Badminton.RazorWebApp.Pages.OrderPage
             var result = await _orderBusiness.GetAllOrders();
             if (result.Status > 0)
             {
-                Order = (result.Data as List<Order>);
+                Order = result.Data as List<Order>;
+            }
+        }
+        public async Task OnPostAsync()
+        {
+            var result = await _orderBusiness.GetBySearchingNote(Key);
+            if (result.Status > 0)
+            {
+                Order = result.Data as List<Order>;
             }
         }
     }

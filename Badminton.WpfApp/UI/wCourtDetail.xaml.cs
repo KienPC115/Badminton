@@ -100,11 +100,11 @@ namespace Badminton.WpfApp.UI
                     MessageBox.Show(result.Message);
                 }
 
-                var courtDetail = result as CourtDetail;
-                courtDetail.CourtId = court.CourtId;
+                var courtDetail = result.Data as CourtDetail;
                 courtDetail.Status = status;
                 courtDetail.Slot = slot;
                 courtDetail.Price = price;
+                courtDetail.CourtId = court.CourtId;
                 var resultUpdate =
                     await _courtDetailBusiness.UpdateCourtDetail(courtDetailId, courtDetail, CourtDetailShared.UPDATE);
                 if (resultUpdate.Status < 0)

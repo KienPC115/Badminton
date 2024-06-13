@@ -1,4 +1,5 @@
 ﻿using Badminton.Business.Interface;
+using Badminton.Business.Shared;
 using Badminton.Common;
 using Badminton.Data;
 using Badminton.Data.DAO;
@@ -28,25 +29,38 @@ namespace Badminton.Business
     public class OrderDetailBusiness : IOrderDetailBusiness
     {
         private readonly UnitOfWork _unitOfWork;
+        private readonly CourtDetailBusiness _courtDetailBusiness;
         public OrderDetailBusiness()
         {
+            _courtDetailBusiness = new CourtDetailBusiness();
             _unitOfWork ??= new();
         }
-        public async Task<IBadmintonResult> AddOrderDetail(OrderDetail result)
+        public async Task<IBadmintonResult> AddOrderDetail(OrderDetail orderDetail)
         {
             try
             {
-                var od = await GetOrderDetailById(result.OrderDetailId);
-                if (od.Status > 0)
+                var result = await GetOrderDetailById(orderDetail.OrderDetailId);
+                if (result.Status > 0)
                 {
                     return new BadmintonResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
                 }
-                result.Amount = _unitOfWork.CourtDetailRepository.GetById(result.CourtDetailId).Price;
-                var check = await _unitOfWork.OrderDetailRepository.CreateAsync(result);
+                orderDetail.OrderDetailId = 0;
+                orderDetail.Amount = _unitOfWork.CourtDetailRepository.GetById(orderDetail.CourtDetailId).Price;
+                var check = await _unitOfWork.OrderDetailRepository.CreateAsync(orderDetail);
                 if (check == 0)
                 {
                     return new BadmintonResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
                 }
+                
+                result = await _courtDetailBusiness.GetCourtDetail(orderDetail.CourtDetailId);
+                var courtDetail = result.Data as CourtDetail;
+                courtDetail.Status = "Booked";
+                result = await _courtDetailBusiness.UpdateCourtDetail(courtDetail.CourtDetailId, courtDetail, CourtDetailShared.UPDATE);
+                if (result.Status <= 0)
+                {
+                    return result;
+                }
+
                 return new BadmintonResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG);
             }
             catch (Exception ex)
@@ -101,14 +115,20 @@ namespace Badminton.Business
         {
             try
             {
-                var od = await GetOrderDetailById(orderDetailId);
+                var result = await GetOrderDetailById(orderDetailId);
 
-                if (od.Data == null)
+                if (result.Data == null)
                 {
-                    return od;
+                    return result;
                 }
 
-                OrderDetail orderDetail = (OrderDetail)od.Data;
+                OrderDetail orderDetail = (OrderDetail)result.Data;
+
+                result = await _courtDetailBusiness.GetCourtDetail(orderDetail.CourtDetailId);
+                var oldCourtDetail = result.Data as CourtDetail;
+                oldCourtDetail.Status = "Available";
+                result = await _courtDetailBusiness.UpdateCourtDetail(oldCourtDetail.CourtDetailId, oldCourtDetail, CourtDetailShared.UPDATE);
+
                 var check = await _unitOfWork.OrderDetailRepository.RemoveAsync(orderDetail);
                 if (!check)
                 {
@@ -216,6 +236,7 @@ namespace Badminton.Business
                     return result;
                 }
                 var od = result.Data as OrderDetail;
+
                 od.CourtDetailId = orderDetail.CourtDetailId;
                 od.OrderId = orderDetail.OrderId;
                 od.Amount = _unitOfWork.CourtDetailRepository.GetById(od.CourtDetailId).Price;
@@ -226,7 +247,18 @@ namespace Badminton.Business
                 {
                     return new BadmintonResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
                 }
-                return new BadmintonResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, check);
+
+                result = await _courtDetailBusiness.GetCourtDetail(orderDetail.CourtDetailId);
+                var newCourtDetail = result.Data as CourtDetail;
+                newCourtDetail.Status = "Booked";
+                result = await _courtDetailBusiness.UpdateCourtDetail(newCourtDetail.CourtDetailId, newCourtDetail, CourtDetailShared.UPDATE);
+
+                if (result.Status <= 0)
+                {
+                    return result;
+                }
+
+                return new BadmintonResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG, check);
             }
             catch (Exception ex)
             {

@@ -79,11 +79,6 @@ namespace Badminton.WpfApp.UI
             try
             {
                 var result = await _courtDetailBusiness.GetCourtDetail(int.Parse(txtCourtDetailId.Text));
-                if (result.Status <= 0)
-                {
-                    MessageBox.Show(result.Message);
-                    return;
-                }
                 var courtDetail = result.Data as CourtDetail;
                 if (courtDetail.Status != "Available")
                 {
@@ -94,21 +89,13 @@ namespace Badminton.WpfApp.UI
                 if (item.Data == null)
                 {
                     OrderDetail orderDetail = GetOrderDetail();
-                    orderDetail.OrderDetailId = 0;
-                    courtDetail.Status = "Booked";
                     result = await _orderDetailBunsiness.AddOrderDetail(orderDetail);
-                    result = await _courtDetailBusiness.UpdateCourtDetail(courtDetail.CourtDetailId, courtDetail, CourtDetailShared.UPDATE);
                     if (result.Status < 0) { MessageBox.Show(result.Message); return; }
-                    result = await _orderBusiness.UpdateAmount(orderDetail.OrderId); MessageBox.Show(result.Message);
                     RefreshAllText();
                 }
                 else
                 {
                     OrderDetail orderDetail = GetOrderDetail();
-                    result = await _courtDetailBusiness.GetCourtDetail(orderDetail.CourtDetailId);
-                    courtDetail = result.Data as CourtDetail;
-                    courtDetail.Status = "Booked";
-                    result = await _courtDetailBusiness.UpdateCourtDetail(courtDetail.CourtDetailId, courtDetail, CourtDetailShared.UPDATE);
                     result = await _orderDetailBunsiness.UpdateOrderDetail(orderDetail);
                     MessageBox.Show(result.Message);
                     RefreshAllText();
@@ -177,7 +164,6 @@ namespace Badminton.WpfApp.UI
                         var deletedOrderDetail = await _orderDetailBunsiness.GetOrderDetailById(int.Parse(code));
                         var orderDetail = deletedOrderDetail.Data as OrderDetail;
                         var result = await _orderDetailBunsiness.DeleteOrderDetail(int.Parse(code));
-                        _orderBusiness.UpdateAmount(orderDetail.OrderId);
                         MessageBox.Show($"{result.Message}", "Delete");
                         LoadGrdOrderDetails();
                     }

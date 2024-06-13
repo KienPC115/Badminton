@@ -2,6 +2,7 @@
 @model Badminton.RazorWebApp.Pages.OrderPage.IndexModel
 
 @{
+    string key = Model.Key;
     ViewData["Title"] = "Index";
 }
 
@@ -10,6 +11,11 @@
 <p>
     <a asp-page="Create">Create New</a>
 </p>
+ <form method="post">
+    <label>Search by note</label>
+    <input asp-for=Key class="form-control" />
+    <input type="submit" value="Save" class="btn btn-primary" />
+ </form>
 <table class="table">
     <thead>
         <tr>
@@ -30,6 +36,12 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Order[0].Customer.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Order[0].OrderDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Order[0].OrderNotes)
             </th>
             <th></th>
         </tr>
@@ -54,6 +66,12 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Customer.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderNotes)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderDate)
                 </td>
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.OrderId">Edit</a> |

@@ -4,6 +4,7 @@ using Badminton.Data;
 using Badminton.Data.DAO;
 using Badminton.Data.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,7 @@ namespace Badminton.Business
         public Task<IBadmintonResult> DeleteOrder(int orderId);
         public Task<IBadmintonResult> DeleteOrdersByCustomerId(int orderId);
         public Task<IBadmintonResult> UpdateAmount(int orderId);
-
+        public Task<IBadmintonResult> GetBySearchingNote(string note);
         public Task<IBadmintonResult> Save(Order order);
     }
     public class OrderBusiness : IOrderBusiness
@@ -126,7 +127,7 @@ namespace Badminton.Business
                 {
                     return o;
                 }
-
+                order.OrderId = 0;
                 var check = await _unitOfWork.OrderRepository.CreateAsync(order);
                 if (check == 0)
                 {
@@ -151,6 +152,8 @@ namespace Badminton.Business
                 existingOrder.OrderDetails = order.OrderDetails;
                 existingOrder.CustomerId = order.CustomerId;
                 existingOrder.Type = order.Type;
+                existingOrder.OrderNotes = order.OrderNotes;
+                existingOrder.OrderDate = order.OrderDate;
                 var check = await _unitOfWork.OrderRepository.UpdateAsync(existingOrder);
 
                 if (check == 0)
@@ -245,6 +248,32 @@ namespace Badminton.Business
         public Task<IBadmintonResult> Save(Order order)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<IBadmintonResult> GetBySearchingNote(string note)
+        {
+            try
+            {
+                var result = await GetAllOrders();
+                if (result.Status <= 0)
+                {
+                    return result;
+                }
+                if (note.IsNullOrEmpty())
+                {
+                    note = string.Empty;
+                }
+                return new BadmintonResult
+                {
+                    Status = Const.SUCCESS_READ_CODE,
+                    Message = Const.SUCCESS_READ_MSG,
+                    Data = (result.Data as List<Order>).Where(d => d.OrderNotes.Trim().ToUpper().Contains(note.Trim().ToUpper())).ToList()
+                };
+            }
+            catch (Exception ex)
+            {
+                return new BadmintonResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
         }
     }
 }

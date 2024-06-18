@@ -34,6 +34,8 @@ CREATE TABLE [Order] (
     OrderId INT IDENTITY(1,1) PRIMARY KEY,
     CustomerId INT NOT NULL,
     Type VARCHAR(50) NOT NULL,
+    OrderDate DATETIME NOT NULL DEFAULT GETDATE(),
+    OrderNotes VARCHAR(500),
     TotalAmount FLOAT NOT NULL,
     FOREIGN KEY (CustomerId) REFERENCES [Customer](CustomerId)
 );
@@ -92,13 +94,13 @@ INSERT INTO Court (Name, Status, Description, Price) VALUES
 GO
 
 -- Insert dummy data into Order table
-INSERT INTO [Order] (CustomerId, Type, TotalAmount) VALUES
-(1, 'Paid', 100.0),
-(2, 'UnPaid', 150.0),
-(3, 'Paid', 300.0),
-(4, 'Paid', 250.0),
-(5, 'UnPaid', 75.0),
-(6, 'UnPaid', 200.0);
+INSERT INTO [Order] (CustomerId, Type, TotalAmount, OrderDate, OrderNotes) VALUES
+(1, 'Direct Payment', 100.0, '2024-05-01 00:00:00.000', 'Contrary to popular belief, Lorem Ipsum is not simply random text'),
+(2, 'Direct Payment', 150.0, '2024-05-01 00:00:00.000', 'There are many variations of passages of Lorem Ipsum available.'),
+(3, 'Direct Payment', 300.0, '2024-05-01 00:00:00.000', 'Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero'),
+(4, 'Direct Payment', 250.0, '2024-05-01 00:00:00.000', 'The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.'),
+(5, 'Direct Payment', 75.0, '2024-05-01 00:00:00.000', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam'),
+(6, 'Direct Payment', 200.0, '2024-05-01 00:00:00.000', 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. ');
 GO
 
 -- Insert dummy data into CourtDetail table

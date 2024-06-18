@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Badminton.Data.Models;
 using Badminton.Business;
+using Badminton.Data.Base;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Badminton.RazorWebApp.Pages.OrderPage
 {
@@ -18,23 +20,59 @@ namespace Badminton.RazorWebApp.Pages.OrderPage
             _orderBusiness ??= new OrderBusiness();
         }
         [BindProperty]
-        public string Key { get; set; }
-        public IList<Order> Order { get;set; } = default!;
+        public string CurrentFilter { get; set; }
+        public int PageSize {  get; set; }
+        //public IList<Order> Orders { get;set; } = default!;
+        public PaginatedList<Order> Orders { get; set; }
 
-        public async Task OnGetAsync()
+        //public async Task OnGetAsync(int? pageIndex, string searchString)
+        //{
+        //    #region configuration
+        //    var configuration = new ConfigurationBuilder()
+        //    .SetBasePath(AppContext.BaseDirectory) // Set the base path for configuration file
+        //    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+        //    .Build();
+        //    #endregion
+
+        //    int pageSize = configuration.GetValue<int>("PageSize");
+
+        //    var result = await _orderBusiness.GetAllOrders();
+        //    if (!searchString.IsNullOrEmpty())
+        //    {
+        //        SearchString = searchString ?? string.Empty;
+        //        result = await _orderBusiness.GetBySearchingNote(SearchString);
+        //    }
+
+        //    if (result.Status > 0)
+        //    {
+        //        Orders = await PaginatedList<Order>.CreateAsync(result.Data as List<Order>, pageIndex ?? 1, pageSize);
+        //    }
+        //}
+        public async Task OnGetAsync(int? pageIndex, string searchString, string currentFilter)
         {
+            #region configuration
+            var configuration = new ConfigurationBuilder()
+            .SetBasePath(AppContext.BaseDirectory) // Set the base path for configuration file
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .Build();
+            #endregion
+            if (searchString != null)
+                pageIndex = 1;
+            else
+                searchString = currentFilter;
+
+            CurrentFilter = searchString;
+
             var result = await _orderBusiness.GetAllOrders();
-            if (result.Status > 0)
+            if (!searchString.IsNullOrEmpty())
             {
-                Order = result.Data as List<Order>;
+                result = await _orderBusiness.GetBySearchingNote(CurrentFilter);
             }
-        }
-        public async Task OnPostAsync()
-        {
-            var result = await _orderBusiness.GetBySearchingNote(Key);
+
             if (result.Status > 0)
             {
-                Order = result.Data as List<Order>;
+                PageSize = configuration.GetValue<int>("PageSize", 3);
+                Orders = await PaginatedList<Order>.CreateAsync(result.Data as List<Order>, pageIndex ?? 1, PageSize);
             }
         }
     }

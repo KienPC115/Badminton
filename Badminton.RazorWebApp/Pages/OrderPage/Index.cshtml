@@ -2,7 +2,6 @@
 @model Badminton.RazorWebApp.Pages.OrderPage.IndexModel
 
 @{
-    string key = Model.Key;
     ViewData["Title"] = "Index";
 }
 
@@ -11,74 +10,95 @@
 <p>
     <a asp-page="Create">Create New</a>
 </p>
- <form method="post">
-    <label>Search by note</label>
-    <input asp-for=Key class="form-control" />
-    <input type="submit" value="Save" class="btn btn-primary" />
- </form>
+<form asp-asp-page="./Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Find by name:
+            <input type="text"
+                   name="searchString"
+                   value="@Model.CurrentFilter" />
+            <input type="submit"
+                   value="Search"
+                   class="btn btn-primary" />
+            <a asp-page="./Index">Back to full List</a>
+        </p>
+    </div>
+</form>
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Order[0].Type)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Order[0].TotalAmount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Order[0].Customer.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Order[0].Customer.Address)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Order[0].Customer.DateOfBirth)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Order[0].Customer.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Order[0].OrderDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Order[0].OrderNotes)
-            </th>
+            <th>@Html.DisplayNameFor(model => model.Orders[0].Type)</th>
+            <th>@Html.DisplayNameFor(model => model.Orders[0].TotalAmount)</th>
+            <th>@Html.DisplayNameFor(model => model.Orders[0].Customer.Name)</th>
+            <th>@Html.DisplayNameFor(model => model.Orders[0].Customer.Address)</th>
+            <th>@Html.DisplayNameFor(model => model.Orders[0].Customer.DateOfBirth)</th>
+            <th>@Html.DisplayNameFor(model => model.Orders[0].Customer.Email)</th>
+            <th>@Html.DisplayNameFor(model => model.Orders[0].OrderDate)</th>
+            <th>@Html.DisplayNameFor(model => model.Orders[0].OrderNotes)</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Order) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Type)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TotalAmount)
-            </td>
+        @foreach (var item in Model.Orders)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Type)</td>
+                <td>@Html.DisplayFor(modelItem => item.TotalAmount)</td>
+                <td>@Html.DisplayFor(modelItem => item.Customer.Name)</td>
+                <td>@Html.DisplayFor(modelItem => item.Customer.Address)</td>
+                <td>@Html.DisplayFor(modelItem => item.Customer.DateOfBirth)</td>
+                <td>@Html.DisplayFor(modelItem => item.Customer.Email)</td>
+                <td>@Html.DisplayFor(modelItem => item.OrderDate)</td>
+                <td>@Html.DisplayFor(modelItem => item.OrderNotes)</td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Customer.Name)
+                    <a asp-page="./Edit" asp-route-id="@item.OrderId">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@item.OrderId">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.OrderId">Delete</a>
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Customer.Address)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Customer.DateOfBirth)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Customer.Email)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.OrderNotes)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.OrderDate)
-                </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.OrderId">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.OrderId">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.OrderId">Delete</a>
-            </td>
-        </tr>
-}
+            </tr>
+        }
     </tbody>
 </table>
+<div id="pagination" class="pagination"></div>
+
+@* @section Scripts {
+    <script type="text/javascript">
+        $(function () {
+            $('#pagination').bootstrapPaginator({
+                currentPage: @Model.Orders.PageIndex,
+                totalPages: @Model.Orders.TotalPages,
+                onPageClicked: function (e, originalEvent, type, page) {
+                    var currentFilter = '@(Model.CurrentFilter)';
+                    var url = '@Url.Page("./Index", new { pageIndex = "__PAGE__", currentFilter = "__CURRENTFILTER__" })';
+                    url = url.replace("__PAGE__", page).replace("__CURRENTFILTER__", currentFilter);
+                    window.location.href = url;
+                }
+            });
+        });
+    </script>
+} *@
+@{
+    var prevDisabled = !Model.Orders.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.Orders.HasNextPage ? "disabled" : "";
+}
+
+<a asp-page="./Index"
+   asp-route-pageIndex="@(Model.Orders.PageIndex - 1)"
+   asp-route-currentFilter="@Model.CurrentFilter"
+   class="btn btn-primary @prevDisabled">
+    Previous
+</a>
+@for (int i = 1; i <= Model.PageSize; i++)
+{
+    <a asp-page="./Index"
+    asp-route-pageIndex="@i"
+       asp-route-currentFilter="@Model.CurrentFilter"
+       class="btn btn-primary">@i
+   </a>
+       }
+<a asp-page="./Index"
+   asp-route-pageIndex="@(Model.Orders.PageIndex + 1)"
+   asp-route-currentFilter="@Model.CurrentFilter"
+   class="btn btn-primary @nextDisabled">
+    Next
+</a>

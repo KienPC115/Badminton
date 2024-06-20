@@ -47,6 +47,7 @@ namespace Badminton.Business
                 foreach (var order in orders)
                 {
                     order.Customer = await AssignCustomerToOrder(order);
+                    order.Customer.Orders = null;
                     await UpdateAmount(order.OrderId);
                 }
                 if (orders == null)

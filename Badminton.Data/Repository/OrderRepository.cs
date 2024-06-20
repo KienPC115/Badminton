@@ -33,19 +33,5 @@ namespace Badminton.Data.Repository
                 throw;
             }
         }
-
-        public async Task<int> UpdateOrder(Order order)
-        {
-            try
-            {
-                _context.Update(order);
-                return await _context.SaveChangesAsync();
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
     }
 }

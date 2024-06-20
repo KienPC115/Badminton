@@ -9,10 +9,6 @@ using Badminton.Data.Models;
 using Badminton.Business;
 using Badminton.Data.Base;
 using Microsoft.IdentityModel.Tokens;
-using System.Text.Json;
-using System.Xml.Serialization;
-using System.IO;
-using System.Drawing.Printing;
 namespace Badminton.RazorWebApp.Pages.OrderPage
 {
     public class IndexModel : PageModel
@@ -58,6 +54,7 @@ namespace Badminton.RazorWebApp.Pages.OrderPage
             {
 
                 throw;
+
             }
         }
     }

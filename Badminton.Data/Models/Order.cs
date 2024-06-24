@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Xml.Serialization;
 
 namespace Badminton.Data.Models;
 
@@ -19,6 +18,5 @@ public partial class Order
     public string? OrderNotes { get; set; }
     
     public virtual Customer Customer { get; set; } = null!;
-    [XmlIgnore]
     public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 }

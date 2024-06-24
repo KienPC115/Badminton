@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34024.191
@@ -12,8 +12,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Badminton.Common", "Badminton.Common\Badminton.Common.csproj", "{7750AED4-F08D-47E2-A5BC-4803BD7B1A64}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Badminton.WpfApp", "Badminton.WpfApp\Badminton.WpfApp.csproj", "{861D90EE-E426-4513-8DD8-3BB743E6172C}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Badminton.Assignment2.WPF", "Badminton.Assignment2.WPF\Badminton.Assignment2.WPF.csproj", "{E87E4F1A-1C36-4ECB-BC0E-D921E8C885D2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,10 +39,6 @@ Global
 		{861D90EE-E426-4513-8DD8-3BB743E6172C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{861D90EE-E426-4513-8DD8-3BB743E6172C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{861D90EE-E426-4513-8DD8-3BB743E6172C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E87E4F1A-1C36-4ECB-BC0E-D921E8C885D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E87E4F1A-1C36-4ECB-BC0E-D921E8C885D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E87E4F1A-1C36-4ECB-BC0E-D921E8C885D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E87E4F1A-1C36-4ECB-BC0E-D921E8C885D2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

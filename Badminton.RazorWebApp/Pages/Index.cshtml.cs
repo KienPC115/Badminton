@@ -25,6 +25,7 @@ namespace Badminton.RazorWebApp.Pages {
 
         public IActionResult OnGet()
         {
+            HttpContext.Session.Clear();
             return Page();
         }
 

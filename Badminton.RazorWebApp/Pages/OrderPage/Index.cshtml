@@ -21,7 +21,7 @@
             <form method="get" class="form-inline">
                 <input type="hidden" name="newCurPage" value="1" />
                 <input name="note" value="@Model.NoteSearching" />
-                <button type="submit" class="btn btn-primary">Search</button>
+                <button type="submit" class="btn btn-outline-primary">Search</button>
             </form>
             <a asp-page="./Index">Back to full List</a>
         </p>
@@ -73,7 +73,7 @@
     <form method="get" class="form-inline">
         <input type="hidden" name="newCurPage" value="@(Model.CurrentPage - 1)" />
         <input type="hidden" name="note" value="@Model.NoteSearching" />
-        <button type="submit" class="btn btn-primary" @(Model.CurrentPage <= 1 ? "disabled" : "")>Previous</button>
+        <button type="submit" class="btn btn-outline-primary" @(Model.CurrentPage <= 1 ? "disabled" : "")>Previous</button>
     </form>
 
     <span>Page @Model.CurrentPage of @Model.TotalPages</span>
@@ -81,6 +81,6 @@
     <form method="get" class="form-inline">
         <input type="hidden" name="newCurPage" value="@(Model.CurrentPage + 1)" />
         <input type="hidden" name="note" value="@Model.NoteSearching" />
-        <button type="submit" class="btn btn-primary" @(Model.CurrentPage >= Model.TotalPages ? "disabled" : "")>Next</button>
+        <button type="submit" class="btn btn-outline-primary" @(Model.CurrentPage >= Model.TotalPages ? "disabled" : "")>Next</button>
     </form>
 </div>

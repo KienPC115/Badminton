@@ -15,7 +15,8 @@ CREATE TABLE [Customer] (
     Name NVARCHAR(50) NOT NULL,
     Address NVARCHAR(100) NOT NULL,
 	Email VARCHAR(50) NOT NULL,
-	DateOfBirth DATETIME NOT NULL
+	DateOfBirth DATETIME NOT NULL,
+    [Password] VARCHAR(50) NOT NULL
 );
 GO
 
@@ -74,13 +75,13 @@ GO
 
 
 -- Insert dummy data into Customer table
-INSERT INTO [Customer] (Phone, Name, Address, Email, DateOfBirth) VALUES
-('1234567890', N'John Doe', N'123 Main St', 'john.doe@example.com', '1985-06-15'),
-('2345678901', N'Jane Smith', N'456 Elm St', 'jane.smith@example.com', '1990-07-20'),
-('3456789012', N'Michael Johnson', N'789 Oak St', 'michael.johnson@example.com', '1978-08-25'),
-('4567890123', N'Emily Davis', N'101 Pine St', 'emily.davis@example.com', '1992-09-30'),
-('5678901234', N'Chris Lee', N'202 Maple St', 'chris.lee@example.com', '1983-10-05'),
-('6789012345', N'Sarah Brown', N'303 Cedar St', 'sarah.brown@example.com', '1987-11-10');
+INSERT INTO [Customer] (Phone, Name, Address, Email, DateOfBirth, [Password]) VALUES
+('1234567890', N'John Doe', N'123 Main St', 'john.doe@example.com', '1985-06-15', 'string'),
+('2345678901', N'Jane Smith', N'456 Elm St', 'jane.smith@example.com', '1990-07-20', 'string'),
+('3456789012', N'Michael Johnson', N'789 Oak St', 'michael.johnson@example.com', '1978-08-25', 'string'),
+('4567890123', N'Emily Davis', N'101 Pine St', 'emily.davis@example.com', '1992-09-30', 'string'),
+('5678901234', N'Chris Lee', N'202 Maple St', 'chris.lee@example.com', '1983-10-05', 'string'),
+('6789012345', N'Sarah Brown', N'303 Cedar St', 'sarah.brown@example.com', '1987-11-10', 'string');
 GO
 
 -- Insert dummy data into Court table

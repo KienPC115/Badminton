@@ -17,6 +17,7 @@ namespace Badminton.Business {
         public Task<IBadmintonResult> AddCustomer(Customer Customer);
         public Task<IBadmintonResult> UpdateCustomer(int CustomerId, Customer Customer);
         public Task<IBadmintonResult> DeleteCustomer(int CustomerId);
+        Task<IBadmintonResult> CheckLogin(string email, string password);
     }
 
     public class CustomerBusiness : ICustomerBusiness {
@@ -51,6 +52,26 @@ namespace Badminton.Business {
 
                 return new BadmintonResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, Customers!);
             } catch (Exception ex) {
+                return new BadmintonResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
+
+        public async Task<IBadmintonResult> CheckLogin(string email, string password)
+        {
+            try
+            {
+                //var Customers = await _DAO.GetAllAsync();
+                var Customers = await _unitOfWork.CustomerRepository.GetAllAsync();
+                var customer = Customers.FirstOrDefault(c => c.Email.Equals(email) && c.Password.Equals(password));
+                if (customer == null)
+                {
+                    return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
+                }
+
+                return new BadmintonResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, customer);
+            }
+            catch (Exception ex)
+            {
                 return new BadmintonResult(Const.ERROR_EXCEPTION, ex.Message);
             }
         }

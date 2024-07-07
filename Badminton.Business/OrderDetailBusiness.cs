@@ -16,8 +16,8 @@ namespace Badminton.Business
 {
     public interface IOrderDetailBusiness
     {
-        public Task<IBadmintonResult> GetAllOrderDetails();
-        public Task<IBadmintonResult> GetOrderDetailsByOrderId(int orderId);
+        public Task<IBadmintonResult> GetAllOrderDetails(double start = 0, double end = double.MaxValue);
+        public Task<IBadmintonResult> GetOrderDetailsByOrderId(int orderId, double start = 0, double end = double.MaxValue);
         public Task<IBadmintonResult> GetOrderDetailsByCourtDetailId(int courtDetailId);
         public Task<IBadmintonResult> GetOrderDetailById(int orderDetailId);
         public Task<IBadmintonResult> UpdateOrderDetail(OrderDetail result);
@@ -143,11 +143,11 @@ namespace Badminton.Business
             }
         }
 
-        public async Task<IBadmintonResult> GetAllOrderDetails()
+        public async Task<IBadmintonResult> GetAllOrderDetails(double start = 0, double end = double.MaxValue)
         {
             try
             {
-                var orderDetails = await _unitOfWork.OrderDetailRepository.GetAllAsync();
+                var orderDetails = _unitOfWork.OrderDetailRepository.GetAllAsync().Result.Where(o => o.Amount >= start && o.Amount <= end).ToList();
                 if (orderDetails == null)
                 {
                     return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
@@ -168,17 +168,24 @@ namespace Badminton.Business
             }
         }
 
-        public async Task<IBadmintonResult> GetOrderDetailsByOrderId(int orderId)
+        public async Task<IBadmintonResult> GetOrderDetailsByOrderId(int orderId, double start = 0, double end = double.MaxValue)
         {
             try
             {
-                var result = await GetAllOrderDetails();
-                if (result.Status <= 0)
+                var result = _unitOfWork.OrderDetailRepository.GetAll()
+                    .Where(o => o.OrderId.Equals(orderId) && o.Amount >= start && o.Amount <= end).ToList();
+                if (result.Count() <= 0 || result == null)
                 {
-                    return new BadmintonResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
+                    return new BadmintonResult(Const.FAIL_READ_CODE, Const.WARNING_NO_DATA__MSG);
                 }
-                List<OrderDetail> orderDetails = (result.Data as List<OrderDetail>).Where(od => od.OrderId == orderId).ToList();
-                return new BadmintonResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, orderDetails);
+                result.ForEach(od =>
+                {
+                    od.Order = _unitOfWork.OrderRepository.GetById(od.OrderId);
+                    od.Order.Customer = _unitOfWork.CustomerRepository.GetById(od.Order.CustomerId);
+                    od.CourtDetail = _unitOfWork.CourtDetailRepository.GetById(od.CourtDetailId);
+                    od.CourtDetail.Court = _unitOfWork.CourtRepository.GetById(od.CourtDetailId);
+                });
+                return new BadmintonResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, result);
             }
             catch (Exception ex)
             {

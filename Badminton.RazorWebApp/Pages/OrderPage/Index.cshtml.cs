@@ -32,13 +32,10 @@ namespace Badminton.RazorWebApp.Pages.OrderPage
         {
             try
             {
-                var cus = Helpers.GetValueFromSession<Customer>("cus", HttpContext);
+                Helpers.GetValueFromSession("cus", out Customer cus, HttpContext);
 
-                if (!int.TryParse(_config["PageSize"].ToString(), out int pageSize))
-                {
-                    pageSize = 2;
-                }
-                
+                int pageSize = int.TryParse(_config["PageSize"], out int ps) ? ps : 3;
+
                 CurrentPage = newCurPage;
                 
                 NoteSearching = note;

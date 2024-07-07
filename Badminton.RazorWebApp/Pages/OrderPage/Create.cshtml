@@ -4,7 +4,12 @@
 @{
     ViewData["Title"] = "Create";
 }
-
+@if (TempData["message"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["message"]
+    </div>
+}
 <h1>Create</h1>
 
 <h4>Order</h4>

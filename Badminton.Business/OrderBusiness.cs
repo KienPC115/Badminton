@@ -260,15 +260,14 @@ namespace Badminton.Business
                 {
                     return result;
                 }
-                if (note.IsNullOrEmpty())
-                {
-                    note = string.Empty;
-                }
+                note ??= string.Empty;
+                var allOrders = result.Data as List<Order>;
+                var orders = allOrders.Where(d => d.OrderNotes.ToUpper().Contains(note.Trim().ToUpper())).ToList();
                 return new BadmintonResult
                 {
                     Status = Const.SUCCESS_READ_CODE,
                     Message = Const.SUCCESS_READ_MSG,
-                    Data = (result.Data as List<Order>).Where(d => d.OrderNotes.Trim().ToUpper().Contains(note.Trim().ToUpper())).ToList()
+                    Data = orders
                 };
             }
             catch (Exception ex)

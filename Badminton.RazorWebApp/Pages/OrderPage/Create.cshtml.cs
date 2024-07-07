@@ -34,18 +34,30 @@ namespace Badminton.RazorWebApp.Pages.OrderPage
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-          if (!ModelState.IsValid || Order == null)
+            try
             {
+                if (Order == null)
+                {
+                    OnGet();
+                    return Page();
+                }
+                OnGet();
+                this.Order.OrderNotes ??= string.Empty;
+                var result = await _orderBusiness.AddOrders(this.Order);
+                if (result.Status <= 0)
+                {
+                    TempData["message"] = result.Message;
+                    return Page();
+                }
+
+                return RedirectToPage("./Index");
+            }
+            catch (Exception ex)
+            {
+                TempData["message"] = ex.Message;
+                OnGet();
                 return Page();
             }
-
-            var result = await _orderBusiness.AddOrders(this.Order);
-            if (result.Status <= 0)
-            {
-                return Page();
-            }
-
-            return RedirectToPage("./Index");
         }
     }
 }

@@ -9,6 +9,8 @@ using Badminton.Data.Models;
 using Badminton.Business;
 using Badminton.Data.Base;
 using Microsoft.IdentityModel.Tokens;
+using Badminton.Business.Helpers;
+using Badminton.Business.Interface;
 namespace Badminton.RazorWebApp.Pages.OrderPage
 {
     public class IndexModel : PageModel
@@ -28,24 +30,31 @@ namespace Badminton.RazorWebApp.Pages.OrderPage
 
         public async Task<IActionResult> OnGet(int newCurPage = 1, string note = @"")
         {
-            /*if (!(HttpContext.Session.GetInt32("r") == 2 || HttpContext.Session.GetInt32("r") == 3))
-            {
-                TempData["message"] = "You don't have enough permission. Please try another email.";
-                return RedirectToPage("../Index");
-            }*/
             try
             {
+                var cus = Helpers.GetValueFromSession<Customer>("cus", HttpContext);
+
                 if (!int.TryParse(_config["PageSize"].ToString(), out int pageSize))
                 {
                     pageSize = 2;
                 }
+                
                 CurrentPage = newCurPage;
+                
                 NoteSearching = note;
 
-                var result = await _orderBusiness.GetBySearchingNote(NoteSearching);
+                IBadmintonResult result = new BadmintonResult();
                 
-                if(result.Status <= 0) TempData["message"] = result.Message;
-                
+                if (cus != null) result = await _orderBusiness.GetBySearchingNoteWithCusId(NoteSearching, cus.CustomerId);
+
+                else result = await _orderBusiness.GetBySearchingNote(NoteSearching);
+
+                if (result.Status <= 0)
+                {
+                    TempData["message"] = result.Message;
+                    return Page();
+                }
+
                 var list = result.Data as List<Order>;
 
                 TotalPages = (int)Math.Ceiling(list.Count / (double)pageSize);

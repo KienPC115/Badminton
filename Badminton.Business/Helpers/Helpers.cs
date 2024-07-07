@@ -12,10 +12,10 @@ namespace Badminton.Business.Helpers
     public static class Helpers
     {
 
-        public static object GetValueFromSession(string key, HttpContext context)
+        public static T GetValueFromSession<T>(string key, HttpContext context)
         {
             context.Session.TryGetValue(key, out byte[] o);
-            return JsonConvert.DeserializeObject(Encoding.UTF8.GetString(o));
+            return JsonConvert.DeserializeObject<T>(Encoding.UTF8.GetString(o));
         }
 
         public static void SetValueToSession(string key, object value, HttpContext context)

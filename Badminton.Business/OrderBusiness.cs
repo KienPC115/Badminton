@@ -25,6 +25,7 @@ namespace Badminton.Business
         public Task<IBadmintonResult> DeleteOrdersByCustomerId(int orderId);
         public Task<IBadmintonResult> UpdateAmount(int orderId);
         public Task<IBadmintonResult> GetBySearchingNote(string note);
+        public Task<IBadmintonResult> GetBySearchingNoteWithCusId(string note, int cusid);
         public Task<IBadmintonResult> Save(Order order);
     }
     public class OrderBusiness : IOrderBusiness
@@ -256,6 +257,31 @@ namespace Badminton.Business
             try
             {
                 var result = await GetAllOrders();
+                if (result.Status <= 0)
+                {
+                    return result;
+                }
+                note ??= string.Empty;
+                var allOrders = result.Data as List<Order>;
+                var orders = allOrders.Where(d => d.OrderNotes.ToUpper().Contains(note.Trim().ToUpper())).ToList();
+                return new BadmintonResult
+                {
+                    Status = Const.SUCCESS_READ_CODE,
+                    Message = Const.SUCCESS_READ_MSG,
+                    Data = orders
+                };
+            }
+            catch (Exception ex)
+            {
+                return new BadmintonResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
+
+        public async Task<IBadmintonResult> GetBySearchingNoteWithCusId(string note, int cusid)
+        {
+            try
+            {
+                var result = await GetAllOrdersByCustomerId(cusid);
                 if (result.Status <= 0)
                 {
                     return result;

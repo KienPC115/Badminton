@@ -27,6 +27,7 @@ namespace Badminton.Business
         public Task<IBadmintonResult> GetBySearchingNote(string note);
         public Task<IBadmintonResult> GetBySearchingNoteWithCusId(string note, int cusid);
         public Task<IBadmintonResult> Save(Order order);
+        public IBadmintonResult Checkout(List<CourtDetail> courtDetailList);
     }
     public class OrderBusiness : IOrderBusiness
     {
@@ -300,6 +301,11 @@ namespace Badminton.Business
             {
                 return new BadmintonResult(Const.ERROR_EXCEPTION, ex.Message);
             }
+        }
+
+        public IBadmintonResult Checkout(List<CourtDetail> courtDetailList)
+        {
+            throw new NotImplementedException();
         }
     }
 }

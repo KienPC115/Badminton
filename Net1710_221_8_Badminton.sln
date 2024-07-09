@@ -12,6 +12,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Badminton.Common", "Badmint
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Badminton.WpfApp", "Badminton.WpfApp\Badminton.WpfApp.csproj", "{861D90EE-E426-4513-8DD8-3BB743E6172C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Badminton.WorkerService", "Badminton.WorkerService\Badminton.WorkerService.csproj", "{2E887B1B-76AC-4678-8CA1-836CD1203B11}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +40,10 @@ Global
 		{861D90EE-E426-4513-8DD8-3BB743E6172C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{861D90EE-E426-4513-8DD8-3BB743E6172C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{861D90EE-E426-4513-8DD8-3BB743E6172C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E887B1B-76AC-4678-8CA1-836CD1203B11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E887B1B-76AC-4678-8CA1-836CD1203B11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E887B1B-76AC-4678-8CA1-836CD1203B11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E887B1B-76AC-4678-8CA1-836CD1203B11}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

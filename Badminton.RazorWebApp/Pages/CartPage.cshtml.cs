@@ -30,15 +30,29 @@ namespace Badminton.RazorWebApp.Pages
             Cart = cart;
             if (!checkout.IsNullOrEmpty())
             {
-                _orderBusiness.Checkout(cart);
+                if (Helpers.GetValueFromSession("cus", out Customer cus, HttpContext))
+                {
+                    var result = _orderBusiness.Checkout(cart, cus.CustomerId);
+                    if (result.Status <= 0)
+                    {
+                        TempData["message"] = "Something failed while checkout.";
+                    }
+                    else
+                    {
+                        TempData["message"] = "Checkout successfully";
+                        cart.Clear();
+                        Cart = cart;
+                        Helpers.SetValueToSession("cart", cart, HttpContext);
+                    }
+                }
             }
             if (courtDetailID != null && courtDetailID != 0)
             {
-                RemoveOutCartAsync(courtDetailID.Value);
+                RemoveOutCart(courtDetailID.Value);
             }
         }
 
-        private bool RemoveOutCartAsync(int courtDetailID)
+        private bool RemoveOutCart(int courtDetailID)
         {
             try
             {

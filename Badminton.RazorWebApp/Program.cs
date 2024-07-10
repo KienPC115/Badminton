@@ -1,8 +1,11 @@
+using Badminton.RazorWebApp;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddSession();
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -21,6 +24,8 @@ app.UseSession();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.MapHub<SignalrServer>("/signalRServer");
 
 app.MapRazorPages();
 

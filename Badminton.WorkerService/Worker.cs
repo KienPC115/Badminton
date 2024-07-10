@@ -6,17 +6,27 @@ namespace Badminton.WorkerService
     {
         private readonly ILogger<Worker> _logger;
         private readonly ICourtDetailBusiness _courtDetailBusiness;
-        private readonly IConfiguration _config;
 
-        public Worker(ILogger<Worker> logger, IConfiguration configuration)
+        public Worker(ILogger<Worker> logger)
         {
-            _config = configuration;
             _courtDetailBusiness ??= new CourtDetailBusiness();
             _logger = logger;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            #region Refresh Status After Next 3s
+            //while (!stoppingToken.IsCancellationRequested)
+            //{
+            //    if (_logger.IsEnabled(LogLevel.Information))
+            //    {
+            //        _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
+            //        var result = await _courtDetailBusiness.RefreshCourtDetailStatus();
+            //        _logger.LogInformation($"Result of Refresh Court Detail Status: {result.Status} - {result.Data}");
+            //    }
+            //    await Task.Delay(3000, stoppingToken);
+            //}
+            #endregion
             while (!stoppingToken.IsCancellationRequested)
             {
                 var now = DateTime.Now;

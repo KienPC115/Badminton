@@ -5,6 +5,7 @@ using Badminton.Data.Models;
 using Humanizer.Localisation.TimeToClockNotation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Badminton.RazorWebApp.Pages
@@ -14,9 +15,11 @@ namespace Badminton.RazorWebApp.Pages
         public IList<CourtDetail> Cart { get; set; }
         private readonly ICourtDetailBusiness _courtDetailBusiness;
         private readonly IOrderBusiness _orderBusiness;
+        private readonly IHubContext<SignalrServer> _hubContext;
 
-        public CartPageModel()
+        public CartPageModel(IHubContext<SignalrServer> hubContext)
         {
+            _hubContext = hubContext;
             _courtDetailBusiness ??= new CourtDetailBusiness();
             _orderBusiness ??= new OrderBusiness();
         }
@@ -39,6 +42,7 @@ namespace Badminton.RazorWebApp.Pages
                     }
                     else
                     {
+                        _hubContext.Clients.All.SendAsync("ChangeStatusCourtDetail");
                         TempData["message"] = "Checkout successfully";
                         cart.Clear();
                         Cart = cart;

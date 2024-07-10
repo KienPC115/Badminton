@@ -20,7 +20,7 @@ namespace Badminton.Business
     {
         public Task<IBadmintonResult> GetAllCourtDetails();
         public Task<IBadmintonResult> GetAllCourtDetailsIncludeCourt(string? Search);
-        IBadmintonResult GetCourtDetailIncludeCourt(int CourtId);
+        IBadmintonResult GetCourtDetailsIncludeCourt(List<int> courtDetailIds);
         public Task<IBadmintonResult> GetCourtDetail(int courtDetailId);
         public Task<IBadmintonResult> AddCourtDetail(CourtDetail courtDetail);
         public Task<IBadmintonResult> UpdateCourtDetail(int courtDetailId, CourtDetail courtDetail,string msg);
@@ -119,13 +119,16 @@ namespace Badminton.Business
             }
         }
 
-        public IBadmintonResult GetCourtDetailIncludeCourt(int courtDetailId)
+        public IBadmintonResult GetCourtDetailsIncludeCourt(List<int> courtDetailIds)
         {
             try
             {
-                /*var courtDetail = await _context.Courts.FindAsync(courtDetailId);*/
-                var courtDetail = _unitOfWork.CourtDetailRepository.GetCourtDetailIncludeCourt(courtDetailId);
-                return courtDetail != null ? new BadmintonResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, courtDetail)
+                List<CourtDetail> courtDetails = new List<CourtDetail>();
+                foreach (int id in courtDetailIds)
+                {
+                    courtDetails.Add(_unitOfWork.CourtDetailRepository.GetCourtDetailIncludeCourt(id));
+                }
+                return courtDetails != null ? new BadmintonResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, courtDetails)
                                                : new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
             }
             catch (Exception ex)

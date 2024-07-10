@@ -93,18 +93,3 @@
         }
     </tbody>
 </table>
-
-
-<script src="~/microsoft/signalr/dist/browser/signalr.js"></script>
-<script src="~/microsoft/signalr/dist/browser/signalr.min.js"></script>
-<script>
-    var connection = new signalR.HubConnectionBuilder()
-        .withUrl("/signalRServer") // Use the URL of your SignalR hub
-        .build();
-
-    connection.start();
-
-    connection.on("ChangeStatusCourtDetail", function () {
-        location.reload();
-    });
-</script>

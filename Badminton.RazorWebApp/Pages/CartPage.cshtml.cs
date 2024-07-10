@@ -26,29 +26,14 @@ namespace Badminton.RazorWebApp.Pages
 
         public void OnGet(string? checkout, int? courtDetailID)
         {
-            if (!Helpers.GetValueFromSession("cart", out List<CourtDetail> cart, HttpContext))
+            if (Helpers.GetValueFromSession("cart", out List<int> cart, HttpContext))
             {
-                cart = new List<CourtDetail>();
+                GetCart(cart);
             }
-            Cart = cart;
+
             if (!checkout.IsNullOrEmpty())
             {
-                if (Helpers.GetValueFromSession("cus", out Customer cus, HttpContext))
-                {
-                    var result = _orderBusiness.Checkout(cart, cus.CustomerId);
-                    if (result.Status <= 0)
-                    {
-                        TempData["message"] = "Something failed while checkout.";
-                    }
-                    else
-                    {
-                        _hubContext.Clients.All.SendAsync("ChangeStatusCourtDetail");
-                        TempData["message"] = "Checkout successfully";
-                        cart.Clear();
-                        Cart = cart;
-                        Helpers.SetValueToSession("cart", cart, HttpContext);
-                    }
-                }
+                Checkout(cart);
             }
             if (courtDetailID != null && courtDetailID != 0)
             {
@@ -56,16 +41,54 @@ namespace Badminton.RazorWebApp.Pages
             }
         }
 
+        private void Checkout(List<int> cart)
+        {
+            if (Helpers.GetValueFromSession("cus", out Customer cus, HttpContext))
+            {
+                var status = CourtDetailShared.Status();
+                var availableCourt = Cart.ToList().Where(c => c.Status.Equals(status[0])).ToList();
+
+                var result = _orderBusiness.Checkout(availableCourt, cus.CustomerId);
+                if (result.Status <= 0)
+                {
+                    TempData["message"] = "Something failed while checkout.";
+                    return;
+                }
+                TempData["message"] = "Checkout successfully";
+                _hubContext.Clients.All.SendAsync("ChangeStatusCourtDetail");
+                Cart.Clear();
+                cart.Clear();
+                Helpers.SetValueToSession("cart", cart, HttpContext);
+            }
+        }
+
+        private void GetCart(List<int> cart)
+        {
+            var result = _courtDetailBusiness.GetCourtDetailsIncludeCourt(cart);
+            if (result.Status <= 0)
+            {
+                TempData["message"] = result.Message;
+                return;
+            }
+            var courtDetails = result.Data as List<CourtDetail>;
+            Cart = courtDetails;
+        }
+
         private bool RemoveOutCart(int courtDetailID)
         {
             try
             {
-                if (!Cart.Remove(Cart.FirstOrDefault(c => c.CourtDetailId == courtDetailID)))
+                if (!Helpers.GetValueFromSession("cart", out List<int> curCart, HttpContext))
                 {
                     TempData["message"] = "Remove failed";
                     return false;
                 }
-                Helpers.SetValueToSession("cart", Cart, HttpContext);
+                if (!curCart.Remove(courtDetailID))
+                {
+                    return true;
+                }
+                GetCart(curCart);
+                Helpers.SetValueToSession("cart", curCart, HttpContext);
                 return true;
             }
             catch (Exception ex)
@@ -78,32 +101,17 @@ namespace Badminton.RazorWebApp.Pages
         public IActionResult OnPostAsync(int courtDetailID)
         {
             //if it's new, init cart.
-            if (!Helpers.GetValueFromSession("cart", out List<CourtDetail> cart, HttpContext))
+            if (!Helpers.GetValueFromSession("cart", out List<int> cart, HttpContext))
             {
-                cart = new List<CourtDetail>();
+                cart = new List<int>();
             }
-
-            if (cart.FirstOrDefault(c => c.CourtDetailId == courtDetailID) != null)
+            
+            if (cart.Contains(courtDetailID))
             {
                 TempData["message"] = "This court detail is already existed in cart";
                 return RedirectToAction("./CourtDetailPage/Index");
             }
-
-            var result = _courtDetailBusiness.GetCourtDetailIncludeCourt(courtDetailID);
-            if (result.Status != Const.SUCCESS_READ_CODE)
-            {
-                TempData["message"] = result.Message;
-                return RedirectToAction("./CourtDetailPage/Index");
-            }
-            var courtDetail = result.Data as CourtDetail;
-            
-            List<string> status = CourtDetailShared.Status();
-            if (!courtDetail.Status.Equals(status[0]))
-            {
-                TempData["message"] = $"The status of this court detail is not {status[0]}";
-                return RedirectToPage("./CourtDetailPage/Index");
-            }
-            cart.Add(courtDetail);
+            cart.Add(courtDetailID);
             Helpers.SetValueToSession("cart", cart, HttpContext);
             return RedirectToPage("./CourtDetailPage/Index");
         }

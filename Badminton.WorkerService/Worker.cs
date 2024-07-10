@@ -16,40 +16,42 @@ namespace Badminton.WorkerService
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             #region Refresh Status After Next 3s
-            //while (!stoppingToken.IsCancellationRequested)
-            //{
-            //    if (_logger.IsEnabled(LogLevel.Information))
-            //    {
-            //        _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-            //        var result = await _courtDetailBusiness.RefreshCourtDetailStatus();
-            //        _logger.LogInformation($"Result of Refresh Court Detail Status: {result.Status} - {result.Data}");
-            //    }
-            //    await Task.Delay(3000, stoppingToken);
-            //}
-            #endregion
             while (!stoppingToken.IsCancellationRequested)
             {
-                var now = DateTime.Now;
-                var nextRun = DateTime.Today.AddDays(1); //00:00:00 is tomorrow
-                var delay = nextRun - now;
-                
-                _logger.LogInformation($"Current time: {now}, next run at: {nextRun}, delay: {delay}");
-
-                if (delay.TotalMilliseconds > 0)
+                if (_logger.IsEnabled(LogLevel.Information))
                 {
-                    await Task.Delay(delay, stoppingToken);
-                }
-                try
-                {
+                    _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
                     var result = await _courtDetailBusiness.RefreshCourtDetailStatus();
-                    _logger.LogInformation($"Result of Refresh Court Detail Status: {result.Status} - {result.Message.ToString()}");
+                    _logger.LogInformation($"Result of Refresh Court Detail Status: {result.Status} - {result.Data}");
                 }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "An error occurred while refreshing court detail status");
-                }
-                await Task.Delay(TimeSpan.FromDays(1), stoppingToken);
+                await Task.Delay(3000, stoppingToken);
             }
+            #endregion
+            #region Refresh Status When time at 00:00:00
+            //while (!stoppingToken.IsCancellationRequested)
+            //{
+            //    var now = DateTime.Now;
+            //    var nextRun = DateTime.Today.AddDays(1); //00:00:00 is tomorrow
+            //    var delay = nextRun - now;
+
+            //    _logger.LogInformation($"Current time: {now}, next run at: {nextRun}, delay: {delay}");
+
+            //    if (delay.TotalMilliseconds > 0)
+            //    {
+            //        await Task.Delay(delay, stoppingToken);
+            //    }
+            //    try
+            //    {
+            //        var result = await _courtDetailBusiness.RefreshCourtDetailStatus();
+            //        _logger.LogInformation($"Result of Refresh Court Detail Status: {result.Status} - {result.Message.ToString()}");
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        _logger.LogError(ex, "An error occurred while refreshing court detail status");
+            //    }
+            //    await Task.Delay(TimeSpan.FromDays(1), stoppingToken);
+            //}
+            #endregion
         }
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -107,6 +108,24 @@ namespace Badminton.Data.Base
 
         public async Task<T> GetByIdAsync(Guid code) {
             return await _context.Set<T>().FindAsync(code);
+        }
+
+        public async Task<IQueryable<T>> FindAll(
+        Expression<Func<T, bool>> predicate = null,
+        params Expression<Func<T, object>>[] includeProperties) {
+            IQueryable<T> query = _context.Set<T>().AsNoTracking();
+
+            // Apply includes
+            foreach (var includeProperty in includeProperties) {
+                query = query.Include(includeProperty);
+            }
+
+            // Apply filtering
+            if (predicate != null) {
+                query = query.Where(predicate);
+            }
+
+            return query;
         }
 
     }

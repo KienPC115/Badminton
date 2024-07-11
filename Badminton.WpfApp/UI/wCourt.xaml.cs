@@ -26,6 +26,10 @@ namespace Badminton.WpfApp.UI
     {
         private readonly ICourtBusiness _courtBusiness;
         List<string> courtStatus;
+        List<string> yardType;
+        List<string> type;
+        List<string> location;
+        List<string> spaceType;
         public wCourt()
         {
             InitializeComponent();
@@ -48,7 +52,13 @@ namespace Badminton.WpfApp.UI
                     Court court = new Court() {
                         Name = txtCourtName.Text,
                         Description = txtCourtDescription.Text,
-                        Status = comboBoxStatus.SelectedItem.ToString(),
+                        Status = cbStatus.SelectedItem.ToString(),
+                        YardType = cbYardType.SelectedItem.ToString(),
+                        Type = cbType.SelectedItem.ToString(),
+                        Location = cbLocation.SelectedItem.ToString(),
+                        SpaceType = cbSpaceType.SelectedItem.ToString(),
+                        CreatedTime = DateTime.UtcNow,
+                        UpdatedTime = DateTime.UtcNow,
                         Price = double.Parse(txtCourtPrice.Text)
                     };
                     var result = await _courtBusiness.AddCourt(court);
@@ -69,7 +79,12 @@ namespace Badminton.WpfApp.UI
                     }
                     court.Name = txtCourtName.Text.Trim();
                     court.Description = txtCourtDescription.Text.Trim();
-                    court.Status = comboBoxStatus.SelectedItem.ToString();
+                    court.Status = cbStatus.SelectedItem.ToString();
+                    court.YardType = cbYardType.SelectedItem.ToString();
+                    court.Type = cbType.SelectedItem.ToString();
+                    court.Location = cbLocation.SelectedItem.ToString();
+                    court.SpaceType = cbSpaceType.SelectedItem.ToString();
+                    court.UpdatedTime = DateTime.UtcNow;
                     /*court.Status = txtCourtStatus.Text.Trim();*/
                     court.Price = double.Parse(txtCourtPrice.Text.Trim());
 
@@ -141,7 +156,11 @@ namespace Badminton.WpfApp.UI
                             txtCourtId.Text = item.CourtId.ToString();
                             txtCourtName.Text = item.Name.ToString();
                             txtCourtDescription.Text = item.Description.ToString();
-                            comboBoxStatus.SelectedItem = item.Status;
+                            cbStatus.SelectedItem = item.Status;
+                            cbYardType.SelectedItem = item.YardType;
+                            cbType.SelectedItem = item.Type;
+                            cbLocation.SelectedItem = item.Location;
+                            cbSpaceType.SelectedItem = item.SpaceType;
                             /*txtCourtStatus.Text = item.Status.ToString();*/
                             txtCourtPrice.Text = item.Price.ToString();
                         }
@@ -162,15 +181,32 @@ namespace Badminton.WpfApp.UI
             txtCourtId.Clear();
             txtCourtName.Clear();
             txtCourtDescription.Clear();
-            comboBoxStatus.SelectedItem = courtStatus[0];
+            cbStatus.SelectedItem = courtStatus[0];
+            cbYardType.SelectedItem = yardType[0];
+            cbType.SelectedItem = type[0];
+            cbLocation.SelectedItem = location[0];
+            cbSpaceType.SelectedItem= spaceType[0];
             txtCourtPrice.Clear();
         }
 
         private async void LoadGrdCourts() {
             var result = await _courtBusiness.GetAllCourts();
             courtStatus = CourtShared.Status();
-            comboBoxStatus.ItemsSource = courtStatus;
-            comboBoxStatus.SelectedItem = courtStatus[0];
+            yardType = CourtShared.YardType();
+            type = CourtShared.Type();
+            spaceType = CourtShared.SpaceType();
+            location = CourtShared.Location();
+            cbStatus.ItemsSource = courtStatus;
+            cbStatus.SelectedItem = courtStatus[0];
+            cbYardType.ItemsSource = yardType;
+            cbYardType.SelectedItem = yardType[0];
+            cbType.ItemsSource = type;
+            cbType.SelectedItem = type[0];
+            cbLocation.ItemsSource= location;
+            cbLocation.SelectedItem = location[0];
+            cbSpaceType.ItemsSource = spaceType;
+            cbSpaceType.SelectedItem = spaceType[0];
+
             if (result.Status > 0 && result.Data != null) {
                 grdCourt.ItemsSource = result.Data as List<Court>;
             }

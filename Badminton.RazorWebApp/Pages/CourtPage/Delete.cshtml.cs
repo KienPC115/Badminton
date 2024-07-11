@@ -13,16 +13,14 @@ namespace Badminton.RazorWebApp.Pages.CourtPage
     public class DeleteModel : PageModel
     {
         private readonly ICourtBusiness _courtBusiness;
-        public DeleteModel()
-        {
+        public DeleteModel() {
             _courtBusiness ??= new CourtBusiness();
         }
 
         [BindProperty]
-      public Court Court { get; set; } = default!;
+        public Court Court { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
-        {
+        public async Task<IActionResult> OnGetAsync(int? id) {
             if (id == null) {
                 return NotFound();
             }
@@ -37,8 +35,7 @@ namespace Badminton.RazorWebApp.Pages.CourtPage
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(int? id)
-        {
+        public async Task<IActionResult> OnPostAsync(int? id) {
             if (id == null) {
                 return NotFound();
             }

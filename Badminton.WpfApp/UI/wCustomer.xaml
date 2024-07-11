@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="wCustomer" Height="450" Width="1013">
     <Grid>
-        <StackPanel Orientation="Vertical">
+        <StackPanel Orientation="Vertical" Margin="0,0,0,-348">
             <GroupBox Header="Customer Form" Margin="10">
                 <Grid Height="350">
                     <Grid.RowDefinitions>

@@ -15,18 +15,6 @@ public partial class Court
 
     public string Description { get; set; }
 
-    public string YardType { get; set; }
-
-    public string Type { get; set; }
-
-    public string Location { get; set; }
-
-    public string SpaceType { get; set; }
-
-    public DateTime? CreatedTime { get; set; }
-
-    public DateTime? UpdatedTime { get; set; }
-
     public double Price { get; set; }
 
     public virtual ICollection<CourtDetail> CourtDetails { get; set; } = new List<CourtDetail>();

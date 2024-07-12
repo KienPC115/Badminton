@@ -25,13 +25,7 @@ CREATE TABLE Court (
     CourtId INT IDENTITY(1,1) PRIMARY KEY,
     Name VARCHAR(20) NOT NULL,
     Status VARCHAR(20) NOT NULL,
-    Description NVARCHAR(255),
-	YardType NVARCHAR(255) NOT NULL,
-	Type NVARCHAR(255) NOT NULL, -- San don, san doi, san tieu chuan
-	Location NVARCHAR(255) NOT NULL,
-	SpaceType NVARCHAR(255) NOT NULL, -- San trong nha, san ngoai troi
-	CreatedTime DATETIME Default GETDATE(),
-    UpdatedTime DATETIME Default GETDATE(),
+    Description NVARCHAR(255) NOT NULL,
     Price FLOAT NOT NULL
 );
 GO
@@ -47,7 +41,6 @@ CREATE TABLE [Order] (
     FOREIGN KEY (CustomerId) REFERENCES [Customer](CustomerId)
 );
 GO
-
 -- Create the order detail table
 CREATE TABLE CourtDetail(
 	CourtDetailId INT IDENTITY(1,1) PRIMARY KEY,
@@ -92,13 +85,13 @@ INSERT INTO [Customer] (Phone, Name, Address, Email, DateOfBirth, [Password]) VA
 GO
 
 -- Insert dummy data into Court table
--- Insert dummy data into Court table
-INSERT INTO Court (Name, Status, Description, YardType, Type, Location, SpaceType, Price) VALUES
-('Court 1', 'Available', N'Court have beautiful view', 'Rubber', 'Single', N'Location A', 'Indoor',50.0),
-('Court 2', 'Available', N'Court have beautiful view', 'Cement', 'Dual', N'Location B', 'Indoor',24.0),
-('Court 3', 'Available', N'Court have beautiful view', 'Rubber', 'Dual', N'Location C', 'Outdoor',86.0),
-('Court 4', 'Available', N'Court have beautiful view', 'Cement', 'Standard', N'Location D', 'Outdoor',73.0),
-('Court 5', 'Available', N'Court have beautiful view', 'Rubber', 'Single', N'Location A', 'Indoor', 68.0);
+INSERT INTO Court (Name, Status, Description, Price) VALUES
+('Court 1', 'Available', N'Standard court', 50.0),
+('Court 2', 'Booked', N'Premium court', 75.0),
+('Court 3', 'Available', N'Outdoor court', 40.0),
+('Court 4', 'Available', N'Indoor court', 65.0),
+('Court 5', 'Available', N'Standard court', 50.0),
+('Court 6', 'Available', N'Outdoor court', 45.0);
 GO
 
 -- Insert dummy data into Order table
@@ -133,3 +126,4 @@ INSERT INTO OrderDetail (OrderId, CourtDetailId, Amount) VALUES
 (5, 5, 50.0),
 (6, 6, 45.0);
 GO
+

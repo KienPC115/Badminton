@@ -5,39 +5,22 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Court Page</h1>
+<h1>Index</h1>
 
 <p>
     <a asp-page="Create">Create New</a>
 </p>
-
-<form asp-page="./Index" method="get">
-    <div class="form-actions no-color">
-        YardType 
-        <select asp-for="SelectedYardType" asp-items="@Model.YardType">
-            <option value="All">All</option>
-        </select>
-        <p>
-            Find:
-            <input type="text" name="search" value="@Model.CurrentSearch" />
-            <input type="submit" value="Search" class="btn btn-primary" /> |
-            <a asp-page="./Index">Back to full List</a>
-        </p>
-    </div>
+<form>
+    <p>
+        <input type="text" asp-for="Search" />
+        <input type="submit" value="Search" />
+    </p>
 </form>
-@if (Model.Court == null || Model.Court.Count <= 0)
-{
-    <p>No court in this range</p>
-}
-else
-{
 <table class="table">
     <thead>
         <tr>
             <th>
-                <a asp-page="./Index" asp-route-sortOrder="@Model.NameSort">
-                        @Html.DisplayNameFor(model => model.Court[0].Name)
-                </a>
+                @Html.DisplayNameFor(model => model.Court[0].Name)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Court[0].Status)
@@ -46,31 +29,7 @@ else
                 @Html.DisplayNameFor(model => model.Court[0].Description)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Court[0].YardType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Court[0].Type)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Court[0].Location)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Court[0].SpaceType)
-            </th>
-            <th>
-                <a asp-page="./Index" asp-route-sortOrder="@Model.CreatedDateSort">
-                    @Html.DisplayNameFor(model => model.Court[0].CreatedTime)
-                </a>
-            </th>
-            <th>
-                <a asp-page="./Index" asp-route-sortOrder="@Model.UpdatedDateSort">
-                     @Html.DisplayNameFor(model => model.Court[0].UpdatedTime)
-                </a>
-            </th>
-            <th>
-                <a asp-page="./Index" asp-route-sortOrder="@Model.PriceSort">
-                    @Html.DisplayNameFor(model => model.Court[0].Price)
-                </a>
+                @Html.DisplayNameFor(model => model.Court[0].Price)
             </th>
             <th></th>
         </tr>
@@ -88,24 +47,6 @@ else
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.YardType)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Type)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Location)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SpaceType)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UpdatedTime)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.Price)
             </td>
             <td>
@@ -117,24 +58,3 @@ else
 }
     </tbody>
 </table>
-    <div class="d-flex justify-content-between">
-        <form method="get" class="form-inline">
-            <input type="hidden" name="pageNumber" value="@(Model.PageNumber - 1)" />
-            <input type="hidden" name="sortOrder" value="@Model.CurrentSort" />
-            <input type="hidden" name="search" value="@Model.CurrentSearch" />
-            <input type="hidden" asp-for="SelectedYardType" value="@Model.SelectedYardType" />
-            <button type="submit" class="btn btn-outline-primary" @(Model.PageNumber <= 1 ? "disabled" : "")>Previous</button>
-        </form>
-
-        <span>Page @Model.PageNumber of @Model.TotalPages</span>
-
-        <form method="get" class="form-inline">
-            <input type="hidden" name="pageNumber" value="@(Model.PageNumber + 1)" />
-            <input type="hidden" name="sortOrder" value="@Model.CurrentSort" />
-            <input type="hidden" name="search" value="@Model.CurrentSearch" />
-            <input type="hidden" asp-for="SelectedYardType" value="@Model.SelectedYardType" />
-            <button type="submit" class="btn btn-outline-primary" @(Model.PageNumber >= Model.TotalPages ? "disabled" : "")>Next</button>
-        </form>
-    </div>
-}
-<script src="/_framework/aspnetcore-browser-refresh.js"></script>

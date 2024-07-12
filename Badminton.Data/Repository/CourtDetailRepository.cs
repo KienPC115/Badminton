@@ -32,13 +32,5 @@ namespace Badminton.Data.Repository
 
             return await query.ToListAsync();
         }
-
-        public CourtDetail GetCourtDetailIncludeCourt(int id)
-        {
-            var courtDetail = _context.CourtDetails.FirstOrDefault(c => c.CourtDetailId == id);
-            courtDetail.Court = _context.Courts.FirstOrDefault(c => c.CourtId == courtDetail.CourtId);
-            courtDetail.Court.CourtDetails = null;
-            return courtDetail;
-        }
     }
 }

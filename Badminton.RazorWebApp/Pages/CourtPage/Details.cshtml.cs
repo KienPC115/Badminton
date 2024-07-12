@@ -14,13 +14,15 @@ namespace Badminton.RazorWebApp.Pages.CourtPage
     {
         private readonly ICourtBusiness _courtBusiness;
 
-        public DetailsModel() {
+        public DetailsModel()
+        {
             _courtBusiness ??= new CourtBusiness();
         }
 
-        public Court Court { get; set; } = default!;
+      public Court Court { get; set; } = default!; 
 
-        public async Task<IActionResult> OnGetAsync(int? id) {
+        public async Task<IActionResult> OnGetAsync(int? id)
+        {
             if (id == null) {
                 return NotFound();
             }
@@ -34,5 +36,6 @@ namespace Badminton.RazorWebApp.Pages.CourtPage
             }
             return Page();
         }
+
     }
 }

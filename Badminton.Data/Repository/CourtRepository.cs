@@ -21,7 +21,7 @@ namespace Badminton.Data.Repository {
                 .ToListAsync();
         }
 
-        /*public async Task<List<Court>> GetCourtsByKeyword(string key) {
+        public async Task<List<Court>> GetCourtsByKeyword(string key) {
             if(string.IsNullOrEmpty(key))
                 return await _context.Courts.ToListAsync();
 
@@ -32,7 +32,7 @@ namespace Badminton.Data.Repository {
                 || x.Price.ToString().ToLower().Contains(key.ToLower())
                 || x.Status.ToLower().Contains(key.ToLower()))
                 .ToListAsync();
-        }*/
+        }
 
         public async Task<Court> GetCourtIdByName(string name)
         {

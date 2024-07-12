@@ -5,27 +5,6 @@
     ViewData["Title"] = "Index";
 }
 
-<style>
-    .notice {
-        position: fixed;
-        top: 10px;
-        left: 10px;
-        background-color: #f8d7da;
-        color: #721c24;
-        padding: 10px;
-        border: 1px solid #f5c6cb;
-        border-radius: 5px;
-        z-index: 1000; /* Ensures the notice appears above other elements */
-    }
-</style>
-
-@if (TempData["message"] != null)
-{
-    <div class="notice">
-        @TempData["message"]
-    </div>
-}
-
 <h1>Index</h1>
 <form>
     <input type="text" asp-for="Search">
@@ -50,46 +29,29 @@
                 @Html.DisplayNameFor(model => model.CourtDetail[0].Court.Name)
             </th>
             <th></th>
-            @if (HttpContext.Session.TryGetValue("cus", out byte[]? cus))
-            {
-                <th></th>
-            }
         </tr>
     </thead>
     <tbody>
-@if (Model.CourtDetail != null && Model.CourtDetail.Count > 0)
-        {
-            @foreach (var item in Model.CourtDetail)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Slot)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Price)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Status)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Court.Name)
-                    </td>
-                    <td>
-                        <a asp-page="./Edit" asp-route-id="@item.CourtDetailId">Edit</a> |
-                        <a asp-page="./Details" asp-route-id="@item.CourtDetailId">Details</a> |
-                        <a asp-page="./Delete" asp-route-id="@item.CourtDetailId">Delete</a>
-                    </td>
-                    @if (cus != null)
-                    {
-                        <td>
-                            <form asp-page="../CartPage" method="post">
-                                <input type="hidden" name="courtDetailID" value="@item.CourtDetailId" />
-                                <button type="submit" class="btn btn-outline-primary">Add to cart</button>
-                            </form>
-                        </td>
-                    }
-                </tr>
-            }
-        }
+@foreach (var item in Model.CourtDetail) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Slot)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Court.Name)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.CourtDetailId">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.CourtDetailId">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.CourtDetailId">Delete</a>
+            </td>
+        </tr>
+}
     </tbody>
 </table>

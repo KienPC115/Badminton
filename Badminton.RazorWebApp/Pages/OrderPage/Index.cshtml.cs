@@ -9,7 +9,7 @@ using Badminton.Data.Models;
 using Badminton.Business;
 using Badminton.Data.Base;
 using Microsoft.IdentityModel.Tokens;
-using Badminton.Common;
+using Badminton.Business.Helpers;
 using Badminton.Business.Interface;
 namespace Badminton.RazorWebApp.Pages.OrderPage
 {

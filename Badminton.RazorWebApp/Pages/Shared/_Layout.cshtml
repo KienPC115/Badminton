@@ -31,9 +31,6 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/OrderPage/Index">Order</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/CartPage">Cart</a>
-                        </li>
                         <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="../Index">Logout</a>
@@ -58,8 +55,6 @@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/microsoft/signalr/dist/browser/signalr.js"></script>
-    <script src="~/microsoft/signalr/dist/browser/signalr.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     @await RenderSectionAsync("Scripts", required: false)

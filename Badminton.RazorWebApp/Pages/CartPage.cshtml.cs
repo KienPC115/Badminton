@@ -24,7 +24,7 @@ namespace Badminton.RazorWebApp.Pages
             _orderBusiness ??= new OrderBusiness();
         }
 
-        public IActionResult OnGet(string? checkout, int? courtDetailID)
+        public void OnGet(string? checkout, int? courtDetailID)
         {
             if (Helpers.GetValueFromSession("cart", out List<int> cart, HttpContext))
             {
@@ -33,20 +33,15 @@ namespace Badminton.RazorWebApp.Pages
 
             if (!checkout.IsNullOrEmpty())
             {
-                int orderId = Checkout(cart);
-                if (orderId > 0)
-                {
-                    return RedirectToPage("./OrderDetail/Index", orderId);
-                }
+                Checkout(cart);
             }
             if (courtDetailID != null && courtDetailID != 0)
             {
                 RemoveOutCart(courtDetailID.Value);
             }
-            return Page();
         }
 
-        private int Checkout(List<int> cart)
+        private void Checkout(List<int> cart)
         {
             if (Helpers.GetValueFromSession("cus", out Customer cus, HttpContext))
             {
@@ -57,16 +52,14 @@ namespace Badminton.RazorWebApp.Pages
                 if (result.Status <= 0)
                 {
                     TempData["message"] = "Something failed while checkout.";
-                    return -1;
+                    return;
                 }
                 TempData["message"] = "Checkout successfully";
                 _hubContext.Clients.All.SendAsync("ChangeStatusCourtDetail");
                 Cart.Clear();
                 cart.Clear();
                 Helpers.SetValueToSession("cart", cart, HttpContext);
-                return int.Parse(result.Data.ToString());
             }
-            return -1;
         }
 
         private void GetCart(List<int> cart)

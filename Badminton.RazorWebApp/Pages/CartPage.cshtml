@@ -1,0 +1,84 @@
+﻿@page
+@model Badminton.RazorWebApp.Pages.CartPageModel
+
+@{
+    ViewData["Title"] = "Cart";
+}
+<style>
+    .notice {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        background-color: #f8d7da;
+        color: #721c24;
+        padding: 10px;
+        border: 1px solid #f5c6cb;
+        border-radius: 5px;
+        z-index: 1000;
+    }
+</style>
+
+@if (TempData["message"] != null)
+{
+    <div class="notice">
+        @TempData["message"]
+    </div>
+}
+@if (Model.Cart == null || Model.Cart.Count <= 0)
+{
+    <p>No thing in this cart</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Cart[0].Slot)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Cart[0].Price)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Cart[0].Status)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Cart[0].Court.Name)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Cart != null && Model.Cart.Count > 0)
+            {
+                @foreach (var item in Model.Cart)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Slot)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Price)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Status)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Court.Name)
+                        </td>
+                        <td>
+                            <form asp-page="../CartPage" method="get">
+                                <input type="hidden" name="courtDetailID" value="@item.CourtDetailId" />
+                                <button type="submit" class="btn btn-outline-primary">Remove</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    <form asp-page="../CartPage" method="get">
+        <input type="hidden" name="checkout" value="CheckOut" />
+        <button type="submit" class="btn btn-outline-primary">Checkout</button>
+    </form>
+}

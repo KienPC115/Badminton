@@ -83,6 +83,7 @@ namespace Badminton.Data.Repository
                     {
                         transaction.Commit();
                     }
+                    check = order.OrderId;
                 }
                 catch (Exception)
                 {

@@ -310,9 +310,9 @@ namespace Badminton.Business
                 var result = _unitOfWork.OrderRepository.Checkout(courtDetailList, cusID);
                 if (result <= 0)
                 {
-                    return new BadmintonResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
+                    return new BadmintonResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG, result);
                 }
-                return new BadmintonResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG);
+                return new BadmintonResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG, result);
             }
             catch (Exception ex)
             {

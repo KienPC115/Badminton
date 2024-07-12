@@ -306,12 +306,12 @@ namespace Badminton.Business
         {
             try
             {
-                var result = _unitOfWork.OrderRepository.Checkout(courtDetailList, cusID);
+                var result = _unitOfWork.OrderRepository.Checkout(courtDetailList, cusID, out int orderId);
                 if (result <= 0)
                 {
-                    return new BadmintonResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
+                    return new BadmintonResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG, -1);
                 }
-                return new BadmintonResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG);
+                return new BadmintonResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG, orderId);
             }
             catch (Exception ex)
             {

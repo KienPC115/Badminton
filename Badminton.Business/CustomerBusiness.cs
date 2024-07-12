@@ -102,6 +102,7 @@ namespace Badminton.Business {
                 Customer.Email = updateCustomer.Email;
                 Customer.Phone = updateCustomer.Phone;
                 Customer.Address = updateCustomer.Address;
+                Customer.Password = updateCustomer.Password;
 
                 if (await _unitOfWork.CustomerRepository.UpdateAsync(Customer) > 0) {
                     return new BadmintonResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG);

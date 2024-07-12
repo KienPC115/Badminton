@@ -20,17 +20,33 @@
             </div>
             <div class="form-group">
                 <label asp-for="Court.Status" class="control-label"></label>
-                <select asp-for="Court.Status" class="form-control">
-                    @foreach (var item in Model.Status) {
-                        <option value="@item">@item</option>
-                    }
-                </select>
+                <select asp-for="Court.Status" class="form-control" asp-items="Model.Status"></select>
                 <span asp-validation-for="Court.Status" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Court.Description" class="control-label"></label>
                 <input asp-for="Court.Description" class="form-control" />
                 <span asp-validation-for="Court.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Court.YardType" class="control-label"></label>
+                <select asp-for="Court.YardType" class="form-control" asp-items="Model.YardType"></select>
+                <span asp-validation-for="Court.YardType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Court.Type" class="control-label"></label>
+                <select asp-for="Court.Type" class="form-control" asp-items="Model.Type"></select>
+                <span asp-validation-for="Court.Type" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Court.Location" class="control-label"></label>
+                <select asp-for="Court.Location" class="form-control" asp-items="Model.Location"></select>
+                <span asp-validation-for="Court.Location" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Court.SpaceType" class="control-label"></label>
+                <select asp-for="Court.SpaceType" class="form-control" asp-items="Model.SpaceType"></select>
+                <span asp-validation-for="Court.SpaceType" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Court.Price" class="control-label"></label>

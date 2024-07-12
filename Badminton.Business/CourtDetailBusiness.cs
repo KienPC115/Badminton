@@ -20,11 +20,12 @@ namespace Badminton.Business
     {
         public Task<IBadmintonResult> GetAllCourtDetails();
         public Task<IBadmintonResult> GetAllCourtDetailsIncludeCourt(string? Search);
-
+        IBadmintonResult GetCourtDetailsIncludeCourt(List<int> courtDetailIds);
         public Task<IBadmintonResult> GetCourtDetail(int courtDetailId);
         public Task<IBadmintonResult> AddCourtDetail(CourtDetail courtDetail);
         public Task<IBadmintonResult> UpdateCourtDetail(int courtDetailId, CourtDetail courtDetail,string msg);
         public Task<IBadmintonResult> DeleteCourtDetail(int courtDetailId);
+        public Task<IBadmintonResult> RefreshCourtDetailStatus();
     }
     public class CourtDetailBusiness : ICourtDetailBusiness
     {
@@ -118,6 +119,24 @@ namespace Badminton.Business
             }
         }
 
+        public IBadmintonResult GetCourtDetailsIncludeCourt(List<int> courtDetailIds)
+        {
+            try
+            {
+                List<CourtDetail> courtDetails = new List<CourtDetail>();
+                foreach (int id in courtDetailIds)
+                {
+                    courtDetails.Add(_unitOfWork.CourtDetailRepository.GetCourtDetailIncludeCourt(id));
+                }
+                return courtDetails != null ? new BadmintonResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, courtDetails)
+                                               : new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
+            }
+            catch (Exception ex)
+            {
+                return new BadmintonResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
+
         public async Task<IBadmintonResult> UpdateCourtDetail(int courtDetailId, CourtDetail updateCourtDetail, string msg)
         {
             try
@@ -143,6 +162,30 @@ namespace Badminton.Business
                 return  result > 0
                     ? new BadmintonResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG)
                     : new BadmintonResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
+            }
+            catch (Exception ex)
+            {
+                return new BadmintonResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
+
+        public async Task<IBadmintonResult> RefreshCourtDetailStatus()
+        {
+            try
+            {
+                var allCourtDetail = await _unitOfWork.CourtDetailRepository.GetAllAsync();
+                if (allCourtDetail == null || allCourtDetail.Count() <= 0)
+                {
+                    return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
+                }
+                var status = CourtDetailShared.Status();
+                allCourtDetail.ForEach(c =>
+                {
+                    c.Status = status[0];
+                    _unitOfWork.CourtDetailRepository.PrepareUpdate(c);
+                });
+                var check = await _unitOfWork.CourtDetailRepository.SaveAsync();
+                return check <= 0 ? new BadmintonResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG) : new BadmintonResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG);
             }
             catch (Exception ex)
             {

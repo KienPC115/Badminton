@@ -1,5 +1,4 @@
 ﻿using Badminton.Business;
-using Badminton.Business.Helpers;
 using Badminton.Common;
 using Badminton.Data.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -37,9 +36,8 @@ namespace Badminton.RazorWebApp.Pages {
                 TempData["message"] = "Login failed!!! Please try with another email or password";
                 return Page();
             }
-            //HttpContext.Session.Set("cus", Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(result.Data as Customer)));
             Helpers.SetValueToSession("cus", result.Data as Customer, HttpContext);
-            return RedirectToPage("./OrderPage/Index");
+            return RedirectToPage("./CourtDetailPage/Index");
         }
     }
 }

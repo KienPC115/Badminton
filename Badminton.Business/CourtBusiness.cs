@@ -1,4 +1,5 @@
 ﻿using Badminton.Business.Interface;
+using Badminton.Business.Shared;
 using Badminton.Common;
 using Badminton.Data;
 using Badminton.Data.DAO;
@@ -17,12 +18,12 @@ namespace Badminton.Business
     {
         public Task<IBadmintonResult> GetAllCourts();
         public Task<IBadmintonResult> GetCourtsByStatus(string status);
-        public Task<IBadmintonResult> GetCourtsByKeyword(string key);
         public Task<IBadmintonResult> GetCourtById(int courtId);
         public Task<IBadmintonResult> AddCourt(Court court);
         public Task<IBadmintonResult> UpdateCourt(int courtId, Court court);
         public Task<IBadmintonResult> DeleteCourt(int courtId);
         public Task<IBadmintonResult> GetCourtIdByName(string name);
+        public Task<IBadmintonResult> GetCourtsWithCondition(string? key, string filter, string sortOrder);
     }
 
     public class CourtBusiness : ICourtBusiness
@@ -106,6 +107,12 @@ namespace Badminton.Business
                 court.Name = updateCourt.Name;
                 court.Status = updateCourt.Status;
                 court.Description = updateCourt.Description;
+                court.Location = updateCourt.Location;
+                court.Type = updateCourt.Type;
+                court.SpaceType = updateCourt.SpaceType;
+                court.YardType = updateCourt.YardType;
+                court.CreatedTime = updateCourt.CreatedTime;
+                court.UpdatedTime = updateCourt.UpdatedTime;
                 court.Price = updateCourt.Price;
                 
                 if (await _unitOfWork.CourtRepository.UpdateAsync(court) > 0)
@@ -178,15 +185,59 @@ namespace Badminton.Business
             }
         }
 
-        public async Task<IBadmintonResult> GetCourtsByKeyword(string? key) {
+        public async Task<IBadmintonResult> GetCourtsWithCondition(string? key, string? filter, string sortOrder) {
             try {
+                var predicate = PredicateBuilder.True<Court>();
+
+                if(!string.IsNullOrEmpty(key)) {
+                    key = key.Trim();
+                    predicate = predicate.And(x =>
+                        x.Name.Contains(key)
+                        || x.Price.ToString().Contains(key)
+                        || x.Description.Contains(key)
+                        || x.Status.Contains(key));
+                }
+
+                if(!string.IsNullOrEmpty(filter) && filter != "All") {
+                    predicate = predicate.And(x => x.YardType == filter);
+                }
+
+                var query = await _unitOfWork.CourtRepository.FindAll(predicate);
+
+                switch (sortOrder) {
+                    case "name_desc":
+                        query = query.OrderByDescending(x => x.Name);
+                        break;
+                    case "Price":
+                        query = query.OrderBy(x => x.Price);
+                        break;
+                    case "price_desc":
+                        query = query.OrderByDescending(x => x.Price);
+                        break;
+                    case "CreatedTime":
+                        query = query.OrderBy(x => x.CreatedTime);
+                        break;
+                    case "create_desc":
+                        query = query.OrderByDescending(x => x.CreatedTime);
+                        break;
+                    case "UpdatedTime":
+                        query = query.OrderBy(x => x.UpdatedTime);
+                        break;
+                    case "update_desc":
+                        query = query.OrderByDescending(x => x.UpdatedTime);
+                        break;
+                    default:
+                        query = query.OrderBy(x =>x.Name);
+                        break;
+                }
+
+                var courts = await query.ToListAsync();
                 //var courts = await _DAO.GetAllAsync();
-                var courts = await _unitOfWork.CourtRepository.GetCourtsByKeyword(key);
                 if (courts == null) {
                     return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
                 }
 
-                return new BadmintonResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, courts!);
+                return new BadmintonResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, courts);
             }
             catch (Exception ex) {
                 return new BadmintonResult(Const.ERROR_EXCEPTION, ex.Message);

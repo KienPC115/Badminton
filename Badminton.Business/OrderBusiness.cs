@@ -27,6 +27,7 @@ namespace Badminton.Business
         public Task<IBadmintonResult> GetBySearchingNote(string note);
         public Task<IBadmintonResult> GetBySearchingNoteWithCusId(string note, int cusid);
         public Task<IBadmintonResult> Save(Order order);
+        public IBadmintonResult Checkout(List<CourtDetail> courtDetailList, int cusID);
     }
     public class OrderBusiness : IOrderBusiness
     {
@@ -45,17 +46,17 @@ namespace Badminton.Business
             try
             {
                 var orders = await _unitOfWork.OrderRepository.GetAllAsync();
+                
                 foreach (var order in orders)
                 {
                     order.Customer = await AssignCustomerToOrder(order);
-                    order.Customer.Orders = null;
                     await UpdateAmount(order.OrderId);
                 }
                 if (orders == null)
                 {
                     return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
                 }
-                return new BadmintonResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, orders);
+                return new BadmintonResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, orders.OrderByDescending(o => o.OrderDate).ToList());
             }
             catch (Exception ex)
             {
@@ -263,7 +264,7 @@ namespace Badminton.Business
                 }
                 note ??= string.Empty;
                 var allOrders = result.Data as List<Order>;
-                var orders = allOrders.Where(d => d.OrderNotes.ToUpper().Contains(note.Trim().ToUpper())).ToList();
+                var orders = allOrders.Where(d => d.OrderNotes.ToUpper().Contains(note.Trim().ToUpper())).OrderByDescending(o => o.OrderDate).ToList();
                 return new BadmintonResult
                 {
                     Status = Const.SUCCESS_READ_CODE,
@@ -288,7 +289,7 @@ namespace Badminton.Business
                 }
                 note ??= string.Empty;
                 var allOrders = result.Data as List<Order>;
-                var orders = allOrders.Where(d => d.OrderNotes.ToUpper().Contains(note.Trim().ToUpper())).ToList();
+                var orders = allOrders.Where(d => d.OrderNotes.ToUpper().Contains(note.Trim().ToUpper())).OrderByDescending(o => o.OrderDate).ToList();
                 return new BadmintonResult
                 {
                     Status = Const.SUCCESS_READ_CODE,
@@ -305,12 +306,12 @@ namespace Badminton.Business
         {
             try
             {
-                var result = _unitOfWork.OrderRepository.Checkout(courtDetailList, cusID, out int orderId);
+                var result = _unitOfWork.OrderRepository.Checkout(courtDetailList, cusID);
                 if (result <= 0)
                 {
-                    return new BadmintonResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG, orderId);
+                    return new BadmintonResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
                 }
-                return new BadmintonResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG, orderId);
+                return new BadmintonResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG);
             }
             catch (Exception ex)
             {

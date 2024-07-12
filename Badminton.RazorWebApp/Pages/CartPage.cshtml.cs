@@ -24,7 +24,7 @@ namespace Badminton.RazorWebApp.Pages
             _orderBusiness ??= new OrderBusiness();
         }
 
-        public async Task<IActionResult> OnGetAsync(string? checkout, int? courtDetailID)
+        public void OnGet(string? checkout, int? courtDetailID)
         {
             if (Helpers.GetValueFromSession("cart", out List<int> cart, HttpContext))
             {
@@ -33,25 +33,15 @@ namespace Badminton.RazorWebApp.Pages
 
             if (!checkout.IsNullOrEmpty())
             {
-                int orderId = Checkout(cart);
-                if (orderId > 0)  // Ensure orderId is valid before redirecting
-                {
-                    return RedirectToPage("/OrderDetailPage/Index", new { orderID = orderId });
-                    //return RedirectToPage("/Index");
-                }
-                else
-                {
-                    TempData["message"] = "Failed to checkout.";
-                }
+                Checkout(cart);
             }
             if (courtDetailID != null && courtDetailID != 0)
             {
                 RemoveOutCart(courtDetailID.Value);
             }
-            return Page();
         }
 
-        private int Checkout(List<int> cart)
+        private void Checkout(List<int> cart)
         {
             if (Helpers.GetValueFromSession("cus", out Customer cus, HttpContext))
             {
@@ -62,16 +52,14 @@ namespace Badminton.RazorWebApp.Pages
                 if (result.Status <= 0)
                 {
                     TempData["message"] = "Something failed while checkout.";
-                    return -1;
+                    return;
                 }
                 TempData["message"] = "Checkout successfully";
                 _hubContext.Clients.All.SendAsync("ChangeStatusCourtDetail");
-                cart.Clear();
                 Cart.Clear();
+                cart.Clear();
                 Helpers.SetValueToSession("cart", cart, HttpContext);
-                return int.Parse(result.Data.ToString());
             }
-            return -1;
         }
 
         private void GetCart(List<int> cart)
@@ -121,8 +109,7 @@ namespace Badminton.RazorWebApp.Pages
             if (cart.Contains(courtDetailID))
             {
                 TempData["message"] = "This court detail is already existed in cart";
-                GetCart(cart);
-                return Page();
+                return RedirectToAction("./CourtDetailPage/Index");
             }
             cart.Add(courtDetailID);
             Helpers.SetValueToSession("cart", cart, HttpContext);

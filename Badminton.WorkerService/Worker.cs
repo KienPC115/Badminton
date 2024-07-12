@@ -22,8 +22,7 @@ namespace Badminton.WorkerService
                 {
                     _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
                     var result = await _courtDetailBusiness.RefreshCourtDetailStatus();
-                    _logger.LogInformation($"Result of Refresh Court Detail Status: {result.Status} - {result.Message}");
-
+                    _logger.LogInformation($"Result of Refresh Court Detail Status: {result.Status} - {result.Data}");
                 }
                 await Task.Delay(3000, stoppingToken);
             }

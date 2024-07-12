@@ -34,10 +34,9 @@ namespace Badminton.Data.Repository
                 throw;
             }
         }
-        public int Checkout(List<CourtDetail> courtDetailsList, int customerId, out int orderId)
+        public int Checkout(List<CourtDetail> courtDetailsList, int customerId)
         {
             int check = -1;
-            orderId = -1;
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
@@ -60,7 +59,7 @@ namespace Badminton.Data.Repository
                     {
                         transaction.Rollback();
                     }
-                    orderId = order.OrderId;
+
                     List<CourtDetail> courtDetailsExisting = new List<CourtDetail>();
                     courtDetailsList.ForEach(o =>
                     {

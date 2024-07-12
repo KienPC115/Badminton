@@ -301,21 +301,5 @@ namespace Badminton.Business
                 return new BadmintonResult(Const.ERROR_EXCEPTION, ex.Message);
             }
         }
-        public IBadmintonResult Checkout(List<CourtDetail> courtDetailList, int cusID)
-        {
-            try
-            {
-                var result = _unitOfWork.OrderRepository.Checkout(courtDetailList, cusID, out int orderId);
-                if (result <= 0)
-                {
-                    return new BadmintonResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG, orderId);
-                }
-                return new BadmintonResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG, orderId);
-            }
-            catch (Exception ex)
-            {
-                return new BadmintonResult(Const.ERROR_EXCEPTION, ex.Message);
-            }
-        }
     }
 }

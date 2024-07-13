@@ -15,6 +15,7 @@ namespace Badminton.Business {
         public Task<IBadmintonResult> GetAllCustomers();
         public Task<IBadmintonResult> GetCustomerById(int CustomerId);
         public Task<IBadmintonResult> AddCustomer(Customer Customer);
+        public Task<IBadmintonResult> GetAllCustomersWithSearchKey(string Search);
         public Task<IBadmintonResult> UpdateCustomer(int CustomerId, Customer Customer);
         public Task<IBadmintonResult> DeleteCustomer(int CustomerId);
         Task<IBadmintonResult> CheckLogin(string email, string password);
@@ -40,6 +41,14 @@ namespace Badminton.Business {
             } catch (Exception ex) {
                 return new BadmintonResult(Const.ERROR_EXCEPTION, ex.Message);
             }
+        }
+
+        public async Task<IBadmintonResult> GetAllCustomersWithSearchKey(string Search)
+        {
+            var Customers = await _unitOfWork.CustomerRepository.GetAllCustomerBySearchKeyAsync(Search);
+            return Customers.Count >= 1
+                ? new BadmintonResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, Customers)
+                : new BadmintonResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
         }
 
         public async Task<IBadmintonResult> GetAllCustomers() {

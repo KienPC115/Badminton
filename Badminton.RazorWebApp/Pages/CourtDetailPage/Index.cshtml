@@ -28,7 +28,8 @@
 
 <h1>Index</h1>
 <form>
-    <input type="text" asp-for="Search">
+    <input type="hidden" name="newCurPage" value="1" />
+    <input name="searchKey" value="@Model.Search" />
     <input type="submit" value="Search">
 </form>
 <p>

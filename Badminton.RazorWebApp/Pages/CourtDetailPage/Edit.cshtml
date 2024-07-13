@@ -44,10 +44,20 @@
                 <select asp-for="CourtDetail.Status" class="form-control">
                     @foreach (var item in Model.Status)
                     {
-                    <option value="@item">@item</option>
+                        <option value="@item">@item</option>
                     }
                 </select>
                 <span asp-validation-for="CourtDetail.Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CourtDetail.Notes" class="control-label"></label>
+                <input asp-for="CourtDetail.Notes" class="form-control" />
+                <span asp-validation-for="CourtDetail.Notes" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CourtDetail.Capacity" class="control-label"></label>
+                <input asp-for="CourtDetail.Capacity" class="form-control" />
+                <span asp-validation-for="CourtDetail.Capacity" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

@@ -23,12 +23,10 @@ connection.on("ChangeCart", function () {
 })
 
 function showToast(message) {
-    console.log("Showing toast: " + message); // Add this line for debugging
-    // Create a div element for the toast
+    console.log("Showing toast: " + message);
     var toast = document.createElement("div");
     toast.innerText = message;
 
-    // Style the toast element
     toast.style.position = "fixed";
     toast.style.top = "10px";
     toast.style.right = "10px";
@@ -39,11 +37,9 @@ function showToast(message) {
     toast.style.borderRadius = "5px";
     toast.style.zIndex = "1000";
 
-    // Append the toast to the body
     document.body.appendChild(toast);
     console.log("Toast appended to body");
 
-    // Remove the toast after 3 seconds
     setTimeout(function () {
         document.body.removeChild(toast);
         console.log("Toast removed from body");

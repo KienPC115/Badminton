@@ -58,7 +58,7 @@ namespace Badminton.RazorWebApp.Pages.OrderDetailPage
                 return Page();
             }
 
-            return RedirectToPage("./Index");
+            return RedirectToPage("../OrderPage/Index");
         }
     }
 }

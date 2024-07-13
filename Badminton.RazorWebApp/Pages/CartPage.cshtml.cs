@@ -76,6 +76,10 @@ namespace Badminton.RazorWebApp.Pages
 
         private void GetCart(List<int> cart)
         {
+            if (cart == null || cart.Count <= 0)
+            {
+                return;
+            }
             var result = _courtDetailBusiness.GetCourtDetailsIncludeCourt(cart);
             if (result.Status <= 0)
             {

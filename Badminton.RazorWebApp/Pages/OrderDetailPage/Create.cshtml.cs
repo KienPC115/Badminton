@@ -33,7 +33,8 @@ namespace Badminton.RazorWebApp.Pages.OrderDetailPage
         {
             Orders = _orderBusiness.GetAllOrders().Result.Data as List<Order>;
             CourtDetails = _courtDetailBusiness.GetAllCourtDetails().Result.Data as List<CourtDetail>;
-            CourtDetails = CourtDetails.Where(cd => cd.Status == "Available").ToList();
+            var status = CourtDetailShared.Status();
+            CourtDetails = CourtDetails.Where(cd => cd.Status.Equals(status[0])).ToList();
             CourtDetails.ForEach(cd => cd.Court = _courtBusiness.GetCourtById(cd.CourtId).Result.Data as Court);
             return Page();
         }
@@ -48,7 +49,7 @@ namespace Badminton.RazorWebApp.Pages.OrderDetailPage
             {
                 return Page();
             }
-            return RedirectToPage("./Index");
+            return RedirectToPage("./Index", new { orderID = OrderDetail.OrderId });
         }
     }
 }

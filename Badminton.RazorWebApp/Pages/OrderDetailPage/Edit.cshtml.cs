@@ -70,7 +70,7 @@ namespace Badminton.RazorWebApp.Pages.OrderDetailPage
             {
                 return Page();
             }
-            return RedirectToPage("./Index");
+            return RedirectToPage("./Index", new { orderID = OrderDetail.OrderId });
         }
     }
 }

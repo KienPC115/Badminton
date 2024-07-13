@@ -34,12 +34,16 @@ namespace Badminton.RazorWebApp.Pages
             if (!checkout.IsNullOrEmpty())
             {
                 int orderid = Checkout(cart);
-                return RedirectToPage("./OrderDetailPage/Index", new { orderID = orderid });
+                if (orderid > 0)
+                {
+                    return RedirectToPage("./OrderDetailPage/Index", new { orderID = orderid });
+                }
             }
             if (courtDetailID != null && courtDetailID != 0)
             {
                 RemoveOutCart(courtDetailID.Value);
             }
+            GetCart(cart);
             return Page();
         }
 
@@ -49,7 +53,11 @@ namespace Badminton.RazorWebApp.Pages
             {
                 var status = CourtDetailShared.Status();
                 var availableCourt = Cart.ToList().Where(c => c.Status.Equals(status[0])).ToList();
-
+                if (availableCourt.Count <= 0)
+                {
+                    TempData["message"] = "All this court in your cart is blocked";
+                    return -1;
+                }
                 var result = _orderBusiness.Checkout(availableCourt, cus.CustomerId);
                 if (result.Status <= 0)
                 {
@@ -104,16 +112,28 @@ namespace Badminton.RazorWebApp.Pages
 
         public IActionResult OnPostAsync(int courtDetailID)
         {
+            var result = _courtDetailBusiness.GetCourtDetail(courtDetailID).Result;
+            if (result.Status <= 0)
+            {
+                return RedirectToPage("./CourtDetailPage/Index");
+            }
+            var courtDetail = result.Data as CourtDetail;
+            var status = CourtDetailShared.Status();
+            if (courtDetail.Status.Equals(status[1]))
+            {
+                TempData["message"] = "This court is already not available.";
+                return RedirectToPage("./CourtDetailPage/Index");
+            }
             //if it's new, init cart.
             if (!Helpers.GetValueFromSession("cart", out List<int> cart, HttpContext))
             {
                 cart = new List<int>();
             }
-            
             if (cart.Contains(courtDetailID))
             {
                 TempData["message"] = "This court detail is already existed in cart";
-                return RedirectToAction("./CourtDetailPage/Index");
+                GetCart(cart);
+                return Page();
             }
             cart.Add(courtDetailID);
             Helpers.SetValueToSession("cart", cart, HttpContext);

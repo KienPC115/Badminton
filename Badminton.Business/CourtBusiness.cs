@@ -41,6 +41,8 @@ namespace Badminton.Business
         {
             try
             {
+                court.CreatedTime = DateTime.UtcNow;
+                court.UpdatedTime = DateTime.UtcNow;
                 _unitOfWork.CourtRepository.PrepareCreate(court);
                 int result = await _unitOfWork.CourtRepository.SaveAsync();
 
@@ -112,7 +114,7 @@ namespace Badminton.Business
                 court.SpaceType = updateCourt.SpaceType;
                 court.YardType = updateCourt.YardType;
                 court.CreatedTime = updateCourt.CreatedTime;
-                court.UpdatedTime = updateCourt.UpdatedTime;
+                court.UpdatedTime = DateTime.UtcNow;
                 court.Price = updateCourt.Price;
                 
                 if (await _unitOfWork.CourtRepository.UpdateAsync(court) > 0)

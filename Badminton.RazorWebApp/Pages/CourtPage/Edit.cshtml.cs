@@ -10,6 +10,7 @@ using Badminton.Data.Models;
 using Badminton.Business.Shared;
 using Badminton.Business;
 using System.Configuration;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 
 namespace Badminton.RazorWebApp.Pages.CourtPage
 {
@@ -64,7 +65,11 @@ namespace Badminton.RazorWebApp.Pages.CourtPage
             }
 
             try {
-                await _courtBusiness.UpdateCourt(Court.CourtId, Court);
+                var courtsResult = await _courtBusiness.UpdateCourt(Court.CourtId, Court);
+                if (courtsResult.Status <= 0) {
+                    TempData["message"] = courtsResult.Message;
+                    return RedirectToPage("./Index");
+                }
             }
             catch (DbUpdateConcurrencyException) {
                 if (!(await CourtExistsAsync(Court.CourtId))) {

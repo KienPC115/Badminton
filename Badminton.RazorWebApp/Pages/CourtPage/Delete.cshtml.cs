@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Badminton.Data.Models;
 using Badminton.Business;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 
 namespace Badminton.RazorWebApp.Pages.CourtPage
 {
@@ -41,6 +42,9 @@ namespace Badminton.RazorWebApp.Pages.CourtPage
             }
 
             var court = await _courtBusiness.DeleteCourt((int)id);
+            if (court.Status <= 0) {
+                TempData["message"] = court.Message;
+            }
 
             return RedirectToPage("./Index");
         }

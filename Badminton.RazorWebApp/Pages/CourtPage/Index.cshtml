@@ -4,6 +4,11 @@
 @{
     ViewData["Title"] = "Index";
 }
+@if (TempData["message"] != null) {
+    <div class="alert alert-danger">
+        @TempData["message"]
+    </div>
+}
 
 <h1>Court Page</h1>
 

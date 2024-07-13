@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Azure.Core;
 using Microsoft.VisualBasic;
 
 namespace Badminton.Data.Repository
@@ -30,14 +31,16 @@ namespace Badminton.Data.Repository
             IQueryable<CourtDetail> query = _context.CourtDetails;
             query = query.Where(cd => cd.Status.ToLower() != "delete")
                 .Include(cd => cd.Court)
-                .OrderByDescending(cd => cd.BookingCount)
+                .OrderBy(cd => cd.Status == "Available" ? 0 : 1)
+                .ThenByDescending(cd => cd.BookingCount)
                 .ThenBy(cd => cd.Court.Name);
             
             if (!string.IsNullOrEmpty(Search))
             {
                 query = query.Where(x => x.Price.ToString().Contains(Search.ToLower())
                                          || x.Status.Contains(Search.ToLower())
-                                         || x.Court.Name.ToLower().Contains(Search.ToLower()));
+                                         || x.Court.Name.ToLower().Contains(Search.ToLower())
+                                         || x.Slot.ToLower().Contains(Search.ToLower()));
             }
 
             return await query.ToListAsync();

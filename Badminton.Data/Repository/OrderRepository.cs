@@ -72,7 +72,11 @@ namespace Badminton.Data.Repository
                             OrderId = order.OrderId,
                         });
                     });
-                    courtDetailsExisting.ForEach(c => c.Status = "Booked");
+                    courtDetailsExisting.ForEach(c =>
+                    {
+                        c.BookingCount += 1;
+                        c.Status = "Booked";
+                    });
                     _context.CourtDetails.UpdateRange(courtDetailsExisting);
                     check = _context.SaveChanges();
                     if (check <= 0)

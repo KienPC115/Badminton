@@ -34,62 +34,97 @@
 <p>
     <a asp-page="Create">Create New</a>
 </p>
+<h1> Top Most Booked Court: @Model.CourtDetail.Court.Name</h1>
 <table class="table">
     <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.CourtDetail[0].Slot)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CourtDetail[0].Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CourtDetail[0].Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CourtDetail[0].Court.Name)
-            </th>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.CourtDetailList[0].Slot)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CourtDetailList[0].Price)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CourtDetailList[0].Status)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CourtDetailList[0].Notes)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CourtDetailList[0].Capacity)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CourtDetailList[0].BookingCount)
+        </th>
+
+        <th>
+            @Html.DisplayNameFor(model => model.CourtDetailList[0].Court.Name)
+        </th>
+        <th></th>
+        @if (HttpContext.Session.TryGetValue("cus", out byte[]? cus))
+        {
             <th></th>
-            @if (HttpContext.Session.TryGetValue("cus", out byte[]? cus))
-            {
-                <th></th>
-            }
-        </tr>
+        }
+    </tr>
     </thead>
     <tbody>
-@if (Model.CourtDetail != null && Model.CourtDetail.Count > 0)
+    @if (Model.CourtDetailList != null && Model.CourtDetailList.Count > 0)
+    {
+        @foreach (var item in Model.CourtDetailList)
         {
-            @foreach (var item in Model.CourtDetail)
-            {
-                <tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Slot)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Notes)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Capacity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BookingCount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Court.Name)
+                </td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.CourtDetailId">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@item.CourtDetailId">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.CourtDetailId">Delete</a>
+                </td>
+                @if (cus != null)
+                {
                     <td>
-                        @Html.DisplayFor(modelItem => item.Slot)
+                        <form asp-page="../CartPage" method="post">
+                            <input type="hidden" name="courtDetailID" value="@item.CourtDetailId" />
+                            <button type="submit" class="btn btn-outline-primary">Add to cart</button>
+                        </form>
                     </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Price)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Status)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Court.Name)
-                    </td>
-                    <td>
-                        <a asp-page="./Edit" asp-route-id="@item.CourtDetailId">Edit</a> |
-                        <a asp-page="./Details" asp-route-id="@item.CourtDetailId">Details</a> |
-                        <a asp-page="./Delete" asp-route-id="@item.CourtDetailId">Delete</a>
-                    </td>
-                    @if (cus != null)
-                    {
-                        <td>
-                            <form asp-page="../CartPage" method="post">
-                                <input type="hidden" name="courtDetailID" value="@item.CourtDetailId" />
-                                <button type="submit" class="btn btn-outline-primary">Add to cart</button>
-                            </form>
-                        </td>
-                    }
-                </tr>
-            }
+                }
+            </tr>
         }
+    }
     </tbody>
 </table>
+<div class="d-flex justify-content-between">
+    <form method="get" class="form-inline">
+        <input type="hidden" name="newCurPage" value="@(Model.CurrentPage - 1)" />
+        <input type="hidden" name="searchKey" value="@Model.Search" />
+        <button type="submit" class="btn btn-outline-primary" @(Model.CurrentPage <= 1 ? "disabled" : "")>Previous</button>
+    </form>
+
+    <span>Page @Model.CurrentPage of @Model.TotalPages</span>
+
+    <form method="get" class="form-inline">
+        <input type="hidden" name="newCurPage" value="@(Model.CurrentPage + 1)" />
+        <input type="hidden" name="searchKey" value="@Model.Search" />
+        <button type="submit" class="btn btn-outline-primary" @(Model.CurrentPage >= Model.TotalPages ? "disabled" : "")>Next</button>
+    </form>
+</div>

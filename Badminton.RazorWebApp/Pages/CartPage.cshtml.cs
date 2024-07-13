@@ -55,7 +55,7 @@ namespace Badminton.RazorWebApp.Pages
                     return;
                 }
                 TempData["message"] = "Checkout successfully";
-                _hubContext.Clients.All.SendAsync("ChangeStatusCourtDetail");
+                _hubContext.Clients.All.SendAsync("ChangeStatusCourtDetail", cus.Name, availableCourt);
                 Cart.Clear();
                 cart.Clear();
                 Helpers.SetValueToSession("cart", cart, HttpContext);

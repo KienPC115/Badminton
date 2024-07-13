@@ -23,7 +23,7 @@ namespace Badminton.Business
         public Task<IBadmintonResult> UpdateCourt(int courtId, Court court);
         public Task<IBadmintonResult> DeleteCourt(int courtId);
         public Task<IBadmintonResult> GetCourtIdByName(string name);
-        public Task<IBadmintonResult> GetCourtsWithCondition(string? key, string filter, string sortOrder);
+        public Task<IBadmintonResult> GetCourtsWithCondition(string? key, string sortOrder, string filterType, string filterYardType);
     }
 
     public class CourtBusiness : ICourtBusiness
@@ -185,21 +185,28 @@ namespace Badminton.Business
             }
         }
 
-        public async Task<IBadmintonResult> GetCourtsWithCondition(string? key, string? filter, string sortOrder) {
+        public async Task<IBadmintonResult> GetCourtsWithCondition(string? key, string sortOrder, string filterType, string filterYardType) {
             try {
                 var predicate = PredicateBuilder.True<Court>();
 
-                if(!string.IsNullOrEmpty(key)) {
+                if (!string.IsNullOrEmpty(key)) {
                     key = key.Trim();
                     predicate = predicate.And(x =>
                         x.Name.Contains(key)
                         || x.Price.ToString().Contains(key)
                         || x.Description.Contains(key)
-                        || x.Status.Contains(key));
+                        || x.Status.Contains(key)
+                        || x.Location.Contains(key)
+                        || x.SpaceType.Contains(key)
+                        );
                 }
 
-                if(!string.IsNullOrEmpty(filter) && filter != "All") {
-                    predicate = predicate.And(x => x.YardType == filter);
+                if (!string.IsNullOrEmpty(filterType) && filterType != "All") {
+                    predicate = predicate.And(x => x.Type == filterType);
+                }
+
+                if (!string.IsNullOrEmpty(filterYardType) && filterYardType != "All") {
+                    predicate = predicate.And(x => x.YardType == filterYardType);
                 }
 
                 var query = await _unitOfWork.CourtRepository.FindAll(predicate);
@@ -227,17 +234,16 @@ namespace Badminton.Business
                         query = query.OrderByDescending(x => x.UpdatedTime);
                         break;
                     default:
-                        query = query.OrderBy(x =>x.Name);
+                        query = query.OrderBy(x => x.Name);
                         break;
                 }
 
                 var courts = await query.ToListAsync();
-                //var courts = await _DAO.GetAllAsync();
                 if (courts == null) {
                     return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
                 }
 
-                return new BadmintonResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, courts);
+                return new BadmintonResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, courts!);
             }
             catch (Exception ex) {
                 return new BadmintonResult(Const.ERROR_EXCEPTION, ex.Message);

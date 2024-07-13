@@ -9,15 +9,21 @@ using Microsoft.EntityFrameworkCore;
 using Badminton.Data.Models;
 using Badminton.Business.Shared;
 using Badminton.Business;
+using System.Configuration;
 
 namespace Badminton.RazorWebApp.Pages.CourtPage
 {
     public class EditModel : PageModel
     {
         private readonly ICourtBusiness _courtBusiness;
+        private readonly IConfiguration _configuration;
+        private readonly CourtConfiguration _courtConfiguration;
 
-        public EditModel() {
+        public EditModel(IConfiguration configuration) {
             _courtBusiness ??= new CourtBusiness();
+            _configuration = configuration;
+            _courtConfiguration = new CourtConfiguration();
+            configuration.GetSection(nameof(CourtConfiguration)).Bind(_courtConfiguration);
         }
 
         [BindProperty]
@@ -38,11 +44,11 @@ namespace Badminton.RazorWebApp.Pages.CourtPage
                 return NotFound();
             }
 
-            Status = CourtShared.Status().Select(s => new SelectListItem { Value = s, Text = s, Selected = s == "Available" ? true : false }).ToList();
-            YardType = CourtShared.YardType().Select(s => new SelectListItem { Value = s, Text = s, Selected = s == "PVC carpet" ? true : false }).ToList();
-            Type = CourtShared.Type().Select(s => new SelectListItem { Value = s, Text = s, Selected = s == "Single" ? true : false }).ToList();
-            Location = CourtShared.Location().Select(s => new SelectListItem { Value = s, Text = s, Selected = s == "Location A" ? true : false }).ToList();
-            SpaceType = CourtShared.SpaceType().Select(s => new SelectListItem { Value = s, Text = s, Selected = s == "Indoor" ? true : false }).ToList();
+            Status = _courtConfiguration.Status.Select(s => new SelectListItem { Value = s, Text = s, Selected = s == "Available" ? true : false }).ToList();
+            YardType = _courtConfiguration.YardType.Select(s => new SelectListItem { Value = s, Text = s, Selected = s == "PVC carpet" ? true : false }).ToList();
+            Type = _courtConfiguration.Type.Select(s => new SelectListItem { Value = s, Text = s, Selected = s == "Single" ? true : false }).ToList();
+            Location = _courtConfiguration.Location.Select(s => new SelectListItem { Value = s, Text = s, Selected = s == "Location A" ? true : false }).ToList();
+            SpaceType = _courtConfiguration.SpaceType.Select(s => new SelectListItem { Value = s, Text = s, Selected = s == "Indoor" ? true : false }).ToList();
             // Load dropdown
             // ViewData["CustomerId"] = new SelectList(_context.Customers,"CustomerId", "Address","selectedValue")
             Court = court.Data as Court;

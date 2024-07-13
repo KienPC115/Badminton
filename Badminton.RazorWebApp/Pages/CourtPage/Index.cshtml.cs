@@ -61,6 +61,11 @@ namespace Badminton.RazorWebApp.Pages.CourtPage {
             CurrentSearch = search;
 
             var courtsResult = await _courtBusiness.GetCourtsWithCondition(search, sortOrder, SelectedType, SelectedYardType);
+            
+            if (courtsResult.Status <= 0) {
+                TempData["message"] = courtsResult.Message;
+                return;
+            }
 
             var list = courtsResult.Data as IList<Court>;
 

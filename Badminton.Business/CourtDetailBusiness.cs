@@ -26,6 +26,7 @@ namespace Badminton.Business
         public Task<IBadmintonResult> UpdateCourtDetail(int courtDetailId, CourtDetail courtDetail,string msg);
         public Task<IBadmintonResult> DeleteCourtDetail(int courtDetailId);
         public Task<IBadmintonResult> RefreshCourtDetailStatus();
+        public Task<IBadmintonResult> GetTopBookedCourt();
     }
     public class CourtDetailBusiness : ICourtDetailBusiness
     {
@@ -191,6 +192,14 @@ namespace Badminton.Business
             {
                 return new BadmintonResult(Const.ERROR_EXCEPTION, ex.Message);
             }
+        }
+
+        public async Task<IBadmintonResult> GetTopBookedCourt()
+        {
+            var courtDetail = await _unitOfWork.CourtDetailRepository.GetTopBookedCourt();
+            return courtDetail != null
+                ? new BadmintonResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, courtDetail)
+                : new BadmintonResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
         }
     }
 }

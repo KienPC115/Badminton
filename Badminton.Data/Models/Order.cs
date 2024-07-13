@@ -11,11 +11,11 @@ public partial class Order
 
     public int CustomerId { get; set; }
 
-    public string Type { get; set; } = null!;
+    public string Type { get; set; }
 
     public DateTime OrderDate { get; set; }
 
-    public string? OrderNotes { get; set; }
+    public string OrderNotes { get; set; }
 
     public double TotalAmount { get; set; }
 

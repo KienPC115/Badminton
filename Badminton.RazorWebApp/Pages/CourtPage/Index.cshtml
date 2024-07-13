@@ -12,117 +12,125 @@
 </p>
 
 <form asp-page="./Index" method="get">
-    <div class="form-actions no-color">
-        YardType 
-        <select asp-for="SelectedYardType" asp-items="@Model.YardType">
-            <option value="All">All</option>
-        </select>
+    <div class="form-actions no-color d-flex">
+        <div>
+            YardType
+            <select asp-for="SelectedYardType" asp-items="@Model.YardType">
+                <option value="All">All</option>
+            </select>
+        </div>
+        <div>
+            Type
+            <select asp-for="SelectedType" asp-items="@Model.Type">
+                <option value="All">All</option>
+            </select>
+        </div>
         <p>
             Find:
             <input type="text" name="search" value="@Model.CurrentSearch" />
+            <input type="hidden" name="sortOrder" value="@Model.CurrentSort" />
             <input type="submit" value="Search" class="btn btn-primary" /> |
             <a asp-page="./Index">Back to full List</a>
         </p>
     </div>
 </form>
-@if (Model.Court == null || Model.Court.Count <= 0)
-{
+@if (Model.Court == null || Model.Court.Count <= 0) {
     <p>No court in this range</p>
 }
-else
-{
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                <a asp-page="./Index" asp-route-sortOrder="@Model.NameSort">
+else {
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    <a asp-page="./Index" asp-route-sortOrder="@Model.NameSort">
                         @Html.DisplayNameFor(model => model.Court[0].Name)
-                </a>
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Court[0].Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Court[0].Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Court[0].YardType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Court[0].Type)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Court[0].Location)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Court[0].SpaceType)
-            </th>
-            <th>
-                <a asp-page="./Index" asp-route-sortOrder="@Model.CreatedDateSort">
-                    @Html.DisplayNameFor(model => model.Court[0].CreatedTime)
-                </a>
-            </th>
-            <th>
-                <a asp-page="./Index" asp-route-sortOrder="@Model.UpdatedDateSort">
-                     @Html.DisplayNameFor(model => model.Court[0].UpdatedTime)
-                </a>
-            </th>
-            <th>
-                <a asp-page="./Index" asp-route-sortOrder="@Model.PriceSort">
-                    @Html.DisplayNameFor(model => model.Court[0].Price)
-                </a>
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Court) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.YardType)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Type)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Location)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SpaceType)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UpdatedTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.CourtId">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.CourtId">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.CourtId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+                    </a>
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Court[0].Status)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Court[0].Description)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Court[0].YardType)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Court[0].Type)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Court[0].Location)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Court[0].SpaceType)
+                </th>
+                <th>
+                    <a asp-page="./Index" asp-route-sortOrder="@Model.CreatedDateSort">
+                        @Html.DisplayNameFor(model => model.Court[0].CreatedTime)
+                    </a>
+                </th>
+                <th>
+                    <a asp-page="./Index" asp-route-sortOrder="@Model.UpdatedDateSort">
+                        @Html.DisplayNameFor(model => model.Court[0].UpdatedTime)
+                    </a>
+                </th>
+                <th>
+                    <a asp-page="./Index" asp-route-sortOrder="@Model.PriceSort">
+                        @Html.DisplayNameFor(model => model.Court[0].Price)
+                    </a>
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Court) {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.YardType)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Type)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Location)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SpaceType)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CreatedTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UpdatedTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        <a asp-page="./Edit" asp-route-id="@item.CourtId">Edit</a> |
+                        <a asp-page="./Details" asp-route-id="@item.CourtId">Details</a> |
+                        <a asp-page="./Delete" asp-route-id="@item.CourtId">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
     <div class="d-flex justify-content-between">
         <form method="get" class="form-inline">
             <input type="hidden" name="pageNumber" value="@(Model.PageNumber - 1)" />
             <input type="hidden" name="sortOrder" value="@Model.CurrentSort" />
             <input type="hidden" name="search" value="@Model.CurrentSearch" />
             <input type="hidden" asp-for="SelectedYardType" value="@Model.SelectedYardType" />
+            <input type="hidden" asp-for="SelectedType" value="@Model.SelectedType" />
             <button type="submit" class="btn btn-outline-primary" @(Model.PageNumber <= 1 ? "disabled" : "")>Previous</button>
         </form>
 
@@ -133,6 +141,7 @@ else
             <input type="hidden" name="sortOrder" value="@Model.CurrentSort" />
             <input type="hidden" name="search" value="@Model.CurrentSearch" />
             <input type="hidden" asp-for="SelectedYardType" value="@Model.SelectedYardType" />
+            <input type="hidden" asp-for="SelectedType" value="@Model.SelectedType" />
             <button type="submit" class="btn btn-outline-primary" @(Model.PageNumber >= Model.TotalPages ? "disabled" : "")>Next</button>
         </form>
     </div>

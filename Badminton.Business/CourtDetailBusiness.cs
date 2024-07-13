@@ -153,6 +153,8 @@ namespace Badminton.Business
                 courtDetail.Slot = updateCourtDetail.Slot;
                 courtDetail.Price = updateCourtDetail.Price;
                 courtDetail.Status = updateCourtDetail.Status;
+                courtDetail.Notes = updateCourtDetail.Notes;
+                courtDetail.Capacity = updateCourtDetail.Capacity;
                 var result = await _unitOfWork.CourtDetailRepository.UpdateAsync(courtDetail);
                 if (msg.Contains(CourtDetailShared.DELETE))
                 {

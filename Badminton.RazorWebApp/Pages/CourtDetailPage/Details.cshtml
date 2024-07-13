@@ -12,6 +12,12 @@
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CourtDetail.Court.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CourtDetail.Court.Name)
+        </dd>
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.CourtDetail.Slot)
         </dt>
         <dd class="col-sm-10">
@@ -30,11 +36,24 @@
             @Html.DisplayFor(model => model.CourtDetail.Status)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CourtDetail.Court)
+            @Html.DisplayNameFor(model => model.CourtDetail.Notes)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CourtDetail.Court.Description)
+            @Html.DisplayFor(model => model.CourtDetail.Notes)
         </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CourtDetail.Capacity)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CourtDetail.Capacity)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CourtDetail.BookingCount)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CourtDetail.BookingCount)
+        </dd>
+
     </dl>
 </div>
 <div>

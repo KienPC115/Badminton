@@ -50,14 +50,17 @@ GO
 
 -- Create the order detail table
 CREATE TABLE CourtDetail(
-	CourtDetailId INT IDENTITY(1,1) PRIMARY KEY,
-	CourtId INT NOT NULL,
-	Slot VARCHAR(50) NOT NULL,
-	Price FLOAT NOT NULL,
-	Status VARCHAR(50),
-	FOREIGN KEY (CourtId) REFERENCES Court(CourtId)
+    CourtDetailId INT IDENTITY(1,1) PRIMARY KEY,
+    CourtId INT NOT NULL,
+    Slot VARCHAR(50) NOT NULL,
+    Price FLOAT NOT NULL,
+    Status VARCHAR(50) NOT NULL,
+    Notes TEXT NOT NULL,
+    Capacity INT DEFAULT 2,
+    BookingCount INT DEFAULT 0,
+    FOREIGN KEY (CourtId) REFERENCES Court(CourtId)
 )
-GO
+    GO
 -- Create the OrderDetail table
 CREATE TABLE OrderDetail (
     OrderDetailId INT IDENTITY(1,1) PRIMARY KEY,
@@ -112,16 +115,16 @@ INSERT INTO [Order] (CustomerId, Type, TotalAmount, OrderDate, OrderNotes) VALUE
 GO
 
 -- Insert dummy data into CourtDetail table
-INSERT INTO CourtDetail (CourtId, Slot, Price, Status) VALUES
-(1, '08h00-9h30', 50.0, 'Available'),
-(2, '09h30-11h00', 75.0, 'Available'),
-(3, '12h00-13h30', 40.0, 'Available'),
-(4, '13h30-15h00', 65.0, 'Available'),
-(5, '15h00-16h30', 50.0, 'Available'),
-(6, '16h30-18h00', 45.0, 'Available'),
-(1, '18h00-19h30', 50.0, 'Available'),
-(2, '19h30-21h00', 75.0, 'Available'),
-(3, '21h00-22h30', 40.0, 'Available');
+INSERT INTO CourtDetail (CourtId, Slot, Price, Status, Notes) VALUES
+(1, '08h00-9h30', 50.0, 'Available', 'Gio nay dong khach'),
+(2, '09h30-11h00', 75.0, 'Available','Gio nay khach tam on'),
+(3, '12h00-13h30', 40.0, 'Available','Gio nay khach tam on'),
+(4, '13h30-15h00', 65.0, 'Available','Gio nay dong khach'),
+(5, '15h00-16h30', 50.0, 'Available','Gio nay dong khach'),
+(3, '16h30-18h00', 45.0, 'Available','Gio nay dong khach'),
+(1, '18h00-19h30', 50.0, 'Available','Gio nay dong khach'),
+(2, '19h30-21h00', 75.0, 'Available','Gio nay dong khach'),
+(3, '21h00-22h30', 40.0, 'Available','Gio nay dong khach');
 GO
 
 -- Insert dummy data into OrderDetail table

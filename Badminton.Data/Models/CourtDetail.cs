@@ -17,6 +17,12 @@ public partial class CourtDetail
 
     public string Status { get; set; }
 
+    public string Notes { get; set; }
+
+    public int? Capacity { get; set; }
+
+    public int? BookingCount { get; set; }
+
     public virtual Court Court { get; set; }
 
     public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.VisualBasic;
 
 namespace Badminton.Data.Repository
 {
@@ -14,15 +15,24 @@ namespace Badminton.Data.Repository
         public CourtDetailRepository()
         {
         }
-
         public CourtDetailRepository(Net1710_221_8_BadmintonContext context) => _context = context;
 
+        public async Task<CourtDetail> GetTopBookedCourt()
+        {
+            return await _context.CourtDetails.Include(cd => cd.Court).OrderByDescending(cd => cd.BookingCount).FirstOrDefaultAsync();
+        }
+        public async Task<CourtDetail> GetByIdAsync(int id)
+        {
+            return await _context.CourtDetails.Where(cd => cd.CourtDetailId == id).Include(cd => cd.Court).FirstOrDefaultAsync();
+        }
         public async Task<List<CourtDetail>> GetAllCourtDetailsIncludeCourtAsync(string? Search)
         {
             IQueryable<CourtDetail> query = _context.CourtDetails;
             query = query.Where(cd => cd.Status.ToLower() != "delete")
                 .Include(cd => cd.Court)
-                .OrderBy(cd => cd.Court.Name);
+                .OrderByDescending(cd => cd.BookingCount)
+                .ThenBy(cd => cd.Court.Name);
+            
             if (!string.IsNullOrEmpty(Search))
             {
                 query = query.Where(x => x.Price.ToString().Contains(Search.ToLower())

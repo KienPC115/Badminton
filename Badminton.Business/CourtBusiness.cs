@@ -23,7 +23,7 @@ namespace Badminton.Business
         public Task<IBadmintonResult> UpdateCourt(int courtId, Court court);
         public Task<IBadmintonResult> DeleteCourt(int courtId);
         public Task<IBadmintonResult> GetCourtIdByName(string name);
-        public Task<IBadmintonResult> GetCourtsWithCondition(string? key, string sortOrder, string filterType, string filterYardType);
+        public Task<IBadmintonResult> GetCourtsWithCondition(string? key, string sortOrder, string filterType, string filterYardType, string filterStatus, string filterLocation);
     }
 
     public class CourtBusiness : ICourtBusiness
@@ -187,7 +187,7 @@ namespace Badminton.Business
             }
         }
 
-        public async Task<IBadmintonResult> GetCourtsWithCondition(string? key, string sortOrder, string filterType, string filterYardType) {
+        public async Task<IBadmintonResult> GetCourtsWithCondition(string? key, string sortOrder, string filterType, string filterYardType, string filterStatus, string filterLocation) {
             try {
                 var predicate = PredicateBuilder.True<Court>();
 
@@ -197,9 +197,9 @@ namespace Badminton.Business
                         x.Name.Contains(key)
                         || x.Price.ToString().Contains(key)
                         || x.Description.Contains(key)
-                        || x.Status.Contains(key)
-                        || x.Location.Contains(key)
                         || x.SpaceType.Contains(key)
+                        || x.CreatedTime.ToString().Contains(key)
+                        || x.UpdatedTime.ToString().Contains(key)
                         );
                 }
 
@@ -209,6 +209,14 @@ namespace Badminton.Business
 
                 if (!string.IsNullOrEmpty(filterYardType) && filterYardType != "All") {
                     predicate = predicate.And(x => x.YardType == filterYardType);
+                }
+
+                if (!string.IsNullOrEmpty(filterStatus) && filterStatus != "All") {
+                    predicate = predicate.And(x => x.Status == filterStatus);
+                }
+
+                if (!string.IsNullOrEmpty(filterLocation) && filterLocation != "All") {
+                    predicate = predicate.And(x => x.Location == filterLocation);
                 }
 
                 var query = await _unitOfWork.CourtRepository.FindAll(predicate);

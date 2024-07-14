@@ -30,6 +30,18 @@
                 <option value="All">All</option>
             </select>
         </div>
+        <div>
+            Status
+            <select asp-for="SelectedStatus" asp-items="@Model.Status">
+                <option value="All">All</option>
+            </select>
+        </div>
+        <div>
+            Location
+            <select asp-for="SelectedLocation" asp-items="@Model.Location">
+                <option value="All">All</option>
+            </select>
+        </div>
         <p>
             Find:
             <input type="text" name="search" value="@Model.CurrentSearch" />
@@ -47,7 +59,12 @@ else {
         <thead>
             <tr>
                 <th>
-                    <a asp-page="./Index" asp-route-sortOrder="@Model.NameSort">
+                    <a asp-page="./Index" asp-route-sortOrder="@Model.NameSort"
+                        asp-route-search="@Model.CurrentSearch"
+                        asp-route-SelectedYardType="@Model.SelectedYardType"
+                        asp-route-SelectedType="@Model.SelectedType"
+                        asp-route-SelectedStatus="@Model.SelectedStatus"
+                        asp-route-SelectedLocation="@Model.SelectedLocation">
                         @Html.DisplayNameFor(model => model.Court[0].Name)
                     </a>
                 </th>
@@ -70,17 +87,35 @@ else {
                     @Html.DisplayNameFor(model => model.Court[0].SpaceType)
                 </th>
                 <th>
-                    <a asp-page="./Index" asp-route-sortOrder="@Model.CreatedDateSort">
+                    <a asp-page="./Index" asp-route-sortOrder="@Model.CreatedDateSort"
+                        asp-route-search="@Model.CurrentSearch"
+                        asp-route-SelectedYardType="@Model.SelectedYardType"
+                        asp-route-SelectedType="@Model.SelectedType"
+                        asp-route-SelectedStatus="@Model.SelectedStatus"
+                        asp-route-SelectedLocation="@Model.SelectedLocation">
                         @Html.DisplayNameFor(model => model.Court[0].CreatedTime)
                     </a>
                 </th>
                 <th>
-                    <a asp-page="./Index" asp-route-sortOrder="@Model.UpdatedDateSort">
+                    <a asp-page="./Index" asp-route-sortOrder="@Model.UpdatedDateSort"
+                       asp-route-search="@Model.CurrentSearch"
+                       asp-route-SelectedYardType="@Model.SelectedYardType"
+                       asp-route-SelectedType="@Model.SelectedType"
+                       asp-route-SelectedStatus="@Model.SelectedStatus"
+                       asp-route-SelectedLocation="@Model.SelectedLocation"
+                    >
+                      
                         @Html.DisplayNameFor(model => model.Court[0].UpdatedTime)
                     </a>
                 </th>
                 <th>
-                    <a asp-page="./Index" asp-route-sortOrder="@Model.PriceSort">
+                    <a asp-page="./Index" asp-route-sortOrder="@Model.PriceSort"
+                       asp-route-search="@Model.CurrentSearch"
+                       asp-route-SelectedYardType="@Model.SelectedYardType"
+                       asp-route-SelectedType="@Model.SelectedType"
+                       asp-route-SelectedStatus="@Model.SelectedStatus"
+                       asp-route-SelectedLocation="@Model.SelectedLocation"
+                    >    
                         @Html.DisplayNameFor(model => model.Court[0].Price)
                     </a>
                 </th>
@@ -136,6 +171,8 @@ else {
             <input type="hidden" name="search" value="@Model.CurrentSearch" />
             <input type="hidden" asp-for="SelectedYardType" value="@Model.SelectedYardType" />
             <input type="hidden" asp-for="SelectedType" value="@Model.SelectedType" />
+            <input type="hidden" asp-for="SelectedStatus" value="@Model.SelectedStatus" />
+            <input type="hidden" asp-for="SelectedLocation" value="@Model.SelectedLocation" />
             <button type="submit" class="btn btn-outline-primary" @(Model.PageNumber <= 1 ? "disabled" : "")>Previous</button>
         </form>
 
@@ -147,6 +184,8 @@ else {
             <input type="hidden" name="search" value="@Model.CurrentSearch" />
             <input type="hidden" asp-for="SelectedYardType" value="@Model.SelectedYardType" />
             <input type="hidden" asp-for="SelectedType" value="@Model.SelectedType" />
+            <input type="hidden" asp-for="SelectedStatus" value="@Model.SelectedStatus" />
+            <input type="hidden" asp-for="SelectedLocation" value="@Model.SelectedLocation" />
             <button type="submit" class="btn btn-outline-primary" @(Model.PageNumber >= Model.TotalPages ? "disabled" : "")>Next</button>
         </form>
     </div>

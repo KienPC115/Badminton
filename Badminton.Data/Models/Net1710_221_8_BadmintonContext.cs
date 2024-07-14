@@ -2,6 +2,7 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -9,10 +10,9 @@ namespace Badminton.Data.Models;
 
 public partial class Net1710_221_8_BadmintonContext : DbContext
 {
-
     public Net1710_221_8_BadmintonContext()
     {
-        
+
     }
     public Net1710_221_8_BadmintonContext(DbContextOptions<Net1710_221_8_BadmintonContext> options)
         : base(options)
@@ -29,11 +29,6 @@ public partial class Net1710_221_8_BadmintonContext : DbContext
 
     public virtual DbSet<OrderDetail> OrderDetails { get; set; }
 
-    
-    /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-       optionsBuilder.UseSqlServer("data source=localhost;initial catalog=Net1710_221_8_Badminton;user id=sa;password=12345;Integrated Security=True;TrustServerCertificate=True");
-       base.OnConfiguring(optionsBuilder);
-   }*/
     public static string GetConnectionString(string connectionStringName) {
         var config = new ConfigurationBuilder()
             .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
@@ -43,7 +38,7 @@ public partial class Net1710_221_8_BadmintonContext : DbContext
         string connectionString = config.GetConnectionString(connectionStringName);
         return connectionString;
     }
-    
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer(GetConnectionString("DefaultConnection"));
 
@@ -51,7 +46,7 @@ public partial class Net1710_221_8_BadmintonContext : DbContext
     {
         modelBuilder.Entity<Court>(entity =>
         {
-            entity.HasKey(e => e.CourtId).HasName("PK__Court__C3A67C9A1F064EA6");
+            entity.HasKey(e => e.CourtId).HasName("PK__Court__C3A67C9A2E16BFCD");
 
             entity.ToTable("Court");
 
@@ -86,7 +81,7 @@ public partial class Net1710_221_8_BadmintonContext : DbContext
 
         modelBuilder.Entity<CourtDetail>(entity =>
         {
-            entity.HasKey(e => e.CourtDetailId).HasName("PK__CourtDet__91278BAA485FD8E8");
+            entity.HasKey(e => e.CourtDetailId).HasName("PK__CourtDet__91278BAACAC832AB");
 
             entity.ToTable("CourtDetail");
 
@@ -112,7 +107,7 @@ public partial class Net1710_221_8_BadmintonContext : DbContext
 
         modelBuilder.Entity<Customer>(entity =>
         {
-            entity.HasKey(e => e.CustomerId).HasName("PK__Customer__A4AE64D8EDA25064");
+            entity.HasKey(e => e.CustomerId).HasName("PK__Customer__A4AE64D85C585A3D");
 
             entity.ToTable("Customer");
 
@@ -139,7 +134,7 @@ public partial class Net1710_221_8_BadmintonContext : DbContext
 
         modelBuilder.Entity<Order>(entity =>
         {
-            entity.HasKey(e => e.OrderId).HasName("PK__Order__C3905BCF73CDB1DB");
+            entity.HasKey(e => e.OrderId).HasName("PK__Order__C3905BCF86C2726B");
 
             entity.ToTable("Order");
 
@@ -162,7 +157,7 @@ public partial class Net1710_221_8_BadmintonContext : DbContext
 
         modelBuilder.Entity<OrderDetail>(entity =>
         {
-            entity.HasKey(e => e.OrderDetailId).HasName("PK__OrderDet__D3B9D36C4DB9ADE9");
+            entity.HasKey(e => e.OrderDetailId).HasName("PK__OrderDet__D3B9D36C1E0C66E6");
 
             entity.ToTable("OrderDetail");
 

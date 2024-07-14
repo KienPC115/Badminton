@@ -40,6 +40,13 @@ namespace Badminton.RazorWebApp.Pages.CourtPage {
         [BindProperty(SupportsGet = true)]
         public string SelectedType { get; set; } = "All";
         public List<SelectListItem> Type { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public string SelectedStatus { get; set; } = "All";
+        public List<SelectListItem> Status { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public string SelectedLocation { get; set; } = "All";
+        public List<SelectListItem> Location { get; set; }
+
         /*public List<SelectListItem> YardType { get; set; } = CourtShared.YardType().Select(s => new SelectListItem { Value = s, Text = s }).ToList();*/
         // Current
         public string CurrentSort { get; set; }
@@ -51,6 +58,8 @@ namespace Badminton.RazorWebApp.Pages.CourtPage {
             PageSize = int.TryParse(_configuration["PageSize"], out int ps) ? ps : 3;
             YardType = _courtConfiguration.YardType.Select(s => new SelectListItem { Value = s, Text = s }).ToList();
             Type = _courtConfiguration.Type.Select(s => new SelectListItem { Value = s, Text = s }).ToList();
+            Status = _courtConfiguration.Status.Select(s => new SelectListItem { Value = s, Text = s }).ToList();
+            Location = _courtConfiguration.Location.Select(s => new SelectListItem { Value = s, Text = s }).ToList();
 
             NameSort = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             PriceSort = sortOrder == "Price" ? "price_desc" : "Price";
@@ -60,7 +69,7 @@ namespace Badminton.RazorWebApp.Pages.CourtPage {
             CurrentSort = sortOrder;
             CurrentSearch = search;
 
-            var courtsResult = await _courtBusiness.GetCourtsWithCondition(search, sortOrder, SelectedType, SelectedYardType);
+            var courtsResult = await _courtBusiness.GetCourtsWithCondition(search, sortOrder, SelectedType, SelectedYardType, SelectedStatus, SelectedLocation);
             
             if (courtsResult.Status <= 0) {
                 TempData["message"] = courtsResult.Message;

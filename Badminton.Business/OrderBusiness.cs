@@ -24,8 +24,8 @@ namespace Badminton.Business
         public Task<IBadmintonResult> DeleteOrder(int orderId);
         public Task<IBadmintonResult> DeleteOrdersByCustomerId(int orderId);
         public Task<IBadmintonResult> UpdateAmount(int orderId);
-        public Task<IBadmintonResult> GetBySearchingNote(string note);
-        public Task<IBadmintonResult> GetBySearchingNoteWithCusId(string note, int cusid);
+        public Task<IBadmintonResult> GetBySearchingNote(string note, double start, double end);
+        public Task<IBadmintonResult> GetBySearchingNoteWithCusId(string note, int cusid, double start, double end);
         public Task<IBadmintonResult> Save(Order order);
         public IBadmintonResult Checkout(List<CourtDetail> courtDetailList, int cusID);
     }
@@ -252,7 +252,7 @@ namespace Badminton.Business
             throw new NotImplementedException();
         }
 
-        public async Task<IBadmintonResult> GetBySearchingNote(string note)
+        public async Task<IBadmintonResult> GetBySearchingNote(string note, double start, double end)
         {
             try
             {
@@ -263,7 +263,7 @@ namespace Badminton.Business
                 }
                 note ??= string.Empty;
                 var allOrders = result.Data as List<Order>;
-                var orders = allOrders.Where(d => d.OrderNotes.ToUpper().Contains(note.Trim().ToUpper())).OrderByDescending(o => o.OrderDate).ToList();
+                var orders = allOrders.Where(d => d.Customer.Name.ToUpper().Contains(note.Trim().ToUpper()) && d.TotalAmount >= start && d.TotalAmount <= end).OrderByDescending(o => o.OrderDate).ToList();
                 return new BadmintonResult
                 {
                     Status = Const.SUCCESS_READ_CODE,
@@ -277,7 +277,7 @@ namespace Badminton.Business
             }
         }
 
-        public async Task<IBadmintonResult> GetBySearchingNoteWithCusId(string note, int cusid)
+        public async Task<IBadmintonResult> GetBySearchingNoteWithCusId(string note, int cusid, double start, double end)
         {
             try
             {
@@ -288,7 +288,7 @@ namespace Badminton.Business
                 }
                 note ??= string.Empty;
                 var allOrders = result.Data as List<Order>;
-                var orders = allOrders.Where(d => d.OrderNotes.ToUpper().Contains(note.Trim().ToUpper())).OrderByDescending(o => o.OrderDate).ToList();
+                var orders = allOrders.Where(d => d.Customer.Name.ToUpper().Contains(note.Trim().ToUpper()) && d.TotalAmount >= start && d.TotalAmount <= end).OrderByDescending(o => o.OrderDate).ToList();
                 return new BadmintonResult
                 {
                     Status = Const.SUCCESS_READ_CODE,

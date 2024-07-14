@@ -24,11 +24,13 @@ namespace Badminton.RazorWebApp.Pages.OrderPage
         public string? NoteSearching { get; set; }
         public int CurrentPage { get; set; } = 1;
         public int TotalPages { get; set; }
+        public double Start {  get; set; }
+        public double End { get; set; }
         public List<Order> Orders { get; set; }
         
         private readonly IConfiguration _config;
 
-        public async Task<IActionResult> OnGet(int newCurPage = 1, string note = @"")
+        public async Task<IActionResult> OnGet(int newCurPage = 1, string note = @"", double start = 0, double end = double.MaxValue)
         {
             try
             {
@@ -40,11 +42,15 @@ namespace Badminton.RazorWebApp.Pages.OrderPage
                 
                 NoteSearching = note;
 
+                Start = start;
+
+                End = end;
+
                 IBadmintonResult result = new BadmintonResult();
                 
-                if (cus != null) result = await _orderBusiness.GetBySearchingNoteWithCusId(NoteSearching, cus.CustomerId);
+                if (cus != null) result = await _orderBusiness.GetBySearchingNoteWithCusId(NoteSearching, cus.CustomerId, start, end);
 
-                else result = await _orderBusiness.GetBySearchingNote(NoteSearching);
+                else result = await _orderBusiness.GetBySearchingNote(NoteSearching, start, end);
 
                 if (result.Status <= 0)
                 {

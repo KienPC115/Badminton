@@ -1,3 +1,5 @@
+Drop Database Net1710_221_8_Badminton;
+
 USE master ;  
 GO  
 -- Create the database
@@ -97,11 +99,12 @@ GO
 -- Insert dummy data into Court table
 -- Insert dummy data into Court table
 INSERT INTO Court (Name, Status, Description, YardType, Type, Location, SpaceType, Price) VALUES
-('Court 1', 'Available', N'Court have beautiful view', 'Rubber', 'Single', N'Location A', 'Indoor',50.0),
-('Court 2', 'Available', N'Court have beautiful view', 'Cement', 'Dual', N'Location B', 'Indoor',24.0),
-('Court 3', 'Available', N'Court have beautiful view', 'Rubber', 'Dual', N'Location C', 'Outdoor',86.0),
-('Court 4', 'Available', N'Court have beautiful view', 'Cement', 'Standard', N'Location D', 'Outdoor',73.0),
-('Court 5', 'Available', N'Court have beautiful view', 'Rubber', 'Single', N'Location A', 'Indoor', 68.0);
+('Court 1', 'Available', N'Court have beautiful view', 'Wood', 'Single', N'Location A', 'Indoor',50.0),
+('Court 2', 'Available', N'Court have beautiful view', 'Wood', 'Dual', N'Location B', 'Indoor',24.0),
+('Court 3', 'Available', N'Court have beautiful view', 'Wood', 'Dual', N'Location C', 'Outdoor',86.0),
+('Court 4', 'Available', N'Court have beautiful view', 'Wood', 'Standard', N'Location D', 'Outdoor',73.0),
+('Court 5', 'Available', N'Court have beautiful view', 'Wood', 'Single', N'Location A', 'Indoor', 68.0),
+('Court 6', 'Available', N'Court have beautiful view', 'Wood', 'Single', N'Location B', 'Indoor', 68.0);
 GO
 
 -- Insert dummy data into Order table

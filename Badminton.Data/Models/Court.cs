@@ -2,11 +2,14 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Badminton.Data.Models;
 
 public partial class Court
 {
+    [Required]
+    [StringLength(25)]
     public int CourtId { get; set; }
 
     public string Name { get; set; }

@@ -45,12 +45,8 @@ namespace Badminton.Business
         {
             try
             {
-                var orders = await _unitOfWork.OrderRepository.GetAllAsync();
+                var orders = _unitOfWork.OrderRepository.GetAllOrders();
                 
-                foreach (var order in orders)
-                {
-                    order.Customer = await AssignCustomerToOrder(order);
-                }
                 if (orders == null)
                 {
                     return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
@@ -74,12 +70,11 @@ namespace Badminton.Business
         {
             try
             {
-                var order = await _unitOfWork.OrderRepository.GetByIdAsync(id);
+                var order = _unitOfWork.OrderRepository.GetOrderById(id);
                 if (order == null)
                 {
                     return new BadmintonResult(Const.FAIL_READ_CODE, Const.FAIL_READ_MSG);
                 }
-                order.Customer = await AssignCustomerToOrder(order);
                 return new BadmintonResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, order);
             }
             catch (Exception ex)

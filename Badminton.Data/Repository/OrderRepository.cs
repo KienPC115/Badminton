@@ -26,6 +26,8 @@ namespace Badminton.Data.Repository
             try
             {
                 return await (from o in _context.Orders
+                              join c in _context.Customers
+                              on o.CustomerId equals c.CustomerId
                               where o.CustomerId == customerId
                               select o).ToListAsync();
             }
@@ -34,6 +36,18 @@ namespace Badminton.Data.Repository
                 throw;
             }
         }
+
+        public List<Order> GetAllOrders()
+        {
+            return _context.Orders
+                         .Include(o => o.Customer).ToList();
+        }
+        
+        public Order GetOrderById(int id)
+        {
+            return _context.Orders.Include(o => o.Customer).FirstOrDefault(c => c.OrderId == id);
+        }
+
         public int Checkout(List<CourtDetail> courtDetailsList, int customerId)
         {
             int check = -1;

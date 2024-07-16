@@ -63,7 +63,9 @@ namespace Badminton.RazorWebApp.Pages.OrderDetailPage
 
             var result = await _courtDetailBusiness.GetCourtDetail(OrderDetail.CourtDetailId);
             var courtDetail = result.Data as CourtDetail;
-            courtDetail.Status = "Booked";
+
+            var courtDetailStatus = CourtDetailShared.Status();
+            courtDetail.Status = courtDetailStatus[1];
             result = await _courtDetailBusiness.UpdateCourtDetail(courtDetail.CourtDetailId, courtDetail, CourtDetailShared.UPDATE);
             result = await _orderDetailBusiness.UpdateOrderDetail(OrderDetail);
             if (result.Status <= 0)

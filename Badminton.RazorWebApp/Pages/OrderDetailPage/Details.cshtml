@@ -30,6 +30,18 @@
             @Html.DisplayFor(model => model.OrderDetail.CourtDetail.Slot)
         </dd>
         <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.OrderDetail.CourtDetail.Court.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.OrderDetail.CourtDetail.Court.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.OrderDetail.CourtDetail.Court.Location)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.OrderDetail.CourtDetail.Court.Location)
+        </dd>
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.OrderDetail.CourtDetail.Status)
         </dt>
         <dd class="col-sm-10">
@@ -52,6 +64,12 @@
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.OrderDetail.Order.Customer.Email)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.OrderDetail.Order.Customer.Address)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.OrderDetail.Order.Customer.Address)
         </dd>
     </dl>
 </div>

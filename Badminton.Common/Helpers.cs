@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using System.Reflection;
 using System.Text;
 
 namespace Badminton.Common
@@ -22,6 +23,30 @@ namespace Badminton.Common
         public static void SetValueToSession(string key, object value, HttpContext context)
         {
             context.Session.Set(key, Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(value)));
+        }
+
+        public static void CopyValues<T>(this T target, T source)
+        {
+            if (target == null || source == null)
+            {
+                throw new ArgumentNullException("Target or Source cannot be null");
+            }
+
+            foreach (PropertyInfo property in typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance))
+            {
+                if (property.CanWrite)
+                {
+                    var value = property.GetValue(source);
+                    property.SetValue(target, value);
+                }
+            }
+        }
+
+        public static void Swap<T>(ref T a, ref T b)
+        {
+            T temp = a;
+            a = b;
+            b = temp;
         }
 
     }

@@ -2,7 +2,6 @@ using Badminton.Business;
 using Badminton.Business.Shared;
 using Badminton.Common;
 using Badminton.Data.Models;
-using Humanizer.Localisation.TimeToClockNotation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.SignalR;

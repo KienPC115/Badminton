@@ -24,16 +24,22 @@ namespace Badminton.RazorWebApp.Pages.OrderPage
         public string? NoteSearching { get; set; }
         public int CurrentPage { get; set; } = 1;
         public int TotalPages { get; set; }
-        public double Start {  get; set; }
-        public double End { get; set; }
+        public string Start {  get; set; }
+        public string End { get; set; }
         public List<Order> Orders { get; set; }
         
         private readonly IConfiguration _config;
 
-        public async Task<IActionResult> OnGet(int newCurPage = 1, string note = @"", double start = 0, double end = double.MaxValue)
+        public async Task<IActionResult> OnGet(string? note, string? start, string? end, int newCurPage = 1)
         {
             try
             {
+                if (!double.TryParse(start, out double s)) s = 0;
+                Start = start;
+
+                if (!double.TryParse(end, out double e)) e = double.MaxValue;
+                End = end;
+
                 Helpers.GetValueFromSession("cus", out Customer cus, HttpContext);
 
                 int pageSize = int.TryParse(_config["PageSize"], out int ps) ? ps : 3;
@@ -42,15 +48,11 @@ namespace Badminton.RazorWebApp.Pages.OrderPage
                 
                 NoteSearching = note;
 
-                Start = start;
-
-                End = end;
-
                 IBadmintonResult result = new BadmintonResult();
                 
-                if (cus != null) result = await _orderBusiness.GetBySearchingNoteWithCusId(NoteSearching, cus.CustomerId, start, end);
+                if (cus != null) result = await _orderBusiness.GetBySearchingNoteWithCusId(NoteSearching, cus.CustomerId, s, e);
 
-                else result = await _orderBusiness.GetBySearchingNote(NoteSearching, start, end);
+                else result = await _orderBusiness.GetBySearchingNote(NoteSearching, s, e);
 
                 if (result.Status <= 0)
                 {
@@ -60,9 +62,9 @@ namespace Badminton.RazorWebApp.Pages.OrderPage
 
                 var list = result.Data as List<Order>;
 
-                TotalPages = (int)Math.Ceiling(list.Count / (double)pageSize);
+                TotalPages = Helpers.TotalPages(list, pageSize);
 
-                Orders = list.Skip((CurrentPage - 1) * pageSize).Take(pageSize).ToList();
+                Orders = list.Paging(CurrentPage, pageSize);
 
                 return Page();
             }

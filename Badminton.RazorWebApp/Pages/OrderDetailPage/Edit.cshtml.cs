@@ -55,6 +55,9 @@ namespace Badminton.RazorWebApp.Pages.OrderDetailPage
             {
                 return NotFound();
             }
+
+            Orders = Orders.Where(o => o.OrderId == OrderDetail.OrderId).ToList();
+
             return Page();
         }
 

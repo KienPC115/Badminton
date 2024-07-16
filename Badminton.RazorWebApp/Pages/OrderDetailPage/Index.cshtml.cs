@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Badminton.Data.Models;
 using Badminton.Business;
 using Badminton.Business.Interface;
+using Microsoft.IdentityModel.Tokens;
+using Badminton.Common;
 
 namespace Badminton.RazorWebApp.Pages.OrderDetailPage
 {
@@ -28,9 +30,9 @@ namespace Badminton.RazorWebApp.Pages.OrderDetailPage
             _courtBusiness ??= new CourtBusiness();
         }
 
-        public double Start { get; set; }
+        public string Start { get; set; }
         
-        public double End { get; set; }
+        public string End { get; set; }
 
         public int CurrentPage { get; set; } = 1;
 
@@ -40,22 +42,28 @@ namespace Badminton.RazorWebApp.Pages.OrderDetailPage
 
         public List<OrderDetail> OrderDetails { get;set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? orderID, double start = 0, double end = double.MaxValue, int newCurPage = 1)
+        public async Task<IActionResult> OnGetAsync(int? orderID, string? start, string? end, int newCurPage = 1)
         {
             try
             {
-                int pageSize = int.TryParse(_config["PageSize"], out int ps) ? ps : 3;
-                IBadmintonResult result = new BadmintonResult();
+                if (!double.TryParse(start, out double s))s = 0;
                 Start = start;
+
+                if (!double.TryParse(end, out double e)) e = double.MaxValue;
                 End = end;
+
+                int pageSize = int.TryParse(_config["PageSize"], out int ps) ? ps : 3;
+                
+                IBadmintonResult result = new BadmintonResult();
+                
                 CurrentPage = newCurPage;
 
-                if (orderID == null || orderID == 0) result = await _orderDetailBusiness.GetAllOrderDetails(start, end);
+                if (orderID == null || orderID == 0) result = await _orderDetailBusiness.GetAllOrderDetails(s, e);
 
                 else
                 {
                     OrderID = orderID.Value;
-                    result = await _orderDetailBusiness.GetOrderDetailsByOrderId(orderID.Value, start, end);
+                    result = await _orderDetailBusiness.GetOrderDetailsByOrderId(orderID.Value, s, e);
                 }
 
                 if (result.Status <= 0)
@@ -67,9 +75,9 @@ namespace Badminton.RazorWebApp.Pages.OrderDetailPage
 
                 var list = result.Data as List<OrderDetail>;
 
-                TotalPages = (int)Math.Ceiling(list.Count / (double)pageSize);
+                TotalPages = Helpers.TotalPages(list, pageSize);
 
-                OrderDetails = list.Skip((CurrentPage - 1) * pageSize).Take(pageSize).ToList();
+                OrderDetails = list.Paging(CurrentPage, pageSize);
 
                 return Page();
             }

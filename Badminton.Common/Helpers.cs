@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 
@@ -49,5 +50,8 @@ namespace Badminton.Common
             b = temp;
         }
 
+        public static List<T> Paging<T>(this List<T> list, int currenctPage, int pageSize) => list.Skip((currenctPage - 1) * pageSize).Take(pageSize).ToList();
+
+        public static int TotalPages<T>(List<T> list, int pageSize) => (int)Math.Ceiling(list.Count / (double)pageSize);
     }
 }

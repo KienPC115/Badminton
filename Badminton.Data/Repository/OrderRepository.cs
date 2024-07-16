@@ -21,20 +21,9 @@ namespace Badminton.Data.Repository
         {
             _context = context;
         }
-        public async Task<List<Order>> GetAllOrdersByCustomerId(int customerId)
+        public List<Order> GetAllOrdersByCustomerId(int customerId)
         {
-            try
-            {
-                return await (from o in _context.Orders
-                              join c in _context.Customers
-                              on o.CustomerId equals c.CustomerId
-                              where o.CustomerId == customerId
-                              select o).ToListAsync();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            return _context.Orders.Where(o => o.CustomerId == customerId).Include(o => o.Customer).ToList();
         }
 
         public List<Order> GetAllOrders()

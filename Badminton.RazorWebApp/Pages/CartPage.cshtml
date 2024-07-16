@@ -78,6 +78,7 @@ else
         </tbody>
     </table>
     <form asp-page="CartPage" method="get">
+        <label>Payment method</label>
         <select asp-for=@Model.SelectedType name="selectedType">
             @foreach (var item in Model.TypeList)
             {
@@ -85,7 +86,7 @@ else
             }
         </select>
         <label>Note</label>
-        <input asp-for="Note" />
+        <input name="Note" />
         <input type="hidden" name="checkout" value="CheckOut" />
         <button type="submit" class="btn btn-outline-primary">Checkout</button>
     </form>

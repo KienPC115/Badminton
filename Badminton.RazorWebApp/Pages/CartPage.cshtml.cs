@@ -30,10 +30,7 @@ namespace Badminton.RazorWebApp.Pages
         [BindProperty]
         public string SelectedType { get; set; }
 
-        [BindProperty]
-        public string Note { get; set; }
-
-        public IActionResult OnGet(string? checkout, int? courtDetailID, string selectedType)
+        public IActionResult OnGet(string? checkout, int? courtDetailID, string selectedType, string? note)
         {
             if (Helpers.GetValueFromSession("cart", out List<int> cart, HttpContext))
             {
@@ -42,8 +39,8 @@ namespace Badminton.RazorWebApp.Pages
 
             if (!checkout.IsNullOrEmpty())
             {
-                Note ??= string.Empty;
-                int orderid = Checkout(cart, Note, selectedType);
+                note ??= string.Empty;
+                int orderid = Checkout(cart, note, selectedType);
                 if (orderid > 0)
                 {
                     return RedirectToPage("./OrderDetailPage/Index", new { orderID = orderid });

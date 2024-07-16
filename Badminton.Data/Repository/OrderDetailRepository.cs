@@ -28,8 +28,10 @@ namespace Badminton.Data.Repository
 
                     var newCD = _context.CourtDetails.FirstOrDefault(cd => cd.CourtDetailId == newOD.CourtDetailId);
 
+                    var temp = newCD.Status;
+                    newCD.Status = oldCD.Status;
+                    oldCD.Status = temp;
                     newCD.Status = "Booked";
-                    oldCD.Status = "Available";
 
                     _context.CourtDetails.Update(oldCD);
                     _context.CourtDetails.Update(newCD);
@@ -40,7 +42,12 @@ namespace Badminton.Data.Repository
                 oldOD.CopyValues(newOD);
                 
                 _context.OrderDetails.Update(oldOD);
-                
+
+                var order = _context.Orders.Include(o => o.OrderDetails).FirstOrDefault(o => o.OrderId == oldOD.OrderId);
+                order.TotalAmount = order.OrderDetails.Sum(o => o.Amount);
+
+                _context.Orders.Update(order);
+
                 return _context.SaveChanges();
             }
             catch (Exception)

@@ -4,7 +4,7 @@ public static class OrderShared
 {
     public static List<string> Type()
     {
-        string[] Type = { "Paid", "UnPaid" };
+        string[] Type = { "Cash Payment", "Online Payment" };
         return new List<string>(Type);
     }
 }

@@ -48,8 +48,9 @@ namespace Badminton.Business
                 
                 result = await _courtDetailBusiness.GetCourtDetail(orderDetail.CourtDetailId);
                 var courtDetail = result.Data as CourtDetail;
-                courtDetail.Status = "Booked";
+                courtDetail.Status = courtDetailStatus[1];
                 result = await _courtDetailBusiness.UpdateCourtDetail(courtDetail.CourtDetailId, courtDetail, CourtDetailShared.UPDATE);
+
                 if (result.Status <= 0)
                 {
                     return result;
@@ -111,23 +112,21 @@ namespace Badminton.Business
             {
                 var result = await GetOrderDetailById(orderDetailId);
 
-                if (result.Data == null)
-                {
-                    return result;
-                }
+                if (result.Data == null) return result;
 
                 OrderDetail orderDetail = (OrderDetail)result.Data;
 
                 result = await _courtDetailBusiness.GetCourtDetail(orderDetail.CourtDetailId);
+                
                 var oldCourtDetail = result.Data as CourtDetail;
-                oldCourtDetail.Status = "Available";
+                
+                oldCourtDetail.Status = courtDetailStatus[0];
+                
                 result = await _courtDetailBusiness.UpdateCourtDetail(oldCourtDetail.CourtDetailId, oldCourtDetail, CourtDetailShared.UPDATE);
 
                 var check = await _unitOfWork.OrderDetailRepository.RemoveAsync(orderDetail);
-                if (!check)
-                {
-                    return new BadmintonResult(Const.FAIL_DELETE_CODE, Const.FAIL_DELETE_MSG);
-                }
+
+                if (!check) return new BadmintonResult(Const.FAIL_DELETE_CODE, Const.FAIL_DELETE_MSG);
 
                 return new BadmintonResult(Const.SUCCESS_DELETE_CODE, Const.SUCCESS_DELETE_MSG);
             }
@@ -141,19 +140,13 @@ namespace Badminton.Business
         {
             try
             {
-                var orderDetails = _unitOfWork.OrderDetailRepository.GetAllAsync().Result.Where(o => o.Amount >= start && o.Amount <= end).ToList();
+                var orderDetails = _unitOfWork.OrderDetailRepository.GetAllOrderDetails().Where(o => o.Amount >= start && o.Amount <= end).ToList();
+                
                 if (orderDetails == null)
                 {
                     return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
                 }
-                orderDetails.ForEach(od =>
-                {
-                    od.Order = _unitOfWork.OrderRepository.GetById(od.OrderId);
-                    od.Order.Customer = _unitOfWork.CustomerRepository.GetById(od.Order.CustomerId);
-                    od.CourtDetail = _unitOfWork.CourtDetailRepository.GetById(od.CourtDetailId);
-                    od.CourtDetail.Court = _unitOfWork.CourtRepository.GetById(od.CourtDetailId);
-                });
-
+                
                 return new BadmintonResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, orderDetails);
             }
             catch (Exception ex)
@@ -166,19 +159,11 @@ namespace Badminton.Business
         {
             try
             {
-                var result = _unitOfWork.OrderDetailRepository.GetAll()
+                var result = _unitOfWork.OrderDetailRepository.GetAllOrderDetails()
                     .Where(o => o.OrderId.Equals(orderId) && o.Amount >= start && o.Amount <= end).ToList();
-                if (result.Count() <= 0 || result == null)
-                {
-                    return new BadmintonResult(Const.FAIL_READ_CODE, Const.WARNING_NO_DATA__MSG);
-                }
-                result.ForEach(od =>
-                {
-                    od.Order = _unitOfWork.OrderRepository.GetById(od.OrderId);
-                    od.Order.Customer = _unitOfWork.CustomerRepository.GetById(od.Order.CustomerId);
-                    od.CourtDetail = _unitOfWork.CourtDetailRepository.GetById(od.CourtDetailId);
-                    od.CourtDetail.Court = _unitOfWork.CourtRepository.GetById(od.CourtDetailId);
-                });
+                
+                if (result.Count() <= 0 || result == null)                     return new BadmintonResult(Const.FAIL_READ_CODE, Const.WARNING_NO_DATA__MSG);
+                
                 return new BadmintonResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, result);
             }
             catch (Exception ex)

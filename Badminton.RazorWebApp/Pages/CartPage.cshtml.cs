@@ -24,7 +24,16 @@ namespace Badminton.RazorWebApp.Pages
             _orderBusiness ??= new OrderBusiness();
         }
 
-        public IActionResult OnGet(string? checkout, int? courtDetailID)
+        [BindProperty]
+        public List<string> TypeList { get; set; }
+
+        [BindProperty]
+        public string SelectedType { get; set; }
+
+        [BindProperty]
+        public string Note { get; set; }
+
+        public IActionResult OnGet(string? checkout, int? courtDetailID, string selectedType)
         {
             if (Helpers.GetValueFromSession("cart", out List<int> cart, HttpContext))
             {
@@ -33,7 +42,8 @@ namespace Badminton.RazorWebApp.Pages
 
             if (!checkout.IsNullOrEmpty())
             {
-                int orderid = Checkout(cart);
+                Note ??= string.Empty;
+                int orderid = Checkout(cart, Note, selectedType);
                 if (orderid > 0)
                 {
                     return RedirectToPage("./OrderDetailPage/Index", new { orderID = orderid });
@@ -47,7 +57,7 @@ namespace Badminton.RazorWebApp.Pages
             return Page();
         }
 
-        private int Checkout(List<int> cart)
+        private int Checkout(List<int> cart, string note, string type)
         {
             if (Helpers.GetValueFromSession("cus", out Customer cus, HttpContext))
             {
@@ -58,7 +68,7 @@ namespace Badminton.RazorWebApp.Pages
                     TempData["message"] = "All this court in your cart is blocked";
                     return -1;
                 }
-                var result = _orderBusiness.Checkout(availableCourt, cus.CustomerId);
+                var result = _orderBusiness.Checkout(availableCourt, cus.CustomerId, note, type);
                 if (result.Status <= 0)
                 {
                     TempData["message"] = "Something failed while checkout.";
@@ -76,6 +86,8 @@ namespace Badminton.RazorWebApp.Pages
 
         private void GetCart(List<int> cart)
         {
+            TypeList = OrderShared.Type();
+            SelectedType = TypeList[0];
             if (cart == null || cart.Count <= 0)
             {
                 return;

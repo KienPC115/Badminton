@@ -27,7 +27,7 @@ namespace Badminton.Business
         public Task<IBadmintonResult> GetBySearchingNote(string note, double start, double end);
         public Task<IBadmintonResult> GetBySearchingNoteWithCusId(string note, int cusid, double start, double end);
         public Task<IBadmintonResult> Save(Order order);
-        public IBadmintonResult Checkout(List<CourtDetail> courtDetailList, int cusID);
+        public IBadmintonResult Checkout(List<CourtDetail> courtDetailList, int cusID, string note, string type);
     }
     public class OrderBusiness : IOrderBusiness
     {
@@ -297,11 +297,11 @@ namespace Badminton.Business
             }
         }
 
-        public IBadmintonResult Checkout(List<CourtDetail> courtDetailList, int cusID)
+        public IBadmintonResult Checkout(List<CourtDetail> courtDetailList, int cusID, string note, string type)
         {
             try
             {
-                var result = _unitOfWork.OrderRepository.Checkout(courtDetailList, cusID);
+                var result = _unitOfWork.OrderRepository.Checkout(courtDetailList, cusID, note, type);
                 if (result <= 0)
                 {
                     return new BadmintonResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG, result);

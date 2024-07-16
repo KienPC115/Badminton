@@ -48,7 +48,7 @@ namespace Badminton.Data.Repository
             return _context.Orders.Include(o => o.Customer).FirstOrDefault(c => c.OrderId == id);
         }
 
-        public int Checkout(List<CourtDetail> courtDetailsList, int customerId)
+        public int Checkout(List<CourtDetail> courtDetailsList, int customerId, string note, string type)
         {
             int check = -1;
             using (var transaction = _context.Database.BeginTransaction())
@@ -62,9 +62,9 @@ namespace Badminton.Data.Repository
                     {
                         CustomerId = customerId,
                         OrderDate = DateTime.Now,
-                        OrderNotes = "Thanh toan",
+                        OrderNotes = note,
                         TotalAmount = totalAmount,
-                        Type = "Cash Payment"
+                        Type = type
                     };
                     _context.Orders.Add(order);
                     check = _context.SaveChanges();

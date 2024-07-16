@@ -77,7 +77,15 @@ else
             }
         </tbody>
     </table>
-    <form asp-page="../CartPage" method="get">
+    <form asp-page="CartPage" method="get">
+        <select asp-for=@Model.SelectedType name="selectedType">
+            @foreach (var item in Model.TypeList)
+            {
+                <option value="@item">@item</option>
+            }
+        </select>
+        <label>Note</label>
+        <input asp-for="Note" />
         <input type="hidden" name="checkout" value="CheckOut" />
         <button type="submit" class="btn btn-outline-primary">Checkout</button>
     </form>

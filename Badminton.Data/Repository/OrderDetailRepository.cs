@@ -50,5 +50,4 @@ namespace Badminton.Data.Repository
             }
         }
     }
-
 }

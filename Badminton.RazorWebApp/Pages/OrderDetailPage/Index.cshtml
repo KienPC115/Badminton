@@ -21,6 +21,7 @@
             <form method="get" class="form-inline">
                 <input type="hidden" name="orderID" value="@Model.OrderID" />
                 <input type="hidden" name="newCurPage" value="1" />
+                Search by string <input name="searchString" value="@Model.SearchingString"/>
                 Amount range <input name="start" value="@Model.Start" />
                 ... <input name="end" value="@Model.End" />
                 <button type="submit" class="btn btn-outline-primary">Search</button>
@@ -51,7 +52,22 @@ else
                     @Html.DisplayNameFor(model => model.OrderDetails[0].Order.Customer.Name)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.OrderDetails[0].CourtDetail.Status)
+                    @Html.DisplayNameFor(model => model.OrderDetails[0].CourtDetail.Court.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.OrderDetails[0].CourtDetail.Court.Location)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.OrderDetails[0].CourtDetail.Court.Type)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.OrderDetails[0].CourtDetail.Court.YardType)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.OrderDetails[0].CourtDetail.Court.SpaceType)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.OrderDetails[0].CourtDetail.Capacity)
                 </th>
                 <th></th>
             </tr>
@@ -73,7 +89,22 @@ else
                         @Html.DisplayFor(modelItem => item.Order.Customer.Name)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.CourtDetail.Status)
+                        @Html.DisplayFor(modelItem => item.CourtDetail.Court.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CourtDetail.Court.Location)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CourtDetail.Court.Type)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CourtDetail.Court.YardType)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CourtDetail.Court.SpaceType)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CourtDetail.Capacity)
                     </td>
                     <td>
                         <a asp-page="./Edit" asp-route-id="@item.OrderDetailId">Edit</a> |
@@ -89,6 +120,7 @@ else
             <input type="hidden" name="newCurPage" value="@(Model.CurrentPage - 1)" />
             <input type="hidden" name="start" value="@Model.Start" />
             <input type="hidden" name="end" value="@Model.End" />
+            <input type="hidden" name="searchString" value="@Model.SearchingString" />
             <input type="hidden" name="orderID" value="@Model.OrderID" />
             <button type="submit" class="btn btn-outline-primary" @(Model.CurrentPage <= 1 ? "disabled" : "")>Previous</button>
         </form>
@@ -99,6 +131,7 @@ else
             <input type="hidden" name="newCurPage" value="@(Model.CurrentPage + 1)" />
             <input type="hidden" name="start" value="@Model.Start" />
             <input type="hidden" name="end" value="@Model.End" />
+            <input type="hidden" name="searchString" value="@Model.SearchingString" />
             <input type="hidden" name="orderID" value="@Model.OrderID" />
             <button type="submit" class="btn btn-outline-primary" @(Model.CurrentPage >= Model.TotalPages ? "disabled" : "")>Next</button>
         </form>

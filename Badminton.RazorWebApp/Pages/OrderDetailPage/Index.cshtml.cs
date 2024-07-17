@@ -39,10 +39,11 @@ namespace Badminton.RazorWebApp.Pages.OrderDetailPage
         public int TotalPages { get; set; }
 
         public int OrderID { get; set; }
+        public string SearchingString {  get; set; }
 
         public List<OrderDetail> OrderDetails { get;set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? orderID, string? start, string? end, int newCurPage = 1)
+        public async Task<IActionResult> OnGetAsync(int? orderID, string? start, string? end, string? searchString, int newCurPage = 1)
         {
             try
             {
@@ -52,6 +53,9 @@ namespace Badminton.RazorWebApp.Pages.OrderDetailPage
                 if (!double.TryParse(end, out double e)) e = double.MaxValue;
                 End = end;
 
+                searchString ??= string.Empty;
+                SearchingString = searchString;
+                
                 int pageSize = int.TryParse(_config["PageSize"], out int ps) ? ps : 3;
                 
                 IBadmintonResult result = new BadmintonResult();
@@ -72,8 +76,14 @@ namespace Badminton.RazorWebApp.Pages.OrderDetailPage
                     TempData["message"] = result.Message;
                     return Page();
                 }
-
+                
                 var list = result.Data as List<OrderDetail>;
+                string everything = string.Empty;
+                list = list.Where(x =>
+                {
+                    everything = x.CourtDetail.Court.Description.ToString() + x.CourtDetail.Court.YardType.ToString() + x.CourtDetail.Court.Type.ToString() + x.CourtDetail.Court.Location.ToString() + x.CourtDetail.Court.Name.ToString() + x.CourtDetail.Notes.ToString();
+                    return everything.ToUpper().Contains(searchString.Trim().ToUpper());
+                }).ToList();
 
                 TotalPages = Helpers.TotalPages(list, pageSize);
 

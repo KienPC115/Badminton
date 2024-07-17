@@ -21,10 +21,24 @@
             <form method="get" class="form-inline">
                 <input type="hidden" name="orderID" value="@Model.OrderID" />
                 <input type="hidden" name="newCurPage" value="1" />
-                Search by string <input name="searchString" value="@Model.SearchingString"/>
-                Amount range <input name="start" value="@Model.Start" />
-                ... <input name="end" value="@Model.End" />
-                <button type="submit" class="btn btn-outline-primary">Search</button>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Search by string</th>
+                            <th>Amound range from</th>
+                            <th>To</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input name="searchString" value="@Model.SearchingString" /></td>
+                            <td><input name="start" value="@Model.Start" /></td>
+                            <td><input name="end" value="@Model.End" /></td>
+                            <td><button type="submit" class="btn btn-outline-primary">Search</button></td>
+                        </tr>
+                    </tbody>
+                </table>
             </form>
             <a asp-page="../OrderPage/Index">Back to order</a>
         </p>

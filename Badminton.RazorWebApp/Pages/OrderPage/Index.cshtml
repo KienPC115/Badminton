@@ -20,10 +20,24 @@
         <p>
             <form method="get" class="form-inline">
                 <input type="hidden" name="newCurPage" value="1" />
-                Note<input name="note" value="@Model.NoteSearching" />
-                Amount range <input name="start" value="@Model.Start" />
-                ... <input name="end" value="@Model.End" />
-                <button type="submit" class="btn btn-outline-primary">Search</button>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Search by string</th>
+                            <th>Amount Range From</th>
+                            <th>To</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input name="note" value="@Model.NoteSearching" /></td>
+                            <td><input name="start" value="@Model.Start" /></td>
+                            <td><input name="end" value="@Model.End" /></td>
+                            <td><button type="submit" class="btn btn-outline-primary">Search</button></td>
+                        </tr>
+                    </tbody>
+                </table>
             </form>
             <a asp-page="./Index">Back to full List</a>
         </p>

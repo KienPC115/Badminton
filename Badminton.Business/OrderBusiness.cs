@@ -254,9 +254,11 @@ namespace Badminton.Business
                 var allOrders = _unitOfWork.OrderRepository.GetAllOrders();
                 
                 note ??= string.Empty;
-                
-                var orders = allOrders.Where(d => d.OrderNotes.ToUpper().Contains(note.Trim().ToUpper()) && d.TotalAmount >= start && d.TotalAmount <= end).OrderByDescending(o => o.OrderDate).ToList();
-                
+
+                var orders = allOrders.Where(d => d.TotalAmount >= start && d.TotalAmount <= end).OrderByDescending(o => o.OrderDate).ToList();
+
+                orders = orders.Where(o => (o.OrderDate.ToString() + o.Type + o.OrderNotes + o.Customer.Name + o.Customer.Address + o.Customer.Email).ToUpper().Trim().Contains(note.ToUpper().Trim())).ToList();
+
                 return new BadmintonResult
                 {
                     Status = Const.SUCCESS_READ_CODE,
@@ -278,7 +280,9 @@ namespace Badminton.Business
 
                 var allOrders =  _unitOfWork.OrderRepository.GetAllOrdersByCustomerId(cusid);
 
-                var orders = allOrders.Where(d => d.OrderNotes.ToUpper().Contains(note.Trim().ToUpper()) && d.TotalAmount >= start && d.TotalAmount <= end).OrderByDescending(o => o.OrderDate).ToList();
+                var orders = allOrders.Where(d => d.TotalAmount >= start && d.TotalAmount <= end).OrderByDescending(o => o.OrderDate).ToList();
+
+                orders = orders.Where(o => (o.OrderDate.ToString() + o.Type + o.OrderNotes + o.Customer.Name + o.Customer.Address + o.Customer.Email).ToUpper().Trim().Contains(note.ToUpper().Trim())).ToList();
 
                 return new BadmintonResult
                 {

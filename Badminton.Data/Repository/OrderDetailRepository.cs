@@ -31,7 +31,6 @@ namespace Badminton.Data.Repository
                     var temp = newCD.Status;
                     newCD.Status = oldCD.Status;
                     oldCD.Status = temp;
-                    newCD.Status = "Booked";
 
                     _context.CourtDetails.Update(oldCD);
                     _context.CourtDetails.Update(newCD);

@@ -79,12 +79,16 @@ namespace Badminton.RazorWebApp.Pages.OrderDetailPage
                 
                 var list = result.Data as List<OrderDetail>;
                 string everything = string.Empty;
-                list = list.Where(x =>
+                var words = searchString.Split(' ');
+                foreach (var word in words)
                 {
-                    everything = x.CourtDetail.Court.Description.ToString() + x.CourtDetail.Court.YardType.ToString() + x.CourtDetail.Court.Type.ToString() + x.CourtDetail.Court.Location.ToString() + x.CourtDetail.Court.Name.ToString() + x.CourtDetail.Notes.ToString();
-                    return everything.ToUpper().Contains(searchString.Trim().ToUpper());
-                }).ToList();
-
+                    list = list.Where(x =>
+                    {
+                        everything = x.CourtDetail.Court.Description.ToString() + x.CourtDetail.Court.YardType.ToString() + x.CourtDetail.Court.Type.ToString() + x.CourtDetail.Court.Location.ToString() + x.CourtDetail.Court.Name.ToString() + x.CourtDetail.Notes.ToString();
+                        return everything.ToUpper().Contains(word.Trim().ToUpper());
+                    }).ToList();
+                }
+                
                 TotalPages = Helpers.TotalPages(list, pageSize);
 
                 OrderDetails = list.Paging(CurrentPage, pageSize);

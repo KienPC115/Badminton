@@ -257,11 +257,11 @@ namespace Badminton.Business
 
                 var orders = allOrders.Where(d => d.TotalAmount >= start && d.TotalAmount <= end).OrderByDescending(o => o.OrderDate).ToList();
 
-                var words = note.Split(' ');
+                var words = note.Split('~');
 
                 foreach (var word in words)
                 {
-                    orders = orders.Where(o => (o.OrderDate.ToString() + o.Type + o.OrderNotes + o.Customer.Name + o.Customer.Address + o.Customer.Email).ToUpper().Trim().Contains(word.ToUpper().Trim())).ToList();
+                    orders = orders.Where(o => (o.OrderDate.ToString()+ "~" +o.Type+ "~" +o.OrderNotes+ "~" +o.Customer.Name+ "~" +o.Customer.Address+ "~" +o.Customer.Email+ "~" +o.Customer.DateOfBirth.ToString()+ "~" +o.Customer.Phone+ "~" +o.TotalAmount).ToUpper().Trim().Contains(word.ToUpper().Trim())).ToList();
                 }
 
                 return new BadmintonResult
@@ -287,11 +287,11 @@ namespace Badminton.Business
 
                 var orders = allOrders.Where(d => d.TotalAmount >= start && d.TotalAmount <= end).OrderByDescending(o => o.OrderDate).ToList();
 
-                var words = note.Split(' ');
+                var words = note.Split('~');
 
                 foreach (var word in words)
                 {
-                    orders = orders.Where(o => (o.OrderDate.ToString() + o.Type + o.OrderNotes + o.Customer.Name + o.Customer.Address + o.Customer.Email).ToUpper().Trim().Contains(word.ToUpper().Trim())).ToList();
+                    orders = orders.Where(o => (o.OrderDate.ToString()+ "~" +o.Type+ "~" +o.OrderNotes+ "~" +o.Customer.Name+ "~" +o.Customer.Address+ "~" +o.Customer.Email+ "~" +o.Customer.DateOfBirth.ToString() + "~" + o.Customer.Phone + "~" + o.TotalAmount).ToUpper().Trim().Contains(word.ToUpper().Trim())).ToList();
                 }
 
                 return new BadmintonResult

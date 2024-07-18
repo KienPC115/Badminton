@@ -79,12 +79,12 @@ namespace Badminton.RazorWebApp.Pages.OrderDetailPage
                 
                 var list = result.Data as List<OrderDetail>;
                 string everything = string.Empty;
-                var words = searchString.Split(' ');
+                var words = searchString.Split('~');
                 foreach (var word in words)
                 {
                     list = list.Where(x =>
                     {
-                        everything = x.CourtDetail.Court.Description.ToString() + x.CourtDetail.Court.YardType.ToString() + x.CourtDetail.Court.Type.ToString() + x.CourtDetail.Court.Location.ToString() + x.CourtDetail.Court.Name.ToString() + x.CourtDetail.Notes.ToString();
+                        everything = x.CourtDetail.Slot + "~" + x.CourtDetail.Notes+ "~" + x.CourtDetail.Court.Description + "~" + x.CourtDetail.Court.YardType + "~" + x.CourtDetail.Court.Type + "~" + x.CourtDetail.Court.Location + "~" + x.CourtDetail.Court.Name + "~" + x.CourtDetail.Notes + "~" + x.Amount + "~" + x.Order.OrderNotes;
                         return everything.ToUpper().Contains(word.Trim().ToUpper());
                     }).ToList();
                 }

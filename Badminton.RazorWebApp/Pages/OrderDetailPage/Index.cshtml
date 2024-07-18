@@ -63,7 +63,7 @@ else
                     @Html.DisplayNameFor(model => model.OrderDetails[0].Order.Type)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.OrderDetails[0].Order.Customer.Name)
+                    @Html.DisplayNameFor(model => model.OrderDetails[0].Order.OrderNotes)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.OrderDetails[0].CourtDetail.Court.Name)
@@ -81,7 +81,10 @@ else
                     @Html.DisplayNameFor(model => model.OrderDetails[0].CourtDetail.Court.SpaceType)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.OrderDetails[0].CourtDetail.Capacity)
+                    @Html.DisplayNameFor(model => model.OrderDetails[0].CourtDetail.Court.Description)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.OrderDetails[0].CourtDetail.Notes)
                 </th>
                 <th></th>
             </tr>
@@ -100,7 +103,7 @@ else
                         @Html.DisplayFor(modelItem => item.Order.Type)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Order.Customer.Name)
+                        @Html.DisplayFor(modelItem => item.Order.OrderNotes)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.CourtDetail.Court.Name)
@@ -118,7 +121,10 @@ else
                         @Html.DisplayFor(modelItem => item.CourtDetail.Court.SpaceType)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.CourtDetail.Capacity)
+                        @Html.DisplayFor(modelItem => item.CourtDetail.Court.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CourtDetail.Notes)
                     </td>
                     <td>
                         <a asp-page="./Edit" asp-route-id="@item.OrderDetailId">Edit</a> |

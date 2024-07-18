@@ -53,5 +53,22 @@ namespace Badminton.Data.Repository
             courtDetail.Court.CourtDetails = null;
             return courtDetail;
         }
+        public int RefreshCourtDetailStatus()
+        {
+            try
+            {
+                var courtDetails = _context.CourtDetails.Where(c => c.Status.Equals("Booked"));
+                foreach (var item in courtDetails)
+                {
+                    item.Status = "Available";
+                    _context.CourtDetails.Update(item);
+                }
+                return _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

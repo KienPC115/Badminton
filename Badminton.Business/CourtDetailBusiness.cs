@@ -176,23 +176,12 @@ namespace Badminton.Business
         {
             try
             {
-                var allCourtDetail = await _unitOfWork.CourtDetailRepository.GetAllAsync();
-                if (allCourtDetail == null || allCourtDetail.Count() <= 0)
-                {
-                    return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
-                }
-                var status = CourtDetailShared.Status();
-                allCourtDetail.ForEach(c =>
-                {
-                    c.Status = status[0];
-                    _unitOfWork.CourtDetailRepository.PrepareUpdate(c);
-                });
-                var check = await _unitOfWork.CourtDetailRepository.SaveAsync();
+                var check = _unitOfWork.CourtDetailRepository.RefreshCourtDetailStatus();
                 return check <= 0 ? new BadmintonResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG) : new BadmintonResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG);
             }
             catch (Exception ex)
             {
-                return new BadmintonResult(Const.ERROR_EXCEPTION, ex.Message);
+                return new BadmintonResult(Const.ERROR_EXCEPTION, ex.InnerException.Source != null ? ex.Message : ex.InnerException.Source);
             }
         }
 

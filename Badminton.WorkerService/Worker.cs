@@ -58,6 +58,8 @@ namespace Badminton.WorkerService
                         _logger.LogError(ex, "An error occurred while refreshing court detail status");
                     }
                     await Task.Delay(TimeSpan.FromDays(1), stoppingToken);
+                    await Task.Delay(3000, stoppingToken);
+
                 }
                 #endregion
             }

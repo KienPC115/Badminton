@@ -31,15 +31,20 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/CustomerPage/Index">Customer</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/OrderPage/Index">Order</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/CartPage">Cart</a>
-                        </li>
+                        @{
+                            if (Helpers.GetValueFromSession("cus", out Customer cus, Context))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-page="/OrderPage/Index">Order</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-page="/CartPage">Cart</a>
+                                </li>
+                            }
+                        }
                         <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end">
                             @{
-                                if (Helpers.GetValueFromSession("cus", out Customer cus, Context)) {
+                                if (cus != null) {
                                     <span class="navbar-text">Hello, @cus.Name!</span>
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-page="../Index">Logout</a>

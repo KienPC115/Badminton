@@ -292,6 +292,7 @@ namespace Badminton.Business
                 foreach (var word in words)
                 {
                     orders = orders.Where(o => (o.OrderDate.ToString()+ "~" +o.Type+ "~" +o.OrderNotes+ "~" +o.Customer.Name+ "~" +o.Customer.Address+ "~" +o.Customer.Email+ "~" +o.Customer.DateOfBirth.ToString() + "~" + o.Customer.Phone + "~" + o.TotalAmount).ToUpper().Trim().Contains(word.ToUpper().Trim())).ToList();
+
                 }
 
                 return new BadmintonResult

@@ -79,6 +79,7 @@ namespace Badminton.RazorWebApp.Pages.OrderDetailPage
                 
                 var list = result.Data as List<OrderDetail>;
                 string everything = string.Empty;
+
                 var words = searchString.Split('~');
                 foreach (var word in words)
                 {

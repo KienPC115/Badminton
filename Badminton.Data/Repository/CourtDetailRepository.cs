@@ -58,6 +58,10 @@ namespace Badminton.Data.Repository
             try
             {
                 var courtDetails = _context.CourtDetails.Where(c => c.Status.Equals("Booked"));
+                if (courtDetails == null || courtDetails.Count() == 0)
+                {
+                    return 1;
+                }
                 foreach (var item in courtDetails)
                 {
                     item.Status = "Available";

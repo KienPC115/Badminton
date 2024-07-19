@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Badminton.Data.Models;
 using Badminton.Business;
+using Badminton.Common;
 
 namespace Badminton.RazorWebApp.Pages.OrderPage
 {
@@ -23,18 +24,22 @@ namespace Badminton.RazorWebApp.Pages.OrderPage
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            var result = await _orderBusiness.GetOrderById(id.Value);
-            if (result.Status < 0)
+            if (Helpers.GetValueFromSession("cus", out Customer cus, HttpContext) && cus.Name.Equals("admin") && cus.Email.Equals("admin@example.com"))
             {
-                return NotFound();
-            }
-            Order = (result.Data as Order);
+                var result = await _orderBusiness.GetOrderById(id.Value);
+                if (result.Status < 0)
+                {
+                    return NotFound();
+                }
+                Order = (result.Data as Order);
 
-            if (Order == null)
-            {
-                return NotFound();
+                if (Order == null)
+                {
+                    return NotFound();
+                }
+                return Page();
             }
-            return Page();
+            return NotFound();
         }
 
         public async Task<IActionResult> OnPostAsync(int? id)

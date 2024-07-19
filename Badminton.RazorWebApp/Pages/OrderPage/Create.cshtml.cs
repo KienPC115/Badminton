@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Badminton.Data.Models;
 using Badminton.Business;
+using Badminton.Common;
 
 namespace Badminton.RazorWebApp.Pages.OrderPage
 {
@@ -22,10 +23,14 @@ namespace Badminton.RazorWebApp.Pages.OrderPage
 
         public IActionResult OnGet()
         {
-            var result = _customerBusiness.GetAllCustomers();
-            Customer = result.Result.Data as List<Customer>;
-            return Page();
-        }
+            if (Helpers.GetValueFromSession("cus", out Customer cus, HttpContext) && cus.Name.Equals("admin") && cus.Email.Equals("admin@example.com"))
+            {
+                var result = _customerBusiness.GetAllCustomers();
+                Customer = result.Result.Data as List<Customer>;
+                return Page();
+            }
+            return NotFound();
+    }
 
         [BindProperty]
         public Order Order { get; set; } = default!;

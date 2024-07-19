@@ -9,7 +9,7 @@ using Badminton.Data.Models;
 
 namespace Badminton.RazorWebApp.Pages.CourtDetailPage
 {
-    public class DetailsModel : PageModel
+    public class DetailsModel : CustomPage
     {
         private readonly ICourtDetailBusiness _courtDetailBusiness;
         public DetailsModel()
@@ -21,6 +21,12 @@ namespace Badminton.RazorWebApp.Pages.CourtDetailPage
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
+            IsAdmin = CheckAdmin();
+
+            if (!IsAdmin) {
+                TempData["message"] = "You don't have enough permission.";
+                return RedirectToPage("./Index");
+            }
             if (id == null )
             {
                 return NotFound();

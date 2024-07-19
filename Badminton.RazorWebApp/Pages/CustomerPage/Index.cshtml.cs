@@ -10,7 +10,7 @@ using Microsoft.CodeAnalysis.Elfie.Serialization;
 using Microsoft.EntityFrameworkCore;
 
 namespace Badminton.RazorWebApp.Pages.CustomerPage {
-    public class IndexModel : PageModel {
+    public class IndexModel : CustomPage {
         private readonly ICustomerBusiness customerBusiness;
 
         public IndexModel(IConfiguration config)
@@ -25,8 +25,15 @@ namespace Badminton.RazorWebApp.Pages.CustomerPage {
         public int CurrentPage = 1;
         public IList<Customer> CustomerList { get; set; } = default!;
 
-        public async Task OnGetAsync(int newCurPage = 1, string searchKey = @"")
+        public async Task<IActionResult> OnGetAsync(int newCurPage = 1, string searchKey = @"")
         {
+            IsAdmin = CheckAdmin();
+
+            if (!IsAdmin) {
+                TempData["message"] = "You don't have enough permission.";
+                return RedirectToPage("../Index");
+            }
+
             int pageSize = int.TryParse(_config["PageSize"], out int ps) ? ps : 3;
             Search = searchKey;
             CurrentPage = newCurPage;
@@ -36,14 +43,15 @@ namespace Badminton.RazorWebApp.Pages.CustomerPage {
             if (result.Status <= 0)
             {
                 TempData["message"] = result.Message;
-                return;
+                return RedirectToPage("./Index");
             }
 
             var list = result.Data as List<Customer>;
 
             TotalPages = (int)Math.Ceiling(list.Count / (double)pageSize);
             CustomerList = list.Skip((CurrentPage - 1) * pageSize).Take(pageSize).ToList();
-            
+
+            return Page();
         }
     }
 }

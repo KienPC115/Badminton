@@ -12,7 +12,7 @@ using Badminton.Business.Shared;
 using Microsoft.Extensions.Options;
 
 namespace Badminton.RazorWebApp.Pages.CourtPage {
-    public class IndexModel : PageModel {
+    public class IndexModel : CustomPage {
         private readonly ICourtBusiness _courtBusiness;
         private readonly IConfiguration _configuration;
         private readonly CourtConfiguration _courtConfiguration;
@@ -55,6 +55,8 @@ namespace Badminton.RazorWebApp.Pages.CourtPage {
         public IList<Court> Court { get; set; } = default!;
 
         public async Task OnGetAsync(string sortOrder, string search = "", int pageNumber = 1) {
+            IsAdmin = CheckAdmin();
+
             PageSize = int.TryParse(_configuration["PageSize"], out int ps) ? ps : 3;
             YardType = _courtConfiguration.YardType.Select(s => new SelectListItem { Value = s, Text = s }).ToList();
             Type = _courtConfiguration.Type.Select(s => new SelectListItem { Value = s, Text = s }).ToList();

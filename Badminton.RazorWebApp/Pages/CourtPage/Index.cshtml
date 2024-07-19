@@ -12,9 +12,12 @@
 
 <h1>Court Page</h1>
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
+@if (Model.IsAdmin)
+{
+    <p>
+        <a asp-page="Create">Create New</a>
+    </p>
+}
 
 <form asp-page="./Index" method="get">
     <div class="form-actions no-color d-flex">
@@ -155,11 +158,13 @@ else {
                     <td>
                         @Html.DisplayFor(modelItem => item.Price)
                     </td>
-                    <td>
-                        <a asp-page="./Edit" asp-route-id="@item.CourtId">Edit</a> |
+                    @if (Model.IsAdmin)
+                    {
+                        <td>
+                            <a asp-page="./Edit" asp-route-id="@item.CourtId">Edit</a> |
                         <a asp-page="./Details" asp-route-id="@item.CourtId">Details</a> |
                         <a asp-page="./Delete" asp-route-id="@item.CourtId">Delete</a>
-                    </td>
+                    </td> }
                 </tr>
             }
         </tbody>

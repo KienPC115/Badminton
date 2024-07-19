@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Cors.Infrastructure;
 
 namespace Badminton.RazorWebApp.Pages.CourtPage
 {
-    public class DeleteModel : PageModel
+    public class DeleteModel : CustomPage
     {
         private readonly ICourtBusiness _courtBusiness;
         public DeleteModel() {
@@ -22,6 +22,13 @@ namespace Badminton.RazorWebApp.Pages.CourtPage
         public Court Court { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id) {
+            IsAdmin = CheckAdmin();
+
+            if (!IsAdmin) {
+                TempData["message"] = "You don't have enough permission.";
+                return RedirectToPage("./Index");
+            }
+
             if (id == null) {
                 return NotFound();
             }

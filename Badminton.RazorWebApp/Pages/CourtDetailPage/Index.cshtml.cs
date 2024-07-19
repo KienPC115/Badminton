@@ -10,7 +10,7 @@ using Badminton.Data.Models;
 
 namespace Badminton.RazorWebApp.Pages.CourtDetailPage
 {
-    public class IndexModel : PageModel
+    public class IndexModel : CustomPage
     {
         private readonly ICourtDetailBusiness _courtDetailBusiness;
 
@@ -29,6 +29,7 @@ namespace Badminton.RazorWebApp.Pages.CourtDetailPage
 
         public async Task OnGetAsync(int newCurPage = 1, string searchKey = @"")
         {
+            IsAdmin = CheckAdmin();
             int pageSize = Int32.TryParse(_config["PageSize"], out int ps) ? ps : 3;
             CurrentPage = newCurPage;
             Search = searchKey;

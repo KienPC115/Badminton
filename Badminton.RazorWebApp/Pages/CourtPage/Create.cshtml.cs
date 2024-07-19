@@ -12,7 +12,7 @@ using System.Configuration;
 
 namespace Badminton.RazorWebApp.Pages.CourtPage
 {
-    public class CreateModel : PageModel
+    public class CreateModel : CustomPage
     {
         private readonly ICourtBusiness _courtBusiness;
         private readonly IConfiguration _configuration;
@@ -26,6 +26,13 @@ namespace Badminton.RazorWebApp.Pages.CourtPage
         }
 
         public IActionResult OnGet() {
+            IsAdmin = CheckAdmin();
+
+            if(!IsAdmin) {
+                TempData["message"] = "You don't have enough permission.";
+                return RedirectToPage("./Index");
+            }
+
             Status = _courtConfiguration.Status.Select(s => new SelectListItem { Value = s, Text = s, Selected = s == "Available" ? true : false }).ToList();
             YardType = _courtConfiguration.YardType.Select(s => new SelectListItem { Value = s, Text = s, Selected = s == "PVC carpet" ? true : false }).ToList();
             Type = _courtConfiguration.Type.Select(s => new SelectListItem { Value = s, Text = s, Selected = s == "Single" ? true : false }).ToList();

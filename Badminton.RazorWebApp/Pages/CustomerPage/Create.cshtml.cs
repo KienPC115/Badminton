@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Badminton.RazorWebApp.Pages.CustomerPage {
-    public class CreateModel : PageModel {
+    public class CreateModel : CustomPage {
         private readonly ICustomerBusiness _business;
 
         public CreateModel() {
@@ -17,6 +17,13 @@ namespace Badminton.RazorWebApp.Pages.CustomerPage {
         }
 
         public IActionResult OnGet() {
+            IsAdmin = CheckAdmin();
+
+            if (!IsAdmin) {
+                TempData["message"] = "You don't have enough permission.";
+                return RedirectToPage("./Index");
+            }
+
             return Page();
         }
 

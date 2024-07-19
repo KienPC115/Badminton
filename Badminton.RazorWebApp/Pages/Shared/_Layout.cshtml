@@ -28,9 +28,6 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/CourtDetailPage/Index">Court Detail</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/CustomerPage/Index">Customer</a>
-                        </li>
                         @{
                             if (Helpers.GetValueFromSession("cus", out Customer cus, Context))
                             {
@@ -39,6 +36,12 @@
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-page="/CartPage">Cart</a>
+                                </li>
+                            }
+
+                            if (cus != null && cus.Email == "admin@example.com" && cus.Name == "admin") {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-page="/CustomerPage/Index">Customer</a>
                                 </li>
                             }
                         }

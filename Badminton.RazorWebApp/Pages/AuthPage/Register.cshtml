@@ -6,7 +6,7 @@
 }
 <div class="d-flex justify-content-center">
     <div class="col-md-6">
-        <h1 class="text-center">Reset Password</h1>
+        <h1 class="text-center">Register</h1>
 
         @if (TempData["message"] != null)
         {
@@ -52,7 +52,7 @@
                     </div>
                     <div class="form-group">
                         <label asp-for="Customer.Password" class="control-label"></label>
-                        <input asp-for="Customer.Password" class="form-control" />
+                        <input asp-for="Customer.Password" type="email" class="form-control" />
                         <span asp-validation-for="Customer.Password" class="text-danger"></span>
                     </div>
 
@@ -71,13 +71,14 @@
                     <div class="form-group row">
                         <label class="col-sm-4 col-form-label text-right">Email</label>
                         <div class="col-sm-8">
-                            <input name="email" class="form-control" />
+                            <input type="email" name="email" class="form-control" />
+                            <span class="text-danger">Please using your gmail to can get OTP from mail</span>
                         </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-sm-4"></div>
                         <div class="col-sm-8">
-                            <input type="submit" value="Login" class="btn btn-primary" />
+                            <input type="submit" value="Receive mail" class="btn btn-primary" />
                         </div>
                     </div>
                 </form>

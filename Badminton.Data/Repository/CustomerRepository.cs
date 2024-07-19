@@ -17,5 +17,7 @@ namespace Badminton.Data.Repository {
                                                   || cus.Address.ToLower().Contains(search.ToLower())
                                                   || cus.Phone.ToLower().Contains(search.ToLower())).ToListAsync();
         }
+
+        public Customer GetCustomerByEmail(string email) => _context.Customers.FirstOrDefault(c => c.Email.Equals(email));
     }
 }

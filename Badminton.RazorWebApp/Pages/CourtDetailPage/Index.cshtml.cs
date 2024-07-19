@@ -48,7 +48,6 @@ namespace Badminton.RazorWebApp.Pages.CourtDetailPage
                     CourtDetail = courtDetail.Data as CourtDetail;
 
                 }
-
             }
         }
     }

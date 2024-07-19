@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using MimeKit;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Reflection;
@@ -53,5 +54,34 @@ namespace Badminton.Common
         public static List<T> Paging<T>(this List<T> list, int currenctPage, int pageSize) => list.Skip((currenctPage - 1) * pageSize).Take(pageSize).ToList();
 
         public static int TotalPages<T>(List<T> list, int pageSize) => (int)Math.Ceiling(list.Count / (double)pageSize);
+
+        public static async Task<string> SendMail(string to, string subject, string htmlMessage)
+        {
+            var email = new MimeMessage();
+            email.Sender = new MailboxAddress("Booking Court Manager", "diamondstoresystem@gmail.com");
+            email.From.Add(new MailboxAddress("Booking Court Manager", "diamondstoresystem@gmail.com"));
+            email.To.Add(MailboxAddress.Parse(to));
+            email.Subject = subject;
+
+            var builder = new BodyBuilder
+            {
+                HtmlBody = htmlMessage
+            };
+            email.Body = builder.ToMessageBody();
+
+            using var smtp = new MailKit.Net.Smtp.SmtpClient();
+
+            try
+            {
+                smtp.Connect("smtp.gmail.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
+                smtp.Authenticate("diamondstoresystem@gmail.com", "hunb lbyz ehrd wgbz");
+                var message = await smtp.SendAsync(email);
+                return message;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

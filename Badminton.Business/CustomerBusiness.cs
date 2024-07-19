@@ -18,6 +18,7 @@ namespace Badminton.Business {
         public Task<IBadmintonResult> GetAllCustomersWithSearchKey(string Search);
         public Task<IBadmintonResult> UpdateCustomer(int CustomerId, Customer Customer);
         public Task<IBadmintonResult> DeleteCustomer(int CustomerId);
+        Task<IBadmintonResult> ResetPassword(string email, string password);
         Task<IBadmintonResult> CheckLogin(string email, string password);
     }
 
@@ -119,6 +120,31 @@ namespace Badminton.Business {
 
                 return new BadmintonResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
             } catch (Exception ex) {
+                return new BadmintonResult(Const.ERROR_EXCEPTION, ex.Message);
+            }
+        }
+        public async Task<IBadmintonResult> ResetPassword(string email, string password)
+        {
+            try
+            {
+                //var Customer = await _DAO.GetByIdAsync(CustomerId);
+                var Customer = _unitOfWork.CustomerRepository.GetCustomerByEmail(email);
+                if (Customer == null)
+                {
+                    return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
+                }
+
+                Customer.Password = password;
+
+                if (await _unitOfWork.CustomerRepository.UpdateAsync(Customer) > 0)
+                {
+                    return new BadmintonResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG);
+                }
+
+                return new BadmintonResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
+            }
+            catch (Exception ex)
+            {
                 return new BadmintonResult(Const.ERROR_EXCEPTION, ex.Message);
             }
         }

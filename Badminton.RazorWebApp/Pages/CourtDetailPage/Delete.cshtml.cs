@@ -11,7 +11,7 @@ using Badminton.Data.Models;
 
 namespace Badminton.RazorWebApp.Pages.CourtDetailPage
 {
-    public class DeleteModel : PageModel
+    public class DeleteModel : CustomPage
     {
         private readonly CourtDetailBusiness _courtDetailBusiness;
 
@@ -25,6 +25,12 @@ namespace Badminton.RazorWebApp.Pages.CourtDetailPage
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
+            IsAdmin = CheckAdmin();
+
+            if (!IsAdmin) {
+                TempData["message"] = "You don't have enough permission.";
+                return RedirectToPage("./Index");
+            }
             if (id == null)
             {
                 return NotFound();

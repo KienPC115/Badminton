@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 namespace Badminton.RazorWebApp.Pages.CustomerPage {
-    public class DeleteModel : PageModel {
+    public class DeleteModel : CustomPage {
         private readonly ICustomerBusiness _business;
 
         public DeleteModel() {
@@ -20,6 +20,13 @@ namespace Badminton.RazorWebApp.Pages.CustomerPage {
         public Customer Customer { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id) {
+            IsAdmin = CheckAdmin();
+
+            if (!IsAdmin) {
+                TempData["message"] = "You don't have enough permission.";
+                return RedirectToPage("./Index");
+            }
+
             if (id == null) {
                 return NotFound();
             }

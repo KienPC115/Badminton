@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Cors.Infrastructure;
 
 namespace Badminton.RazorWebApp.Pages.CourtPage
 {
-    public class EditModel : PageModel
+    public class EditModel : CustomPage
     {
         private readonly ICourtBusiness _courtBusiness;
         private readonly IConfiguration _configuration;
@@ -36,6 +36,13 @@ namespace Badminton.RazorWebApp.Pages.CourtPage
         public List<SelectListItem> SpaceType { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id) {
+            IsAdmin = CheckAdmin();
+
+            if (!IsAdmin) {
+                TempData["message"] = "You don't have enough permission.";
+                return RedirectToPage("./Index");
+            }
+
             if (id == null) {
                 return NotFound();
             }

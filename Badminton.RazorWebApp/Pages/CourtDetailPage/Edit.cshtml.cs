@@ -12,7 +12,7 @@ using Badminton.Data.Models;
 
 namespace Badminton.RazorWebApp.Pages.CourtDetailPage
 {
-    public class EditModel : PageModel
+    public class EditModel : CustomPage
     {
         private readonly CourtDetailBusiness _courtDetailBusiness;
         private readonly CourtBusiness _courtBusiness;
@@ -32,6 +32,12 @@ namespace Badminton.RazorWebApp.Pages.CourtDetailPage
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
+            IsAdmin = CheckAdmin();
+
+            if (!IsAdmin) {
+                TempData["message"] = "You don't have enough permission.";
+                return RedirectToPage("./Index");
+            }
             if (id == null)
             {
                 return NotFound();

@@ -32,9 +32,12 @@
     <input name="searchKey" value="@Model.Search" />
     <input type="submit" value="Search">
 </form>
-<p>
+@if (Model.IsAdmin)
+{
+    <p>
     <a asp-page="Create">Create New</a>
 </p>
+}
 <h1> Top Most Booked Court: @Model.CourtDetail.Court.Name at time: @Model.CourtDetail.Slot</h1>
 <table class="table">
     <thead>
@@ -95,11 +98,13 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Court.Name)
                 </td>
+                    @if (Model.IsAdmin) {
                 <td>
                     <a asp-page="./Edit" asp-route-id="@item.CourtDetailId">Edit</a> |
                     <a asp-page="./Details" asp-route-id="@item.CourtDetailId">Details</a> |
                     <a asp-page="./Delete" asp-route-id="@item.CourtDetailId">Delete</a>
                 </td>
+                    }
                 @if (cus != null)
                 {
                     <td>

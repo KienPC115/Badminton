@@ -11,7 +11,7 @@ using Badminton.Data.Models;
 
 namespace Badminton.RazorWebApp.Pages.CourtDetailPage
 {
-    public class CreateModel : PageModel
+    public class CreateModel : CustomPage
     {
         private readonly ICourtDetailBusiness _courtDetailBusiness;
         private readonly ICourtBusiness _courtBusiness;
@@ -24,6 +24,12 @@ namespace Badminton.RazorWebApp.Pages.CourtDetailPage
 
         public async Task<IActionResult> OnGet()
         {
+            IsAdmin = CheckAdmin();
+
+            if (!IsAdmin) {
+                TempData["message"] = "You don't have enough permission.";
+                return RedirectToPage("./Index");
+            }
             Slot = CourtDetailShared.Slot();
             Status = CourtDetailShared.Status();
             var result = await _courtBusiness.GetCourtsByStatus(CourtShared.Status()[0]);

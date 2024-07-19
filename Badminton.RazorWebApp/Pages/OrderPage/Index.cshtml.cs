@@ -32,47 +32,47 @@ namespace Badminton.RazorWebApp.Pages.OrderPage
 
         public async Task<IActionResult> OnGet(string? note, string? start, string? end, int newCurPage = 1)
         {
-            try
+            if (Helpers.GetValueFromSession("cus", out Customer cus, HttpContext))
             {
-                if (!double.TryParse(start, out double s)) s = 0;
-                Start = start;
-
-                if (!double.TryParse(end, out double e)) e = double.MaxValue;
-                End = end;
-
-                Helpers.GetValueFromSession("cus", out Customer cus, HttpContext);
-
-                int pageSize = int.TryParse(_config["PageSize"], out int ps) ? ps : 3;
-
-                CurrentPage = newCurPage;
-                
-                NoteSearching = note;
-
-                IBadmintonResult result = new BadmintonResult();
-                
-                if (cus != null) result = await _orderBusiness.GetBySearchingNoteWithCusId(NoteSearching, cus.CustomerId, s, e);
-
-                else result = await _orderBusiness.GetBySearchingNote(NoteSearching, s, e);
-
-                if (result.Status <= 0)
+                try
                 {
-                    TempData["message"] = result.Message;
+                    if (!double.TryParse(start, out double s)) s = 0;
+                    Start = start;
+
+                    if (!double.TryParse(end, out double e)) e = double.MaxValue;
+                    End = end;
+
+                    int pageSize = int.TryParse(_config["PageSize"], out int ps) ? ps : 3;
+
+                    CurrentPage = newCurPage;
+
+                    NoteSearching = note;
+
+                    IBadmintonResult result = new BadmintonResult();
+
+                    if (cus.Name.Equals("admin") && cus.Email.Equals("admin@example.com")) result = await _orderBusiness.GetBySearchingNote(NoteSearching, s, e);
+
+                    else result = await _orderBusiness.GetBySearchingNoteWithCusId(NoteSearching, cus.CustomerId, s, e);
+
+                    if (result.Status <= 0)
+                    {
+                        TempData["message"] = result.Message;
+                        return Page();
+                    }
+
+                    var list = result.Data as List<Order>;
+
+                    TotalPages = Helpers.TotalPages(list, pageSize);
+
+                    Orders = list.Paging(CurrentPage, pageSize);
+                }
+                catch (Exception ez)
+                {
+                    TempData["message"] = ez.Message;
                     return Page();
                 }
-
-                var list = result.Data as List<Order>;
-
-                TotalPages = Helpers.TotalPages(list, pageSize);
-
-                Orders = list.Paging(CurrentPage, pageSize);
-
-                return Page();
             }
-            catch (Exception ez)
-            {
-                TempData["message"] = ez.Message;
-                return Page();
-            }
+            return Page();
         }
     }
 }

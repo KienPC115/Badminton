@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Badminton.Data.Models;
 using Badminton.Business;
+using Badminton.Common;
 
 namespace Badminton.RazorWebApp.Pages.OrderPage
 {
@@ -27,21 +28,25 @@ namespace Badminton.RazorWebApp.Pages.OrderPage
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            var result = await _customerBusiness.GetAllCustomers();
-            Customer = result.Data as List<Customer>;
-
-            result = await _orderBusiness.GetOrderById(id.Value);
-            if (result.Status < 0)
+            if(Helpers.GetValueFromSession("cus", out Customer cus, HttpContext) && cus.Name.Equals("admin") && cus.Email.Equals("admin@example.com"))
             {
-                return NotFound();
-            }
-            Order = (result.Data as Order);
+                var result = await _customerBusiness.GetAllCustomers();
+                Customer = result.Data as List<Customer>;
 
-            if (Order == null)
-            {
-                return NotFound();
+                result = await _orderBusiness.GetOrderById(id.Value);
+                if (result.Status < 0)
+                {
+                    return NotFound();
+                }
+                Order = (result.Data as Order);
+
+                if (Order == null)
+                {
+                    return NotFound();
+                }
+                return Page();
             }
-            return Page();
+            return NotFound();
         }
 
         // To protect from overposting attacks, enable the specific properties you want to bind to.

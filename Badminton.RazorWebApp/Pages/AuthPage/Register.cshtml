@@ -1,0 +1,87 @@
+﻿@page
+@using Badminton.Common
+@model Badminton.RazorWebApp.Pages.AuthPage.RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+<div class="d-flex justify-content-center">
+    <div class="col-md-6">
+        <h1 class="text-center">Reset Password</h1>
+
+        @if (TempData["message"] != null)
+        {
+            <div class="alert alert-danger">
+                @TempData["message"]
+            </div>
+        }
+
+        @{
+            if (Helpers.GetValueFromSession("otp", out string otp, HttpContext))
+            {
+                <form method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group row">
+                        <label asp-for="@Model.OTP" class="control-label">OTP</label>
+                        <input asp-for="@Model.OTP" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Customer.Phone" class="control-label"></label>
+                        <input asp-for="Customer.Phone" class="form-control" />
+                        <span asp-validation-for="Customer.Phone" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Customer.Name" class="control-label"></label>
+                        <input asp-for="Customer.Name" class="form-control" />
+                        <span asp-validation-for="Customer.Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Customer.Address" class="control-label"></label>
+                        <input asp-for="Customer.Address" class="form-control" />
+                        <span asp-validation-for="Customer.Address" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Customer.Email" class="control-label"></label>
+                        <input asp-for="Customer.Email" class="form-control" readonly/>
+                        <span asp-validation-for="Customer.Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Customer.DateOfBirth" class="control-label"></label>
+                        <input asp-for="Customer.DateOfBirth" class="form-control" />
+                        <span asp-validation-for="Customer.DateOfBirth" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Customer.Password" class="control-label"></label>
+                        <input asp-for="Customer.Password" class="form-control" />
+                        <span asp-validation-for="Customer.Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-4"></div>
+                        <div class="col-sm-8">
+                            <input type="submit" value="Register" class="btn btn-primary" />
+                        </div>
+                    </div>
+                </form>
+            }
+            else
+            {
+                <form method="get">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label text-right">Email</label>
+                        <div class="col-sm-8">
+                            <input name="email" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-4"></div>
+                        <div class="col-sm-8">
+                            <input type="submit" value="Login" class="btn btn-primary" />
+                        </div>
+                    </div>
+                </form>
+            }
+        }
+    </div>
+</div>

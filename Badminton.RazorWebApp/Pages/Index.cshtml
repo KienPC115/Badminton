@@ -4,44 +4,50 @@
     ViewData["Title"] = "Home page";
 }
 
-<div class="d-flex justify-content-center">
+<div class="d-flex justify-content-center align-items-center min-vh-100">
     <div class="col-md-6">
-        <h1 class="text-center">Login</h1>
+        <div class="card shadow-lg">
+            <div class="card-body">
+                <h1 class="text-center">Login</h1>
 
-        @if (TempData["message"] != null)
-        {
-            <div class="alert alert-danger">
-                @TempData["message"]
-            </div>
-        }
+                @if (TempData["message"] != null)
+                {
+                    <div class="alert alert-danger text-center">
+                        @TempData["message"]
+                    </div>
+                }
 
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <form method="post" novalidate>
+                    <div asp-validation-summary="ModelOnly" class="text-danger text-center mb-3"></div>
 
-            <div class="form-group row">
-                <label asp-for="@Model.Email" class="col-sm-4 col-form-label text-right">Email</label>
-                <div class="col-sm-8">
-                    <input asp-for="@Model.Email" class="form-control" />
-                    <span asp-validation-for="@Model.Email" class="text-danger"></span>
+                    <div class="form-group row">
+                        <label asp-for="@Model.Email" class="col-sm-4 col-form-label text-right">Email</label>
+                        <div class="col-sm-8">
+                            <input asp-for="@Model.Email" class="form-control" />
+                            <span asp-validation-for="@Model.Email" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label asp-for="@Model.Password" class="col-sm-4 col-form-label text-right">Password</label>
+                        <div class="col-sm-8">
+                            <input asp-for="@Model.Password" type="password" class="form-control" />
+                            <span asp-validation-for="@Model.Password" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-8 offset-sm-4">
+                            <input type="submit" value="Login" class="btn btn-primary btn-block" />
+                        </div>
+                    </div>
+                </form>
+
+                <div class="text-center mt-3">
+                    <a asp-page="./AuthPage/ForgotPasswordPage" class="btn btn-link">Forgot password?</a>
+                    <a asp-page="./AuthPage/Register" class="btn btn-link">You do not have an account?</a>
                 </div>
             </div>
-
-            <div class="form-group row">
-                <label asp-for="@Model.Password" class="col-sm-4 col-form-label text-right">Password</label>
-                <div class="col-sm-8">
-                    <input asp-for="@Model.Password" type="password" class="form-control" />
-                    <span asp-validation-for="@Model.Password" class="text-danger"></span>
-                </div>
-            </div>
-
-            <div class="form-group row">
-                <div class="col-sm-4"></div>
-                <div class="col-sm-8">
-                    <input type="submit" value="Login" class="btn btn-primary" />
-                </div>
-            </div>
-        </form>
-        <a asp-page="./AuthPage/ForgotPasswordPage">Forgot Password ?</a>
+        </div>
     </div>
 </div>
-

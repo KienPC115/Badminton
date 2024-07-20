@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Badminton.Data.Models;
 using Badminton.Business;
+using Badminton.Common;
 
 namespace Badminton.RazorWebApp.Pages.OrderDetailPage
 {
@@ -32,21 +33,25 @@ namespace Badminton.RazorWebApp.Pages.OrderDetailPage
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            Orders = _orderBusiness.GetAllOrders().Result.Data as List<Order>;
-            CourtDetails = _courtDetailBusiness.GetAllCourtDetails().Result.Data as List<CourtDetail>;
-            CourtDetails.ForEach(cd => cd.Court = _courtBusiness.GetCourtById(cd.CourtId).Result.Data as Court);
-            var result = await _orderDetailBusiness.GetOrderDetailById(id.Value);
-            if (result.Status < 0)
+            if (Helpers.GetValueFromSession("cus", out Customer cus, HttpContext) && cus.Name.Equals("admin") && cus.Email.Equals("admin@example.com"))
             {
-                return NotFound();
-            }
-            OrderDetail = (result.Data as OrderDetail);
+                Orders = _orderBusiness.GetAllOrders().Result.Data as List<Order>;
+                CourtDetails = _courtDetailBusiness.GetAllCourtDetails().Result.Data as List<CourtDetail>;
+                CourtDetails.ForEach(cd => cd.Court = _courtBusiness.GetCourtById(cd.CourtId).Result.Data as Court);
+                var result = await _orderDetailBusiness.GetOrderDetailById(id.Value);
+                if (result.Status < 0)
+                {
+                    return NotFound();
+                }
+                OrderDetail = (result.Data as OrderDetail);
 
-            if (OrderDetail == null)
-            {
-                return NotFound();
+                if (OrderDetail == null)
+                {
+                    return NotFound();
+                }
+                return Page();
             }
-            return Page();
+            return NotFound();
         }
 
         public async Task<IActionResult> OnPostAsync(int? id)

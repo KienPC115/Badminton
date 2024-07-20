@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Badminton.Data.Models;
 using Badminton.Business;
 using Badminton.Common;
+using Badminton.Business.Shared;
 
 namespace Badminton.RazorWebApp.Pages.OrderPage
 {
@@ -27,6 +28,7 @@ namespace Badminton.RazorWebApp.Pages.OrderPage
             {
                 var result = _customerBusiness.GetAllCustomers();
                 Customer = result.Result.Data as List<Customer>;
+                Type = OrderShared.Type();
                 return Page();
             }
             return NotFound();
@@ -34,6 +36,8 @@ namespace Badminton.RazorWebApp.Pages.OrderPage
 
         [BindProperty]
         public Order Order { get; set; } = default!;
+        [BindProperty]
+        public List<string> Type { get; set; }
         public List<Customer> Customer { get; set; }
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
@@ -46,11 +50,11 @@ namespace Badminton.RazorWebApp.Pages.OrderPage
                     OnGet();
                     return Page();
                 }
-                OnGet();
                 this.Order.OrderNotes ??= string.Empty;
                 var result = await _orderBusiness.AddOrders(this.Order);
                 if (result.Status <= 0)
                 {
+                    OnGet();
                     TempData["message"] = result.Message;
                     return Page();
                 }

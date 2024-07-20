@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Badminton.Data.Models;
 using Badminton.Business;
 using Badminton.Common;
+using Badminton.Business.Shared;
 
 namespace Badminton.RazorWebApp.Pages.OrderPage
 {
@@ -24,6 +25,8 @@ namespace Badminton.RazorWebApp.Pages.OrderPage
 
         [BindProperty]
         public Order Order { get; set; } = default!;
+        [BindProperty]
+        public List<string> Type { get; set; }
         public List<Customer> Customer { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
@@ -38,6 +41,7 @@ namespace Badminton.RazorWebApp.Pages.OrderPage
                 {
                     return NotFound();
                 }
+                Type = OrderShared.Type();
                 Order = (result.Data as Order);
 
                 if (Order == null)
@@ -55,12 +59,14 @@ namespace Badminton.RazorWebApp.Pages.OrderPage
         {
             if (!ModelState.IsValid)
             {
+                OnGetAsync(Order.OrderId);
                 return Page();
             }
 
             var result = await _orderBusiness.UpdateOrder(Order);
             if (result.Status <= 0)
             {
+                OnGetAsync(Order.OrderId);
                 return Page();
             }
 

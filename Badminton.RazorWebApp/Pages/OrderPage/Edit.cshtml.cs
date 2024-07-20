@@ -39,18 +39,18 @@ namespace Badminton.RazorWebApp.Pages.OrderPage
                 result = await _orderBusiness.GetOrderById(id.Value);
                 if (result.Status < 0)
                 {
-                    return NotFound();
+                    return RedirectToPage("../Index");
                 }
                 Type = OrderShared.Type();
                 Order = (result.Data as Order);
 
                 if (Order == null)
                 {
-                    return NotFound();
+                    return RedirectToPage("../Index");
                 }
                 return Page();
             }
-            return NotFound();
+            return RedirectToPage("../Index");
         }
 
         // To protect from overposting attacks, enable the specific properties you want to bind to.

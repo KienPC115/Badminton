@@ -41,7 +41,7 @@ namespace Badminton.RazorWebApp.Pages.OrderDetailPage
                 CourtDetails.ForEach(cd => cd.Court = _courtBusiness.GetCourtById(cd.CourtId).Result.Data as Court);
                 return Page();
             }
-            return NotFound();
+            return RedirectToPage("../Index");
         }
         [BindProperty]
         public OrderDetail OrderDetail { get; set; } = default!;

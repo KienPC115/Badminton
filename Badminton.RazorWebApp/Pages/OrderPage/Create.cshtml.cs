@@ -31,8 +31,8 @@ namespace Badminton.RazorWebApp.Pages.OrderPage
                 Type = OrderShared.Type();
                 return Page();
             }
-            return NotFound();
-    }
+            return RedirectToPage("../Index");
+        }
 
         [BindProperty]
         public Order Order { get; set; } = default!;

@@ -50,20 +50,20 @@ namespace Badminton.RazorWebApp.Pages.OrderDetailPage
 
                 if (result.Status < 0)
                 {
-                    return NotFound();
+                    return RedirectToPage("../Index");
                 }
                 OrderDetail = (result.Data as OrderDetail);
 
                 if (OrderDetail == null)
                 {
-                    return NotFound();
+                    return RedirectToPage("../Index");
                 }
 
                 Orders = Orders.Where(o => o.OrderId == OrderDetail.OrderId).ToList();
 
                 return Page();
             }
-            return NotFound();
+            return RedirectToPage("../Index");
         }
 
         // To protect from overposting attacks, enable the specific properties you want to bind to.

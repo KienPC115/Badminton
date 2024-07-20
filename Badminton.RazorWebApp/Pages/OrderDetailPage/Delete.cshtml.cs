@@ -41,17 +41,17 @@ namespace Badminton.RazorWebApp.Pages.OrderDetailPage
                 var result = await _orderDetailBusiness.GetOrderDetailById(id.Value);
                 if (result.Status < 0)
                 {
-                    return NotFound();
+                    return RedirectToPage("../Index");
                 }
                 OrderDetail = (result.Data as OrderDetail);
 
                 if (OrderDetail == null)
                 {
-                    return NotFound();
+                    return RedirectToPage("../Index");
                 }
                 return Page();
             }
-            return NotFound();
+            return RedirectToPage("../Index");
         }
 
         public async Task<IActionResult> OnPostAsync(int? id)

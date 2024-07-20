@@ -8,28 +8,27 @@ namespace Badminton.Data.Models;
 
 public partial class Court
 {
-    [Required]
-    [StringLength(25)]
+
+    //[StringLength(25)]
     public int CourtId { get; set; }
-
+    [Required]
+    [MaxLength(25)]
     public string Name { get; set; }
-
+    [Required]
     public string Status { get; set; }
-
+    [Required]
     public string Description { get; set; }
-
+    [Required]
     public string YardType { get; set; }
-
+    [Required]
     public string Type { get; set; }
-
+    [Required]
     public string Location { get; set; }
-
+    [Required]
     public string SpaceType { get; set; }
-
     public DateTime? CreatedTime { get; set; }
-
     public DateTime? UpdatedTime { get; set; }
-
+    [Required]
     public double Price { get; set; }
 
     public virtual ICollection<CourtDetail> CourtDetails { get; set; } = new List<CourtDetail>();

@@ -1,4 +1,6 @@
 ﻿@page
+@using Badminton.Common
+@using Badminton.Data.Models
 @model Badminton.RazorWebApp.Pages.OrderDetailPage.IndexModel
 
 @{
@@ -12,9 +14,12 @@
 }
 <h1>Index</h1>
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
+@if (Helpers.GetValueFromSession("cus", out Customer cus, HttpContext) && cus.Name.Equals("admin") && cus.Email.Equals("admin@example.com"))
+{
+    <p>
+        <a asp-page="Create">Create New</a>
+    </p>
+}
 <form asp-asp-page="./Index" method="get">
     <div class="form-actions no-color">
         <p>
@@ -127,9 +132,14 @@ else
                         @Html.DisplayFor(modelItem => item.CourtDetail.Notes)
                     </td>
                     <td>
-                        <a asp-page="./Edit" asp-route-id="@item.OrderDetailId">Edit</a> |
-                        <a asp-page="./Details" asp-route-id="@item.OrderDetailId">Details</a> |
-                        <a asp-page="./Delete" asp-route-id="@item.OrderDetailId">Delete</a>
+                        @if (cus.Name.Equals("admin") && cus.Email.Equals("admin@example.com"))
+                        {
+                            <div>
+                                <a asp-page="./Edit" asp-route-id="@item.OrderDetailId">Edit</a> |
+                                <a asp-page="./Delete" asp-route-id="@item.OrderDetailId">Delete</a> |
+                            </div>
+                        }
+                        <a asp-page="./Details" asp-route-id="@item.OrderDetailId">Details</a>
                     </td>
                 </tr>
             }

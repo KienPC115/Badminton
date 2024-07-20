@@ -47,54 +47,58 @@ namespace Badminton.RazorWebApp.Pages.OrderDetailPage
         {
             try
             {
-                if (!double.TryParse(start, out double s))s = 0;
-                Start = start;
-
-                if (!double.TryParse(end, out double e)) e = double.MaxValue;
-                End = end;
-
-                searchString ??= string.Empty;
-                SearchingString = searchString;
-                
-                int pageSize = int.TryParse(_config["PageSize"], out int ps) ? ps : 3;
-                
-                IBadmintonResult result = new BadmintonResult();
-                
-                CurrentPage = newCurPage;
-
-                if (orderID == null || orderID == 0) result = await _orderDetailBusiness.GetAllOrderDetails(s, e);
-
-                else
+                if (Helpers.GetValueFromSession("cus", out Customer cus, HttpContext))
                 {
-                    OrderID = orderID.Value;
-                    result = await _orderDetailBusiness.GetOrderDetailsByOrderId(orderID.Value, s, e);
-                }
+                    if (!double.TryParse(start, out double s)) s = 0;
+                    Start = start;
 
-                if (result.Status <= 0)
-                {
-                    OrderDetails = new();
-                    TempData["message"] = result.Message;
+                    if (!double.TryParse(end, out double e)) e = double.MaxValue;
+                    End = end;
+
+                    searchString ??= string.Empty;
+                    SearchingString = searchString;
+
+                    int pageSize = int.TryParse(_config["PageSize"], out int ps) ? ps : 3;
+
+                    IBadmintonResult result = new BadmintonResult();
+
+                    CurrentPage = newCurPage;
+
+                    if (cus.Name.Equals("admin") && cus.Email.Equals("admin@example.com")) result = await _orderDetailBusiness.GetAllOrderDetails(s, e);
+
+                    if (orderID != null && orderID != 0)
+                    {
+                        OrderID = orderID.Value;
+                        result = await _orderDetailBusiness.GetOrderDetailsByOrderId(orderID.Value, s, e);
+                    }
+
+                    if (result.Status <= 0)
+                    {
+                        OrderDetails = new();
+                        TempData["message"] = result.Message;
+                        return Page();
+                    }
+
+                    var list = result.Data as List<OrderDetail>;
+                    string everything = string.Empty;
+
+                    var words = searchString.Split('~');
+                    foreach (var word in words)
+                    {
+                        list = list.Where(x =>
+                        {
+                            everything = x.CourtDetail.Slot + "~" + x.CourtDetail.Notes + "~" + x.CourtDetail.Court.Description + "~" + x.CourtDetail.Court.YardType + "~" + x.CourtDetail.Court.Type + "~" + x.CourtDetail.Court.SpaceType + "~" + x.CourtDetail.Court.Location + "~" + x.Order.Type + "~" + x.CourtDetail.Court.Name + "~" + x.CourtDetail.Notes + "~" + x.Amount + "~" + x.Order.OrderNotes;
+                            return everything.ToUpper().Contains(word.Trim().ToUpper());
+                        }).ToList();
+                    }
+
+                    TotalPages = Helpers.TotalPages(list, pageSize);
+
+                    OrderDetails = list.Paging(CurrentPage, pageSize);
+
                     return Page();
                 }
-                
-                var list = result.Data as List<OrderDetail>;
-                string everything = string.Empty;
-
-                var words = searchString.Split('~');
-                foreach (var word in words)
-                {
-                    list = list.Where(x =>
-                    {
-                        everything = x.CourtDetail.Slot + "~" + x.CourtDetail.Notes+ "~" + x.CourtDetail.Court.Description + "~" + x.CourtDetail.Court.YardType + "~" + x.CourtDetail.Court.Type + "~" + x.CourtDetail.Court.Location + "~" + x.CourtDetail.Court.Name + "~" + x.CourtDetail.Notes + "~" + x.Amount + "~" + x.Order.OrderNotes;
-                        return everything.ToUpper().Contains(word.Trim().ToUpper());
-                    }).ToList();
-                }
-                
-                TotalPages = Helpers.TotalPages(list, pageSize);
-
-                OrderDetails = list.Paging(CurrentPage, pageSize);
-
-                return Page();
+                return NotFound();
             }
             catch (Exception ex)
             {

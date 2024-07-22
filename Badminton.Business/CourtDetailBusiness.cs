@@ -25,7 +25,7 @@ namespace Badminton.Business
         public Task<IBadmintonResult> AddCourtDetail(CourtDetail courtDetail);
         public Task<IBadmintonResult> UpdateCourtDetail(int courtDetailId, CourtDetail courtDetail,string msg);
         public Task<IBadmintonResult> DeleteCourtDetail(int courtDetailId);
-        public Task<IBadmintonResult> RefreshCourtDetailStatus();
+        public IBadmintonResult RefreshCourtDetailStatus();
         public Task<IBadmintonResult> GetTopBookedCourt();
     }
     public class CourtDetailBusiness : ICourtDetailBusiness
@@ -172,7 +172,7 @@ namespace Badminton.Business
             }
         }
 
-        public async Task<IBadmintonResult> RefreshCourtDetailStatus()
+        public IBadmintonResult RefreshCourtDetailStatus()
         {
             try
             {

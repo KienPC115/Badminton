@@ -10,7 +10,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Badminton.RazorWebApp", "Ba
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Badminton.Common", "Badminton.Common\Badminton.Common.csproj", "{7750AED4-F08D-47E2-A5BC-4803BD7B1A64}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Badminton.WorkerService", "Badminton.WorkerService\Badminton.WorkerService.csproj", "{2E887B1B-76AC-4678-8CA1-836CD1203B11}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Badminton.BackgroundTask", "Badminton.BackgroundTask\Badminton.BackgroundTask.csproj", "{7351FF4C-80C3-4CFE-928E-F583F14AE14F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,10 +34,10 @@ Global
 		{7750AED4-F08D-47E2-A5BC-4803BD7B1A64}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7750AED4-F08D-47E2-A5BC-4803BD7B1A64}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7750AED4-F08D-47E2-A5BC-4803BD7B1A64}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2E887B1B-76AC-4678-8CA1-836CD1203B11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2E887B1B-76AC-4678-8CA1-836CD1203B11}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2E887B1B-76AC-4678-8CA1-836CD1203B11}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2E887B1B-76AC-4678-8CA1-836CD1203B11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7351FF4C-80C3-4CFE-928E-F583F14AE14F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7351FF4C-80C3-4CFE-928E-F583F14AE14F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7351FF4C-80C3-4CFE-928E-F583F14AE14F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7351FF4C-80C3-4CFE-928E-F583F14AE14F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

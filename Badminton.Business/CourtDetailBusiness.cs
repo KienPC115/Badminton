@@ -19,7 +19,7 @@ namespace Badminton.Business
     public interface ICourtDetailBusiness
     {
         public Task<IBadmintonResult> GetAllCourtDetails();
-        public Task<IBadmintonResult> GetAllCourtDetailsIncludeCourt(string? Search);
+        public Task<IBadmintonResult> GetAllCourtDetailsIncludeCourt(string? slot, int? capacity, double? minPrice, double? maxPrice);
         IBadmintonResult GetCourtDetailsIncludeCourt(List<int> courtDetailIds);
         public Task<IBadmintonResult> GetCourtDetail(int courtDetailId);
         public Task<IBadmintonResult> AddCourtDetail(CourtDetail courtDetail);
@@ -92,11 +92,11 @@ namespace Badminton.Business
                 return new BadmintonResult(Const.ERROR_EXCEPTION, ex.Message);
             }
         }
-        public async Task<IBadmintonResult> GetAllCourtDetailsIncludeCourt(string? Search)
+        public async Task<IBadmintonResult> GetAllCourtDetailsIncludeCourt(string? slot, int? capacity, double? minPrice, double? maxPrice)
         {
             try
             {
-                var courtDetails = await _unitOfWork.CourtDetailRepository.GetAllCourtDetailsIncludeCourtAsync(Search);
+                var courtDetails = await _unitOfWork.CourtDetailRepository.GetAllCourtDetailsIncludeCourtAsync(slot,capacity,minPrice,maxPrice);
                 return courtDetails.Count > 0 ? new BadmintonResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, courtDetails)
                                                : new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
             }

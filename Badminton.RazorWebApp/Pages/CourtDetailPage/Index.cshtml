@@ -1,4 +1,5 @@
 ﻿@page
+@using Org.BouncyCastle.Crypto.Engines
 @model Badminton.RazorWebApp.Pages.CourtDetailPage.IndexModel
 
 @{
@@ -28,9 +29,35 @@
 
 <h1>Index</h1>
 <form>
-    <input type="hidden" name="newCurPage" value="1" />
-    <input name="searchKey" value="@Model.Search" />
-    <input type="submit" value="Search">
+    <div class="form-group">
+        <label class="control-label">Search by slot</label>
+        <select asp-for="Slot" class="form-control">
+            @foreach (var item in Model.SlotList)
+            {
+                <option value="@item"> @item</option>
+            }
+        </select>
+        <span asp-validation-for="CourtDetail.Slot" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label class="control-label">Search by Capacity</label>
+        <input type="text" name="capacity" value="@Model.Capacity" class="form-control" />
+        <span asp-validation-for="CourtDetail.Capacity" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label class="control-label">Search by Min Price</label>
+        <input type="text" name="minPrice" value="@Model.MinPrice" class="form-control" />
+        <span asp-validation-for="CourtDetail.Price" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label class="control-label">Search by Max Price</label>
+        <input type="text" name="maxPrice" value="@Model.MaxPrice" class="form-control" />
+        <span asp-validation-for="CourtDetail.Price" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="hidden" name="newCurPage" value="1" />
+        <input type="submit" value="Search" class="btn btn-primary"/>
+    </div>
 </form>
 @if (Model.IsAdmin)
 {
@@ -38,8 +65,17 @@
     <a asp-page="Create">Create New</a>
 </p>
 }
-<h1> Top Most Booked Court: @Model.CourtDetail.Court.Name at time: @Model.CourtDetail.Slot</h1>
-<table class="table">
+@if (Model.CourtDetail != null)
+{
+    <h1> Top Most Booked Court: @Model.CourtDetail.Court.Name at time: @Model.CourtDetail.Slot</h1>
+}
+@if (Model.CourtDetailList == null || Model.CourtDetailList.Count == 0)
+{
+    <h1>No record was found! please try again</h1>
+}
+else
+{
+    <table class="table">
     <thead>
     <tr>
         <th>
@@ -119,10 +155,16 @@
     }
     </tbody>
 </table>
+}
+
+
 <div class="d-flex justify-content-between">
     <form method="get" class="form-inline">
         <input type="hidden" name="newCurPage" value="@(Model.CurrentPage - 1)" />
-        <input type="hidden" name="searchKey" value="@Model.Search" />
+        <input type="hidden" name="capacity" value="@Model.Capacity" />
+        <input type="hidden" name="minPrice" value="@Model.MinPrice" />
+        <input type="hidden" name="maxPrice" value="@Model.MaxPrice" />
+        <input type="hidden" asp-for="Slot" value="@Model.Slot" />
         <button type="submit" class="btn btn-outline-primary" @(Model.CurrentPage <= 1 ? "disabled" : "")>Previous</button>
     </form>
 
@@ -130,7 +172,10 @@
 
     <form method="get" class="form-inline">
         <input type="hidden" name="newCurPage" value="@(Model.CurrentPage + 1)" />
-        <input type="hidden" name="searchKey" value="@Model.Search" />
+        <input type="hidden" name="capacity" value="@Model.Capacity" />
+        <input type="hidden" name="minPrice" value="@Model.MinPrice" />
+        <input type="hidden" name="maxPrice" value="@Model.MaxPrice" />
+        <input type="hidden" asp-for="Slot" value="@Model.Slot" />
         <button type="submit" class="btn btn-outline-primary" @(Model.CurrentPage >= Model.TotalPages ? "disabled" : "")>Next</button>
     </form>
 </div>

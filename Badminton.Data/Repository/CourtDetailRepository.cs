@@ -26,7 +26,7 @@ namespace Badminton.Data.Repository
         {
             return await _context.CourtDetails.Where(cd => cd.CourtDetailId == id).Include(cd => cd.Court).FirstOrDefaultAsync();
         }
-        public async Task<List<CourtDetail>> GetAllCourtDetailsIncludeCourtAsync(string? Search)
+        public async Task<List<CourtDetail>> GetAllCourtDetailsIncludeCourtAsync(string? slot,int? capacity, double? minPrice, double? maxPrice)
         {
             IQueryable<CourtDetail> query = _context.CourtDetails;
             query = query.Where(cd => cd.Status.ToLower() != "delete")
@@ -35,14 +35,25 @@ namespace Badminton.Data.Repository
                 .ThenByDescending(cd => cd.BookingCount)
                 .ThenBy(cd => cd.Court.Name);
             
-            if (!string.IsNullOrEmpty(Search))
+            if (!string.IsNullOrEmpty(slot))
             {
-                query = query.Where(x => x.Price.ToString().Contains(Search.ToLower())
-                                         || x.Status.Contains(Search.ToLower())
-                                         || x.Court.Name.ToLower().Contains(Search.ToLower())
-                                         || x.Slot.ToLower().Contains(Search.ToLower()));
+                query = query.Where(x => x.Slot.ToLower().Contains(slot.ToLower()));
             }
 
+            if (capacity != null)
+            {
+                query = query.Where(x => x.Capacity == capacity.Value);
+            }
+
+            if (minPrice != null)
+            {
+                query = query.Where(x => x.Price >= minPrice.Value);
+            }
+
+            if (maxPrice != null)
+            {
+                query = query.Where(x => x.Price <= maxPrice.Value);
+            }
             return await query.ToListAsync();
         }
 

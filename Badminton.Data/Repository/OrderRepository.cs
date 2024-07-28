@@ -34,10 +34,10 @@ namespace Badminton.Data.Repository
         
         public Order GetOrderById(int id)
         {
-            return _context.Orders.Include(o => o.Customer).FirstOrDefault(c => c.OrderId == id);
+            return _context.Orders.FirstOrDefault(c => c.OrderId == id);
         }
 
-        public int Checkout(List<CourtDetail> courtDetailsList, int customerId, string note, string type)
+        public Order Checkout(List<CourtDetail> courtDetailsList, int customerId, string note, string type)
         {
             int check = -1;
             using (var transaction = _context.Database.BeginTransaction())
@@ -53,7 +53,11 @@ namespace Badminton.Data.Repository
                         OrderDate = DateTime.Now,
                         OrderNotes = note,
                         TotalAmount = totalAmount,
-                        Type = type
+                        Type = type,
+                        Email = "",
+                        PhoneOrder = "",
+                        OrderStatus = "Pending",
+                        ModifiedDate = DateTime.Now,
                     };
                     _context.Orders.Add(order);
                     check = _context.SaveChanges();
@@ -91,14 +95,15 @@ namespace Badminton.Data.Repository
                         transaction.Commit();
                     }
                     check = order.OrderId;
+                    return order;
                 }
                 catch (Exception)
                 {
                     check = -1;
                     transaction.Rollback();
                 }
+                return null;
             }
-            return check;
         }
     }
 }

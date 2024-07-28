@@ -7,4 +7,9 @@ public static class OrderShared
         string[] Type = { "Cash Payment", "Online Payment" };
         return new List<string>(Type);
     }
+    public static List<string> Status()
+    {
+        string[] Status = { "Canceled", "Pending", "Paid" };
+        return new List<string>(Status);
+    }
 }

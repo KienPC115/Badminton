@@ -1,8 +1,10 @@
 ﻿using Badminton.Business.Interface;
+using Badminton.Business.Shared;
 using Badminton.Common;
 using Badminton.Data;
 using Badminton.Data.DAO;
 using Badminton.Data.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -51,7 +53,7 @@ namespace Badminton.Business
                 {
                     return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
                 }
-                return new BadmintonResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, orders.OrderByDescending(o => o.OrderDate).ToList());
+                return new BadmintonResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, orders.OrderByDescending(o => o.OrderId).ToList());
             }
             catch (Exception ex)
             {
@@ -95,10 +97,6 @@ namespace Badminton.Business
                     return result;
                 }
                 var check1 = await _orderDetailBusiness.DeleteOrderDetailsByOrderId(orderId);
-                if (check1.Status <= 0)
-                {
-                    return check1;
-                }
                 var check = _unitOfWork.OrderRepository.Remove((Order)result.Data);
 
                 if (!check)
@@ -143,20 +141,15 @@ namespace Badminton.Business
         {
             try
             {
-                var result = await GetOrderById(order.OrderId);
-                if (result.Status <= 0) return result;
-                var existingOrder = result.Data as Order;
-                existingOrder.OrderDetails = order.OrderDetails;
-                existingOrder.CustomerId = order.CustomerId;
-                existingOrder.Type = order.Type;
-                existingOrder.OrderNotes = order.OrderNotes;
-                existingOrder.OrderDate = order.OrderDate;
-                var check = await _unitOfWork.OrderRepository.UpdateAsync(existingOrder);
+                var result = await _unitOfWork.OrderRepository.GetByIdAsync(order.OrderId);
+                
+                if (result == null) return new BadmintonResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
 
-                if (check == 0)
-                {
-                    return new BadmintonResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
-                }
+                result.CopyValues(order);
+                
+                var check = await _unitOfWork.OrderRepository.UpdateAsync(result);
+
+                if (check == 0) return new BadmintonResult(Const.FAIL_UPDATE_CODE, Const.FAIL_UPDATE_MSG);
 
                 return new BadmintonResult(Const.SUCCESS_UPDATE_CODE, Const.SUCCESS_UPDATE_MSG);
             }
@@ -172,10 +165,7 @@ namespace Badminton.Business
             {
 
                 var orders = _unitOfWork.OrderRepository.GetAllOrdersByCustomerId(customerId);
-                if (orders == null)
-                {
-                    return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
-                }
+                if (orders == null) return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
                 foreach (var order in orders)
                 {
                     order.Customer = await AssignCustomerToOrder(order);
@@ -261,7 +251,7 @@ namespace Badminton.Business
 
                 foreach (var word in words)
                 {
-                    orders = orders.Where(o => (o.OrderDate.ToString()+ "~" +o.Type+ "~" +o.OrderNotes+ "~" +o.Customer.Name+ "~" +o.Customer.Address+ "~" +o.Customer.Email+ "~" +o.Customer.DateOfBirth.ToString()+ "~" +o.Customer.Phone+ "~" +o.TotalAmount).ToUpper().Trim().Contains(word.ToUpper().Trim())).ToList();
+                    orders = orders.Where(o => (o.OrderDate.ToString()+ "~" +o.Type+ "~" +o.OrderNotes+ "~" +o.Customer.Name+ "~" +o.Customer.Address+ "~" +o.Customer.Email+ "~" +o.Customer.DateOfBirth.ToString()+ "~" +o.Customer.Phone+ "~" +o.TotalAmount + "~" + o.Email + "~" + o.PhoneOrder+ "~" + o.OrderStatus).ToUpper().Trim().Contains(word.ToUpper().Trim())).ToList();
                 }
 
                 return new BadmintonResult
@@ -291,7 +281,7 @@ namespace Badminton.Business
 
                 foreach (var word in words)
                 {
-                    orders = orders.Where(o => (o.OrderDate.ToString()+ "~" +o.Type+ "~" +o.OrderNotes+ "~" +o.Customer.Name+ "~" +o.Customer.Address+ "~" +o.Customer.Email+ "~" +o.Customer.DateOfBirth.ToString() + "~" + o.Customer.Phone + "~" + o.TotalAmount).ToUpper().Trim().Contains(word.ToUpper().Trim())).ToList();
+                    orders = orders.Where(o => (o.OrderDate.ToString() + "~" + o.Type + "~" + o.OrderNotes + "~" + o.Customer.Name + "~" + o.Customer.Address + "~" + o.Customer.Email + "~" + o.Customer.DateOfBirth.ToString() + "~" + o.Customer.Phone + "~" + o.TotalAmount + "~" + o.Email + "~" + o.PhoneOrder + "~" + o.OrderStatus).ToUpper().Trim().Contains(word.ToUpper().Trim())).ToList();
 
                 }
 
@@ -308,16 +298,49 @@ namespace Badminton.Business
             }
         }
 
+        public string CreatePaymentUrl(Order model)
+        {
+            try
+            {
+                var tick = DateTime.Now.Ticks.ToString();
+                var vnpay = new VnPayLibrary();
+                vnpay.AddRequestData("vnp_Version", "2.1.0");
+                vnpay.AddRequestData("vnp_Command", "Pay");
+                vnpay.AddRequestData("vnp_TmnCode", "NJJ0R8FS");
+                vnpay.AddRequestData("vnp_Amount", (model.TotalAmount * 100).ToString());
+                vnpay.AddRequestData("vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss"));
+                vnpay.AddRequestData("vnp_CurrCode", "VND");
+                vnpay.AddRequestData("vnp_IpAddr", Utils.GetIpAddress());
+                vnpay.AddRequestData("vnp_Locale", "vn");
+                vnpay.AddRequestData("vnp_OrderInfo", "Pay Order:" + model.OrderId);
+                vnpay.AddRequestData("vnp_OrderType", "other"); // default value: other
+                vnpay.AddRequestData("vnp_ReturnUrl", "https://localhost:7287/PaymentPage");
+                vnpay.AddRequestData("vnp_TxnRef", tick);
+
+                var paymentUrl = vnpay.CreateRequestUrl("https://sandbox.vnpayment.vn/paymentv2/vpcpay.html", "BYKJBHPPZKQMKBIBGGXIYKWYFAYSJXCW");
+                return paymentUrl;
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+        }
         public IBadmintonResult Checkout(List<CourtDetail> courtDetailList, int cusID, string note, string type)
         {
             try
             {
                 var result = _unitOfWork.OrderRepository.Checkout(courtDetailList, cusID, note, type);
-                if (result <= 0)
+                var listType = OrderShared.Type();
+                if (result == null)
                 {
-                    return new BadmintonResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG, result);
+                    return new BadmintonResult(Const.FAIL_CREATE_CODE, Const.FAIL_CREATE_MSG);
                 }
-                return new BadmintonResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG, result);
+                var paymentUrl = string.Empty;
+                if (type.Equals(listType[1]))
+                {
+                    paymentUrl = CreatePaymentUrl(result);
+                }
+                return new BadmintonResult(Const.SUCCESS_CREATE_CODE, Const.SUCCESS_CREATE_MSG, paymentUrl = paymentUrl + " " + result.OrderId);
             }
             catch (Exception ex)
             {

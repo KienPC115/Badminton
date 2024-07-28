@@ -28,7 +28,12 @@ namespace Badminton.RazorWebApp.Pages.OrderPage
             {
                 var result = _customerBusiness.GetAllCustomers();
                 Customer = result.Result.Data as List<Customer>;
+                Status = OrderShared.Status();
                 Type = OrderShared.Type();
+
+                Order = new Order();
+                Order.ModifiedDate = DateTime.Now;
+                Order.OrderDate = DateTime.Now;
                 return Page();
             }
             return RedirectToPage("../Index");
@@ -39,6 +44,8 @@ namespace Badminton.RazorWebApp.Pages.OrderPage
         [BindProperty]
         public List<string> Type { get; set; }
         public List<Customer> Customer { get; set; }
+        [BindProperty]
+        public List<string> Status { get; set; }
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()

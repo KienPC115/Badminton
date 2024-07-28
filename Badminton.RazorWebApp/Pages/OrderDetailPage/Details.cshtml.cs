@@ -29,8 +29,9 @@ namespace Badminton.RazorWebApp.Pages.OrderDetailPage
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            var result = await _orderDetailBusiness.GetOrderDetailById(id.Value);
-            OrderDetail = result.Data as OrderDetail;
+            var result = await _orderDetailBusiness.GetAllOrderDetails();
+            var orderDetails = result.Data as List<OrderDetail>;
+            OrderDetail = orderDetails.FirstOrDefault(c => c.OrderDetailId == id);
             return Page();
         }
     }

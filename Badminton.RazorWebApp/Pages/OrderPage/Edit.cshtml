@@ -9,50 +9,78 @@
 
 <h4>Order</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Order.OrderId" />
-            <div class="form-group">
-                <label asp-for="Order.CustomerId" class="control-label"></label>
-                <select asp-for="Order.CustomerId" class="form-control">
-                    @foreach (var item in Model.Customer)
-                    {
-                        <option value=@item.CustomerId>@item.Name - @item.Email - @item.Address</option>
-                    }
-                </select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Order.Type" class="control-label"></label>
-                <select asp-for="Order.Type" class="form-control">
-                    @foreach (var item in Model.Type)
-                    {
-                        <option value=@item>@item</option>
-                    }
-                </select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Order.OrderNotes" class="control-label"></label>
-                <input asp-for="Order.OrderNotes" class="form-control"/>
-                <span asp-validation-for="Order.OrderNotes" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Order.OrderDate" class="control-label"></label>
-                <input asp-for="Order.OrderDate" class="form-control" type="datetime"/>
-                <span asp-validation-for="Order.OrderDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Order.TotalAmount" class="control-label"></label>
-                <input asp-for="Order.TotalAmount" class="form-control" readonly/>
-                <span asp-validation-for="Order.TotalAmount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+@if (Model.Order != null)
+{
+    <div class="row">
+        <div class="col-md-4">
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Order.OrderId" />
+                <div class="form-group">
+                    <label asp-for="Order.CustomerId" class="control-label"></label>
+                    <select asp-for="Order.CustomerId" class="form-control">
+                        @foreach (var item in Model.Customer)
+                        {
+                            <option value=@item.CustomerId>@item.Name - @item.Email - @item.Address</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Order.Type" class="control-label"></label>
+                    <select asp-for="Order.Type" class="form-control">
+                        @foreach (var item in Model.Type)
+                        {
+                            <option value=@item>@item</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Order.OrderNotes" class="control-label"></label>
+                    <input asp-for="Order.OrderNotes" class="form-control" />
+                    <span asp-validation-for="Order.OrderNotes" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Order.OrderDate" class="control-label"></label>
+                    <input asp-for="Order.OrderDate" class="form-control" />
+                    <span asp-validation-for="Order.OrderDate" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Order.PhoneOrder" class="control-label"></label>
+                    <input asp-for="Order.PhoneOrder" class="form-control" />
+                    <span asp-validation-for="Order.PhoneOrder" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Order.ModifiedDate" class="control-label"></label>
+                    <input asp-for="Order.ModifiedDate" class="form-control" />
+                    <span asp-validation-for="Order.ModifiedDate" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Order.Email" class="control-label"></label>
+                    <input asp-for="Order.Email" class="form-control" />
+                    <span asp-validation-for="Order.Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Order.OrderStatus" class="control-label"></label>
+                    <select asp-for="Order.OrderStatus" class="form-control">
+                        @foreach (var item in Model.Status)
+                        {
+                            <option value=@item>@item</option>
+                        }
+                    </select>
+                    <span asp-validation-for="Order.OrderStatus" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Order.TotalAmount" class="control-label"></label>
+                    <input asp-for="Order.TotalAmount" class="form-control" readonly />
+                    <span asp-validation-for="Order.TotalAmount" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
     </div>
-</div>
+}
 
 <div>
     <a asp-page="./Index">Back to List</a>

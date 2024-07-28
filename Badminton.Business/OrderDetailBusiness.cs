@@ -176,10 +176,10 @@ namespace Badminton.Business
         {
             try
             {
-                var result = _unitOfWork.OrderDetailRepository.GetOrderDetail(orderDetailId);
+                var result = _unitOfWork.OrderDetailRepository.GetById(orderDetailId);
                 if (result == null)
                 {
-                    return new BadmintonResult(Const.WARNING_NO_DATA_CODE, Const.WARNING_NO_DATA__MSG);
+                    return new BadmintonResult(Const.FAIL_READ_CODE, Const.WARNING_NO_DATA__MSG);
                 }
                 return new BadmintonResult(Const.SUCCESS_READ_CODE, Const.SUCCESS_READ_MSG, result);
             }

@@ -56,6 +56,8 @@ namespace Badminton.RazorWebApp.Pages.OrderDetailPage
 
         public async Task<IActionResult> OnPostAsync(int? id)
         {
+            var orderD = await _orderDetailBusiness.GetOrderDetailById(id.Value);
+
             var orderdetail = await _orderDetailBusiness.DeleteOrderDetail(id.Value);
 
             if (orderdetail.Status <= 0)
@@ -63,7 +65,11 @@ namespace Badminton.RazorWebApp.Pages.OrderDetailPage
                 return Page();
             }
 
-            return RedirectToPage("../OrderPage/Index");
+            return RedirectToPage("./Index", new { orderID = (orderD.Data as OrderDetail).OrderId
+            
+            
+            
+            });
         }
     }
 }

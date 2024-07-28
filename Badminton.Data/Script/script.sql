@@ -42,10 +42,14 @@ GO
 CREATE TABLE [Order] (
     OrderId INT IDENTITY(1,1) PRIMARY KEY,
     CustomerId INT NOT NULL,
-    Type VARCHAR(50) NOT NULL,
+    [Type] VARCHAR(50) NOT NULL,
     OrderDate DATETIME NOT NULL DEFAULT GETDATE(),
     OrderNotes VARCHAR(500),
     TotalAmount FLOAT NOT NULL,
+    OrderStatus NVARCHAR(50),
+    PhoneOrder Varchar(11),
+    Email NVARCHAR(255),
+    ModifiedDate DATETIME DEFAULT GETDATE(),
     FOREIGN KEY (CustomerId) REFERENCES [Customer](CustomerId)
 );
 GO
@@ -107,16 +111,6 @@ INSERT INTO Court (Name, Status, Description, YardType, Type, Location, SpaceTyp
 ('Court 6', 'Available', N'Court have beautiful view', 'Wood', 'Single', N'Location B', 'Indoor', 68.0);
 GO
 
--- Insert dummy data into Order table
-INSERT INTO [Order] (CustomerId, Type, TotalAmount, OrderDate, OrderNotes) VALUES
-(1, 'Direct Payment', 100.0, '2024-05-01 00:00:00.000', 'Contrary to popular belief, Lorem Ipsum is not simply random text'),
-(2, 'Direct Payment', 150.0, '2024-05-01 00:00:00.000', 'There are many variations of passages of Lorem Ipsum available.'),
-(3, 'Direct Payment', 300.0, '2024-05-01 00:00:00.000', 'Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero'),
-(4, 'Direct Payment', 250.0, '2024-05-01 00:00:00.000', 'The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.'),
-(5, 'Direct Payment', 75.0, '2024-05-01 00:00:00.000', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam'),
-(6, 'Direct Payment', 200.0, '2024-05-01 00:00:00.000', 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. ');
-GO
-
 -- Insert dummy data into CourtDetail table
 INSERT INTO CourtDetail (CourtId, Slot, Price, Status, Notes) VALUES
 (1, '08h00-9h30', 50.0, 'Available', 'Gio nay dong khach'),
@@ -128,14 +122,4 @@ INSERT INTO CourtDetail (CourtId, Slot, Price, Status, Notes) VALUES
 (1, '18h00-19h30', 50.0, 'Available','Gio nay dong khach'),
 (2, '19h30-21h00', 75.0, 'Available','Gio nay dong khach'),
 (3, '21h00-22h30', 40.0, 'Available','Gio nay dong khach');
-GO
-
--- Insert dummy data into OrderDetail table
-INSERT INTO OrderDetail (OrderId, CourtDetailId, Amount) VALUES
-(1, 1, 50.0),
-(2, 2, 75.0),
-(3, 3, 40.0),
-(4, 4, 65.0),
-(5, 5, 50.0),
-(6, 6, 45.0);
 GO

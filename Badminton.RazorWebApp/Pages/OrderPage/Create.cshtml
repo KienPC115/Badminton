@@ -42,6 +42,31 @@
                 <span asp-validation-for="Order.OrderNotes" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Order.PhoneOrder" class="control-label"></label>
+                <input asp-for="Order.PhoneOrder" class="form-control" />
+                <span asp-validation-for="Order.PhoneOrder" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Order.ModifiedDate" class="control-label"></label>
+                <input asp-for="Order.ModifiedDate" class="form-control" />
+                <span asp-validation-for="Order.ModifiedDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Order.Email" class="control-label"></label>
+                <input asp-for="Order.Email" class="form-control" />
+                <span asp-validation-for="Order.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Order.OrderStatus" class="control-label"></label>
+                <select asp-for="Order.OrderStatus" class="form-control">
+                    @foreach (var item in Model.Status)
+                    {
+                        <option value=@item>@item</option>
+                    }
+                </select>
+                <span asp-validation-for="Order.OrderStatus" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="Order.OrderDate" class="control-label"></label>
                 <input asp-for="Order.OrderDate" class="form-control" type="datetime-local" />
                 <span asp-validation-for="Order.OrderDate" class="text-danger"></span>

@@ -39,10 +39,18 @@ namespace Badminton.RazorWebApp.Pages
             if (!checkout.IsNullOrEmpty())
             {
                 note ??= string.Empty;
-                int orderid = Checkout(cart, note, selectedType);
-                if (orderid > 0)
+                var paymentResult = Checkout(cart, note, selectedType);
+                if (!string.IsNullOrEmpty(paymentResult))
                 {
-                    return RedirectToPage("./OrderDetailPage/Index", new { orderID = orderid });
+                    var orderID = paymentResult.Split(' ');
+                    if (paymentResult.Length>100)
+                    {
+                        return Redirect(orderID[0]);
+                    }
+                    else
+                    {
+                        return RedirectToPage("./OrderDetailPage/Index", new { orderID = orderID[1] });
+                    }
                 }
             }
             if (courtDetailID != null && courtDetailID != 0)
@@ -53,7 +61,7 @@ namespace Badminton.RazorWebApp.Pages
             return Page();
         }
 
-        private int Checkout(List<int> cart, string note, string type)
+        private string Checkout(List<int> cart, string note, string type)
         {
             if (Helpers.GetValueFromSession("cus", out Customer cus, HttpContext))
             {
@@ -62,22 +70,22 @@ namespace Badminton.RazorWebApp.Pages
                 if (availableCourt.Count <= 0)
                 {
                     TempData["message"] = "All this court in your cart is blocked";
-                    return -1;
+                    return string.Empty;
                 }
                 var result = _orderBusiness.Checkout(availableCourt, cus.CustomerId, note, type);
                 if (result.Status <= 0)
                 {
                     TempData["message"] = "Something failed while checkout.";
-                    return -1;
+                    return string.Empty;
                 }
                 TempData["message"] = "Checkout successfully";
                 _hubContext.Clients.All.SendAsync("ChangeStatusCourtDetail", cus.Name, availableCourt);
                 Cart.Clear();
                 cart.Clear();
                 Helpers.SetValueToSession("cart", cart, HttpContext);
-                return int.Parse(result.Data.ToString());
+                return result.Data.ToString();
             }
-            return -1;
+            return string.Empty;
         }
 
         private void GetCart(List<int> cart)

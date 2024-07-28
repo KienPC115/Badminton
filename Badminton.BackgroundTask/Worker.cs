@@ -39,33 +39,33 @@ namespace Badminton.BackgroundTask
                 #endregion
 
                 #region Refresh Status When time at 00:00:00
-                while (!stoppingToken.IsCancellationRequested)
-                {
-                    var now = DateTime.Now;
-                    var nextRun = DateTime.Today.AddDays(1); //00:00:00 is tomorrow
-                    var delay = nextRun - now;
+                //while (!stoppingToken.IsCancellationRequested)
+                //{
+                //    var now = DateTime.Now;
+                //    var nextRun = DateTime.Today.AddDays(1); //00:00:00 is tomorrow
+                //    var delay = nextRun - now;
 
-                    text = $"Current time: {now}, next run at: {nextRun}, delay: {delay}";
-                    File.AppendAllText(LogPath, text);
+                //    text = $"Current time: {now}, next run at: {nextRun}, delay: {delay}";
+                //    File.AppendAllText(LogPath, text);
 
-                    _logger.LogInformation(text);
+                //    _logger.LogInformation(text);
 
-                    if (delay.TotalMilliseconds > 0)
-                    {
-                        await Task.Delay(delay, stoppingToken);
-                    }
-                    var result = RefreshStatusOfCourtDetail();
-                    if (result <= 0)
-                    {
-                        text = "Refresh failed\n";
-                    }
-                    else
-                    {
-                        text = "Refresh successfully\n";
-                    }
-                    File.AppendAllText(LogPath, text);
-                    await Task.Delay(TimeSpan.FromDays(1), stoppingToken);
-                }
+                //    if (delay.TotalMilliseconds > 0)
+                //    {
+                //        await Task.Delay(delay, stoppingToken);
+                //    }
+                //    var result = RefreshStatusOfCourtDetail();
+                //    if (result <= 0)
+                //    {
+                //        text = "Refresh failed\n";
+                //    }
+                //    else
+                //    {
+                //        text = "Refresh successfully\n";
+                //    }
+                //    File.AppendAllText(LogPath, text);
+                //    await Task.Delay(TimeSpan.FromDays(1), stoppingToken);
+                //}
                 #endregion
             }
             catch (Exception ex)

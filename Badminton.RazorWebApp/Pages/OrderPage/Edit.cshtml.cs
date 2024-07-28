@@ -27,6 +27,8 @@ namespace Badminton.RazorWebApp.Pages.OrderPage
         public Order Order { get; set; } = default!;
         [BindProperty]
         public List<string> Type { get; set; }
+        [BindProperty]
+        public List<string> Status { get; set; }
         public List<Customer> Customer { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
@@ -41,9 +43,10 @@ namespace Badminton.RazorWebApp.Pages.OrderPage
                 {
                     return RedirectToPage("../Index");
                 }
+                Status = OrderShared.Status();
                 Type = OrderShared.Type();
                 Order = (result.Data as Order);
-
+                Order.ModifiedDate = DateTime.Now;
                 if (Order == null)
                 {
                     return RedirectToPage("../Index");
@@ -57,11 +60,6 @@ namespace Badminton.RazorWebApp.Pages.OrderPage
         // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
-            {
-                OnGetAsync(Order.OrderId);
-                return Page();
-            }
 
             var result = await _orderBusiness.UpdateOrder(Order);
             if (result.Status <= 0)

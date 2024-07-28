@@ -46,7 +46,7 @@ namespace Badminton.RazorWebApp.Pages.OrderPage
         {
             if (id == null)
             {
-                return RedirectToPage("../Index");
+                return RedirectToPage("./Index");
             }
             var result = await _orderBusiness.GetOrderById(id.Value);
             var order = result.Data as Order;
@@ -56,7 +56,8 @@ namespace Badminton.RazorWebApp.Pages.OrderPage
                 result = await _orderBusiness.DeleteOrder(id.Value);
                 if (result.Status <= 0)
                 {
-                    return RedirectToPage("../Index");
+                    OnGetAsync(id);
+                    return Page();
                 }
             }
 

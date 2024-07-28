@@ -42,8 +42,6 @@ namespace Badminton.RazorWebApp.Pages.OrderDetailPage
 
                 CourtDetails = _courtDetailBusiness.GetAllCourtDetails().Result.Data as List<CourtDetail>;
 
-                CourtDetails = CourtDetails.Where(cd => cd.Status == courtDetailStatus[0]).ToList();
-
                 CourtDetails.ForEach(cd => cd.Court = _courtBusiness.GetCourtById(cd.CourtId).Result.Data as Court);
 
                 var result = await _orderDetailBusiness.GetOrderDetailById(id.Value);
@@ -70,10 +68,6 @@ namespace Badminton.RazorWebApp.Pages.OrderDetailPage
         // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
 
             var result = await _courtDetailBusiness.GetCourtDetail(OrderDetail.CourtDetailId);
             var courtDetail = result.Data as CourtDetail;

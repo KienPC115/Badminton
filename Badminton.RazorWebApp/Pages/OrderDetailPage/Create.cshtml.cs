@@ -35,6 +35,7 @@ namespace Badminton.RazorWebApp.Pages.OrderDetailPage
             if (Helpers.GetValueFromSession("cus", out Customer cus, HttpContext) && cus.Name.Equals("admin") && cus.Email.Equals("admin@example.com"))
             {
                 Orders = _orderBusiness.GetAllOrders().Result.Data as List<Order>;
+                Orders = Orders.OrderByDescending(o => o.OrderId).ToList();
                 CourtDetails = _courtDetailBusiness.GetAllCourtDetails().Result.Data as List<CourtDetail>;
                 var status = CourtDetailShared.Status();
                 CourtDetails = CourtDetails.Where(cd => cd.Status.Equals(status[0])).ToList();
@@ -52,6 +53,7 @@ namespace Badminton.RazorWebApp.Pages.OrderDetailPage
             var result = await _orderDetailBusiness.AddOrderDetail(OrderDetail);
             if (result.Status <= 0)
             {
+                OnGet();
                 return Page();
             }
             return RedirectToPage("./Index", new { orderID = OrderDetail.OrderId });

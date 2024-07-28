@@ -22,12 +22,16 @@ namespace Badminton.RazorWebApp.Pages.OrderPage
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            var result = await _orderBusiness.GetOrderById(id.Value);
+            var result = await _orderBusiness.GetAllOrders();
+            
             if (result.Status < 0)
             {
                 return NotFound();
             }
-            Order = (result.Data as Order);
+
+            var orders = (result.Data as List<Order>);
+
+            Order = orders.FirstOrDefault(c => c.OrderId == id.Value);
 
             if (Order == null)
             {
